@@ -1,0 +1,2612 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>智能发货 - 工作台</title>
+<style>
+:root {
+  --primary: #70ABFF; --primary-dark: #5A95E8; --primary-light: #EAF3FF; --tab-active: #3487FF;
+  --text-primary: #333333; --text-regular: #606266; --text-secondary: #909399;
+  --border-color: #E6E7E9; --border-lighter: #EBEEF5;
+  --bg-page: #F2F3F5; --bg-hover: #F5F7FA; --bg-header: #F6FAFF;
+  --success: #67C23A; --warning: #E6A23C; --danger: #F56C6C; --purple: #722ED1;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; font-size: 14px; color: var(--text-primary); background: var(--bg-page); }
+
+/* === 顶部导航（el-menu horizontal） === */
+.topbar { height: 47px; background: #fff; border-bottom: 1px solid var(--border-lighter); display: flex; align-items: center; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+.topbar .logo { width: 200px; height: 47px; display: flex; align-items: center; padding-left: 20px; font-size: 16px; font-weight: 500; border-right: 1px solid var(--border-lighter); }
+.topbar .top-menus { display: flex; height: 47px; align-items: stretch; flex: 1; }
+.topbar .top-menu-item { padding: 0 16px; display: flex; align-items: center; cursor: pointer; font-size: 14px; border-bottom: 2px solid transparent; white-space: nowrap; color: var(--text-primary); }
+.topbar .top-menu-item:hover { background: var(--bg-hover); }
+.topbar .top-menu-item.active { background: var(--primary-light); color: var(--tab-active); border-bottom: 2px solid var(--tab-active); }
+
+/* === 侧边栏（el-menu vertical，采购模块真实分组） === */
+.layout { display: flex; height: calc(100vh - 47px); }
+.sidebar { width: 200px; background: #fff; border-right: 1px solid var(--border-lighter); overflow-y: auto; flex-shrink: 0; }
+.sidebar .group-title { height: 38px; line-height: 38px; padding: 0 18px; font-size: 14px; font-weight: 500; color: var(--text-regular); }
+.sidebar .menu-item { height: 40px; line-height: 40px; padding: 0 18px 0 28px; cursor: pointer; font-size: 14px; border-left: 3px solid transparent; color: var(--text-primary); }
+.sidebar .menu-item:hover { background: var(--bg-hover); color: var(--primary); }
+.sidebar .menu-item.active { background: var(--primary-light); color: var(--tab-active); border-left: 3px solid var(--primary); font-weight: 500; }
+
+/* === 主内容 === */
+.main { flex: 1; overflow-y: auto; padding: 16px 20px; }
+.breadcrumb { font-size: 13px; color: var(--text-secondary); margin-bottom: 12px; }
+.breadcrumb .cur { color: var(--text-regular); }
+.breadcrumb .sep { margin: 0 6px; }
+
+/* === 查询条件区（el-form，输入框30px高，参考真实发货计划页） === */
+.query-bar { background: #fff; padding: 14px 20px; margin-bottom: 12px; border: 1px solid var(--border-lighter); border-radius: 4px; }
+.query-bar .query-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.query-bar .query-item { display: flex; align-items: center; gap: 6px; font-size: 13px; }
+.query-bar .query-item label { color: var(--text-regular); white-space: nowrap; }
+.query-bar .input { height: 30px; width: 160px; padding: 0 28px 0 10px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 13px; color: var(--text-primary); background: #fff; }
+.query-bar .input:focus { outline: none; border-color: var(--primary); }
+.query-bar .input.select { appearance: none; background: #fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23909399' stroke-width='2'><polyline points='6 9 12 15 18 9'/></svg>") no-repeat right 8px center; cursor: pointer; }
+.query-bar .query-actions { display: flex; gap: 8px; margin-left: auto; }
+/* 日期范围输入框 */
+.query-bar .date-range { display: flex; align-items: center; gap: 4px; }
+.query-bar .date-range input { height: 30px; width: 130px; padding: 0 8px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 13px; color: var(--text-primary); background: #fff; }
+.query-bar .date-range input:focus { outline: none; border-color: var(--primary); }
+.query-bar .date-range .date-sep { color: var(--text-secondary); font-size: 12px; }
+
+/* === 按钮（el-button，主色#70ABFF高32px） === */
+.op-btn { height: 32px; padding: 0 16px; border-radius: 4px; font-size: 14px; border: 1px solid var(--border-color); background: #fff; color: var(--text-regular); cursor: pointer; line-height: 32px; display: inline-block; }
+.op-btn:hover { color: var(--primary); border-color: var(--primary); }
+.op-btn.primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+.op-btn.primary:hover { background: var(--primary-dark); border-color: var(--primary-dark); }
+.op-btn.danger { color: var(--danger); border-color: var(--danger); }
+.op-btn.sm { height: 26px; line-height: 26px; padding: 0 12px; font-size: 12px; }
+
+/* === Tab页签（el-tabs，横向，选中#3487FF，带数量） === */
+.el-tabs { background: #fff; border: 1px solid var(--border-lighter); border-bottom: none; border-radius: 4px 4px 0 0; display: flex; gap: 0; flex-wrap: wrap; padding: 0 12px; }
+.tab-item { height: 42px; line-height: 42px; padding: 0 18px; cursor: pointer; font-size: 14px; color: var(--text-regular); border-bottom: 2px solid transparent; white-space: nowrap; }
+.tab-item:hover { color: var(--tab-active); }
+.tab-item.active { color: var(--tab-active); border-bottom: 2px solid var(--tab-active); font-weight: 500; }
+.tab-item .count { color: var(--text-secondary); font-size: 12px; margin-left: 2px; }
+
+/* 页面级Tab（card样式，参考信诚发货计划页 el-tabs--card） */
+.page-tabs { display: flex; gap: 0; margin-bottom: 12px; border-bottom: 1px solid var(--border-lighter); }
+.page-tab-item { padding: 8px 20px; cursor: pointer; font-size: 14px; font-weight: 500; color: var(--text-regular); border: 1px solid transparent; border-bottom: none; background: #f5f6f8; border-radius: 4px 4px 0 0; }
+.page-tab-item:hover { color: var(--tab-active); }
+.page-tab-item.active { color: var(--tab-active); background: #fff; border: 1px solid var(--border-lighter); border-bottom: 1px solid #fff; margin-bottom: -1px; }
+
+/* === 批量操作条 === */
+.batch-bar { background: var(--primary-light); border: 1px solid var(--primary); border-top: none; padding: 8px 16px; display: flex; align-items: center; gap: 12px; font-size: 13px; }
+.batch-bar .sel-count { color: var(--tab-active); font-weight: 500; }
+
+/* === 表格（信诚式：单行分组表头 + 单元格内多字段纵向堆叠，非多级表头） === */
+.table-wrap { background: #fff; border: 1px solid var(--border-lighter); border-top: none; border-radius: 0 0 4px 4px; overflow-x: auto; }
+.table-wrap::-webkit-scrollbar { height: 10px; }
+.table-wrap::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 5px; }
+.table-wrap::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
+.table-wrap::-webkit-scrollbar-track { background: #f5f5f5; }
+table.data-table { width: 1920px; table-layout: fixed; border-collapse: collapse; font-size: 13px; }
+table.data-table th { background: var(--bg-header); padding: 10px 12px; text-align: left; font-weight: 600; color: var(--text-regular); border-bottom: 1px solid var(--border-lighter); white-space: nowrap; }
+table.data-table td { padding: 10px 12px; border-bottom: 1px solid var(--border-lighter); color: var(--text-primary); vertical-align: top; text-align: left; }
+table.data-table tr.row-main:hover td { background: var(--primary-light); }
+table.data-table tr.row-expand td { background: #FAFCFF; padding: 0; }
+
+/* 单元格内多字段堆叠（信诚式 v-text 结构：字段名灰 + 值黑，每个一行） */
+.field-stack { display: flex; flex-direction: column; gap: 4px; }
+.field-stack .field-line { line-height: 1.6; font-size: 13px; }
+.field-stack .field-label { color: var(--text-secondary); font-size: 12px; }
+.field-stack .field-value { color: var(--text-primary); }
+.field-stack .field-line.key .field-label::before { content: "★ "; color: var(--danger); font-size: 11px; }
+.field-stack .field-line.key .field-label { color: var(--text-regular); }
+
+/* SKU码/单号 等代码类字段（等宽+主色，可点） */
+.col-code { font-family: "SF Mono", Consolas, monospace; font-size: 12px; color: var(--tab-active); }
+
+/* 复选框 */
+.vxe-checkbox { width: 16px; height: 16px; border: 1px solid var(--border-color); border-radius: 2px; display: inline-block; vertical-align: middle; cursor: pointer; position: relative; background: #fff; }
+.vxe-checkbox.checked { background: var(--primary); border-color: var(--primary); }
+.vxe-checkbox.checked::after { content: ""; position: absolute; left: 4px; top: 1px; width: 5px; height: 9px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+
+/* vxe 复选框模拟（vxe-cell--checkbox + vxe-icon-checkbox-unchecked） */
+.vxe-checkbox { width: 16px; height: 16px; border: 1px solid var(--border-color); border-radius: 2px; display: inline-block; vertical-align: middle; cursor: pointer; position: relative; background: #fff; }
+.vxe-checkbox.checked { background: var(--primary); border-color: var(--primary); }
+.vxe-checkbox.checked::after { content: ""; position: absolute; left: 4px; top: 1px; width: 5px; height: 9px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+
+/* 展开行（vxe-table row-expand） */
+.expand-box { padding: 12px 16px; border-left: 3px solid var(--primary); margin: 0 12px 8px 12px; background: #fff; border-radius: 0 4px 4px 0; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+.expand-title { font-size: 12px; color: var(--tab-active); font-weight: 600; margin-bottom: 8px; }
+.expand-grid { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+.batch-card { border: 1px solid var(--border-color); border-radius: 4px; padding: 8px 12px; min-width: 130px; font-size: 12px; background: #fff; }
+.batch-card .bc-head { font-weight: 600; color: var(--text-primary); margin-bottom: 4px; display: flex; justify-content: space-between; }
+.batch-card .bc-row { color: var(--text-regular); line-height: 1.7; }
+.batch-card.urgent { border-color: var(--danger); background: #FFF8F8; }
+.batch-card.urgent .bc-head { color: var(--danger); }
+.expand-actions { display: flex; gap: 8px; padding-top: 8px; border-top: 1px dashed var(--border-lighter); }
+.expand-reason { font-size: 11px; color: var(--text-secondary); margin-top: 6px; font-style: italic; }
+
+.col-code { font-family: "SF Mono", Consolas, monospace; font-size: 12px; color: var(--tab-active); }
+.tag { padding: 2px 8px; border-radius: 4px; font-size: 12px; display: inline-block; }
+.tag-red { background: #FEF0F0; color: var(--danger); border: 1px solid #FDE2E2; }
+.tag-orange { background: #FDF6EC; color: var(--warning); border: 1px solid #FAECD8; }
+.tag-green { background: #F0F9EB; color: var(--success); border: 1px solid #E1F3D8; }
+.tag-blue { background: #ECF5FF; color: var(--primary); border: 1px solid #D9ECFF; }
+.tag-gray { background: #F4F4F5; color: var(--text-secondary); border: 1px solid #E6E7E9; }
+/* 活跃度枚举标签（新品/正常/重点/清库/冲量） */
+.tag-new { background: #FDF6EC; color: var(--warning); border: 1px solid #FAECD8; }            /* 新品-橙 */
+.tag-key { background: #F3E8FF; color: var(--purple); border: 1px solid #E0C8FF; }              /* 重点-紫 */
+.tag-clear { background: #FEF0F0; color: var(--danger); border: 1px solid #FDE2E2; }            /* 清库-红 */
+.tag-rush { background: #F0F9EB; color: var(--success); border: 1px solid #E1F3D8; }            /* 冲量-绿 */
+
+.warn-text { color: var(--danger); font-size: 11px; }
+.ok-text { color: var(--success); font-size: 11px; }
+.muted { color: var(--text-secondary); font-size: 12px; }
+.expand-toggle { color: var(--tab-active); cursor: pointer; font-size: 12px; user-select: none; }
+.expand-toggle:hover { text-decoration: underline; }
+.metric { font-weight: 600; }
+.metric .unit { font-size: 10px; color: var(--text-secondary); font-weight: 400; }
+
+/* === 行内嵌套子表格（信诚式：el-table 嵌在 vxe-cell 单元格内，模拟 PMC 备货分析的"需求数量"嵌套表格） === */
+.nested-table { width: 100%; border: 1px solid var(--border-lighter); border-radius: 4px; border-collapse: collapse; font-size: 12px; background: #fff; }
+.nested-table thead th { background: #FAFAFA; padding: 6px 8px; text-align: left; font-weight: 500; color: var(--text-regular); border-bottom: 1px solid var(--border-lighter); white-space: nowrap; font-size: 12px; }
+.nested-table tbody td { padding: 6px 8px; border-bottom: 1px solid var(--border-lighter); color: var(--text-primary); white-space: nowrap; font-size: 12px; }
+.nested-table tbody tr:last-child td { border-bottom: none; }
+.nested-table tbody tr:hover td { background: var(--bg-hover); }
+
+/* 智能拆批列：嵌套表格按内容自适应，但限定在列宽内不溢出 */
+.nested-table { table-layout: auto; width: 100%; }
+/* 智能拆批列（第8列）：内容不溢出到操作列 */
+.data-table > tbody > tr > td:nth-child(8) { overflow: hidden; }
+.nested-table .row-urgent td { background: #FFF8F8; }
+.nested-table .row-urgent:hover td { background: #FFEEEE; }
+/* 批次标签（序号列里的类型小标签） */
+.batch-type { padding: 1px 6px; border-radius: 3px; font-size: 11px; display: inline-block; margin-right: 4px; }
+.batch-type.urgent { background: #FEF0F0; color: var(--danger); border: 1px solid #FDE2E2; }
+.batch-type.normal { background: #ECF5FF; color: var(--primary); border: 1px solid #D9ECFF; }
+.batch-type.slow { background: #F4F4F5; color: var(--text-secondary); border: 1px solid #E6E7E9; }
+/* 拆批统计行（子表格下方的小字） */
+.batch-summary { font-size: 11px; color: var(--text-secondary); margin-top: 6px; padding: 4px 0; border-top: 1px dashed var(--border-lighter); }
+.batch-summary .sum-num { color: var(--text-primary); font-weight: 500; }
+
+/* 子表格复选框列（暂缓批次禁选） */
+.nested-table .nt-ck { width: 32px; text-align: center; }
+.nested-table .nt-ck .vxe-checkbox { width: 14px; height: 14px; }
+.nested-table .nt-ck .vxe-checkbox.checked { background: var(--primary); border-color: var(--primary); }
+.nested-table .nt-ck .vxe-checkbox.checked::after { left: 3px; top: 0px; width: 4px; height: 8px; border-width: 0 2px 2px 0; }
+.nested-table tr.tr-hold td { color: var(--text-secondary) !important; }
+.nested-table tr.tr-hold .nt-ck .vxe-checkbox { background: #f0f0f0; border-color: #dcdfe6; cursor: not-allowed; opacity: 0.5; }
+
+/* 子表格可编辑数量输入框（el-input mini） */
+.nt-input { width: 48px; height: 24px; padding: 0 6px; border: 1px solid var(--border-color); border-radius: 3px; font-size: 12px; color: var(--text-primary); text-align: center; background: #fff; }
+.nt-input:focus { outline: none; border-color: var(--primary); }
+
+/* 货源状态标签（现货🟢/待入库🟡/待采购🔴） */
+.src-stock { color: var(--success); font-size: 11px; }
+.src-stock::before { content: "●"; margin-right: 3px; }
+.src-incoming { color: var(--warning); font-size: 11px; }
+.src-incoming::before { content: "●"; margin-right: 3px; }
+.src-purchase { color: var(--danger); font-size: 11px; }
+.src-purchase::before { content: "●"; margin-right: 3px; }
+
+/* 子表格底部按钮区（el-button 行内，按Tab状态变） */
+.nt-actions { margin-top: 6px; display: flex; gap: 6px; align-items: center; }
+.nt-btn { height: 26px; padding: 0 12px; border-radius: 3px; font-size: 12px; border: 1px solid var(--border-color); background: #fff; color: var(--text-regular); cursor: pointer; line-height: 26px; display: inline-block; }
+.nt-btn:hover { color: var(--primary); border-color: var(--primary); }
+.nt-btn.primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+.nt-btn.primary:hover { background: var(--primary-dark); border-color: var(--primary-dark); }
+.nt-btn.danger { color: var(--danger); border-color: var(--danger); }
+.nt-btn.link { border: none; background: transparent; color: var(--tab-active); padding: 0 8px; }
+
+/* 主表暂缓行（整行置灰，第4行无需规划） */
+tr.row-hold td { background: #FAFBFC !important; color: var(--text-secondary); }
+tr.row-hold td .field-value, tr.row-hold td .field-label { color: var(--text-secondary); }
+tr.row-hold .nested-table { opacity: 0.5; }
+tr.row-hold:hover td { background: #FAFBFC !important; }
+
+/* 列拖动改宽（vxe-resizable 模拟） */
+table.data-table th { position: relative; }
+table.data-table th .col-resizer { position: absolute; right: 0; top: 0; width: 5px; height: 100%; cursor: col-resize; user-select: none; z-index: 5; }
+table.data-table th .col-resizer:hover { background: var(--primary); }
+table.data-table th .col-resizer.dragging { background: var(--primary); }
+
+/* 操作列：固定在右侧，横向滚动时始终可见 */
+/* 操作列：固定在右侧，永远不被相邻列内容覆盖 */
+.data-table .th-fixed-op, .data-table .td-op { position: sticky; right: 0; text-align: center; background: #fff; z-index: 3; box-shadow: -2px 0 4px rgba(0,0,0,0.06); }
+.data-table tr.row-main:hover .td-op { background: var(--primary-light, #f0f7ff); }
+.data-table .td-op { vertical-align: middle; }
+.data-table .th-fixed-op { background: var(--bg-header, #fafafa); z-index: 4; }
+
+/* 批次紧迫说明（批次标签旁的小字） */
+.batch-urgency { font-size: 11px; margin-left: 2px; }
+.batch-urgency.urgent { color: var(--danger); }
+.batch-urgency.normal { color: var(--text-secondary); }
+.batch-urgency.slow { color: var(--text-secondary); }
+
+/* 统计行倒计时（A方案：目的仓可售天数驱动） */
+.batch-summary .countdown { color: var(--danger); font-weight: 500; }
+.batch-summary .countdown-ok { color: var(--success); font-weight: 500; }
+
+/* 货源状态：待入库/待采购 的批次行轻提示 */
+.nested-table tr.tr-incoming td { background: #FFFBF0; }
+.nested-table tr.tr-incoming:hover td { background: #FFF6E0; }
+.nested-table tr.tr-purchase td { background: #FFF5F5; }
+.nested-table tr.tr-purchase:hover td { background: #FFEEEE; }
+
+/* 运输方式升降标识（对比默认运输方式） */
+.ship-level { display: inline-block; padding: 0 4px; border-radius: 3px; font-size: 10px; font-weight: 500; margin-left: 4px; line-height: 16px; }
+.ship-level.up { background: #F0F9EB; color: var(--success); border: 1px solid #E1F3D8; }
+.ship-level.down { background: #FEF0F0; color: var(--danger); border: 1px solid #FDE2E2; }
+
+/* 多PO折叠展开 */
+.po-more { color: var(--tab-active); cursor: pointer; font-size: 12px; user-select: none; margin-top: 2px; }
+.po-more:hover { text-decoration: underline; }
+.po-extra { display: none; }
+.po-extra.show { display: block; }
+
+/* === 分页（vxe-pager 完整结构） === */
+.pagination { display: flex; align-items: center; gap: 8px; padding: 10px 12px; font-size: 13px; color: var(--text-regular); flex-wrap: wrap; }
+.pagination .pg-total { margin-right: auto; color: var(--text-regular); }
+.pagination .pg-btn { min-width: 30px; height: 30px; padding: 0 8px; border: 1px solid var(--border-color); background: #fff; border-radius: 4px; cursor: pointer; font-size: 13px; color: var(--text-regular); display: inline-flex; align-items: center; justify-content: center; }
+.pagination .pg-btn:hover { color: var(--primary); border-color: var(--primary); }
+.pagination .pg-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+.pagination .pg-btn.jump-btn { padding: 0; color: var(--text-secondary); }
+.pagination .pg-btn:disabled { color: var(--border-color); cursor: not-allowed; }
+.pagination .pg-sep { color: var(--text-secondary); margin: 0 2px; }
+.pagination .pg-sizes { height: 30px; padding: 0 26px 0 10px; border: 1px solid var(--border-color); border-radius: 4px; background: #fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23909399' stroke-width='2'><polyline points='6 9 12 15 18 9'/></svg>") no-repeat right 8px center; font-size: 13px; color: var(--text-regular); cursor: pointer; }
+.pagination .pg-goto { width: 44px; height: 30px; padding: 0 6px; text-align: center; border: 1px solid var(--border-color); border-radius: 4px; font-size: 13px; color: var(--text-primary); background: #fff; }
+
+/* ===== 版本导航条 ===== */
+.version-bar { position: sticky; top: 0; z-index: 150; background: #1f2329; color: #c9cdd4; padding: 6px 20px; font-size: 12px; display: flex; align-items: center; gap: 10px; box-shadow: 0 1px 4px rgba(0,0,0,0.15); }
+.version-bar .vb-current { color: #ffe94d; font-weight: 500; }
+.version-bar .vb-current.milestone { color: #52c41a; }
+.version-bar .vb-label { color: #86929c; }
+.version-bar .vb-link { color: #3487ff; text-decoration: none; padding: 2px 8px; background: rgba(52,135,255,0.15); border-radius: 3px; }
+.version-bar .vb-link:hover { background: rgba(52,135,255,0.3); color: #5a9fff; }
+.version-bar .vb-dropdown { position: relative; }
+.version-bar .vb-right-actions { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.version-bar .vb-spec-btn { position: relative; background: rgba(255,233,77,0.15); color: #ffe94d; border: 1px solid rgba(255,233,77,0.3); padding: 4px 12px; border-radius: 3px; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+.version-bar .vb-spec-btn:hover { background: rgba(255,233,77,0.28); }
+.version-bar .vb-spec-btn.active { background: #ffe94d; color: #1f2329; border-color: #ffe94d; }
+.version-bar .vb-spec-btn .spec-badge { background: #ff7d00; color: #fff; font-size: 10px; min-width: 16px; height: 16px; border-radius: 8px; text-align: center; line-height: 16px; padding: 0 4px; }
+.version-bar .vb-badge-toggle { background: rgba(52,135,255,0.15); color: #3487ff; border: 1px solid rgba(52,135,255,0.3); padding: 4px 12px; border-radius: 3px; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+.version-bar .vb-badge-toggle:hover { background: rgba(52,135,255,0.28); }
+.version-bar .vb-badge-toggle.badges-hidden { opacity: 0.5; }
+.version-bar .vb-drop-btn { background: rgba(52,135,255,0.15); color: #3487ff; border: none; padding: 4px 12px; border-radius: 3px; font-size: 12px; cursor: pointer; }
+.version-bar .vb-drop-btn:hover { background: rgba(52,135,255,0.3); }
+.version-bar .vb-drop-menu { display: none; position: absolute; right: 0; top: 100%; background: #fff; border: 1px solid #e5e6eb; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); min-width: 180px; padding: 4px 0; z-index: 200; }
+.version-bar .vb-drop-menu.show { display: block; }
+.version-bar .vb-drop-menu a { display: block; padding: 8px 16px; color: #1f2329; text-decoration: none; font-size: 13px; }
+.version-bar .vb-drop-menu a:hover { background: #f2f3f5; }
+.version-bar .vb-drop-menu a.current { color: #3487ff; font-weight: 500; background: #e8f3ff; }
+.version-bar .vb-drop-menu .vb-drop-sep { height: 1px; background: #e5e6eb; margin: 4px 0; }
+
+/* ===== 飞书式评论组件 CSS ===== */
+.page-root { display: flex; width: 100%; min-height: 100vh; transition: all 0.25s; }
+.content { flex: 1; min-width: 0; transition: all 0.25s; }
+.content.with-panel { padding-right: 20px; }
+.selection-toolbar { position: absolute; background: #1f2329; border-radius: 6px; padding: 4px; display: none; z-index: 200; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+.selection-toolbar.show { display: flex; gap: 2px; }
+.selection-toolbar button { background: transparent; border: none; color: #c9cdd4; font-size: 12px; padding: 4px 10px; border-radius: 4px; cursor: pointer; white-space: nowrap; }
+.selection-toolbar button:hover { background: rgba(255,255,255,0.15); color: #fff; }
+
+/* 浮动评论气泡 */
+.comment-popover { position: absolute; width: 280px; background: #fff; border: 1px solid #d9d9d9; border-radius: 8px; box-shadow: 0 6px 20px rgba(0,0,0,0.15); z-index: 201; display: none; padding: 12px; }
+.comment-popover.show { display: block; }
+.comment-popover .pop-arrow { position: absolute; top: -6px; left: 20px; width: 10px; height: 10px; background: #fff; border-left: 1px solid #d9d9d9; border-top: 1px solid #d9d9d9; transform: rotate(45deg); }
+.comment-popover .pop-quote { font-size: 12px; color: #86929c; background: #fffbe6; border-left: 3px solid #fadb14; padding: 5px 10px; border-radius: 0 4px 4px 0; margin-bottom: 8px; line-height: 1.5; }
+.comment-popover .pop-type-row { margin-bottom: 6px; }
+.comment-popover .pop-type-row select { width: 100%; height: 28px; padding: 0 8px; border: 1px solid #d9d9d9; border-radius: 4px; font-size: 12px; color: #4e5969; background: #fff; }
+.comment-popover textarea { width: 100%; min-height: 60px; padding: 8px 10px; border: 1px solid #d9d9d9; border-radius: 4px; font-size: 13px; font-family: inherit; resize: vertical; }
+.comment-popover textarea:focus { outline: none; border-color: #3487ff; }
+.comment-popover .pop-btns { margin-top: 8px; display: flex; gap: 6px; justify-content: flex-end; }
+
+/* 日志弹窗（两个Tab：操作记录/计算过程） */
+.log-modal-mask { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 300; display: none; align-items: center; justify-content: center; }
+.log-modal-mask.show { display: flex; }
+.log-modal { width: 680px; max-height: 80vh; background: #fff; border-radius: 8px; box-shadow: 0 8px 32px rgba(0,0,0,0.15); display: flex; flex-direction: column; }
+.log-modal-header { padding: 16px 24px; border-bottom: 1px solid var(--border-lighter); display: flex; justify-content: space-between; align-items: center; }
+.log-modal-header h3 { font-size: 16px; font-weight: 600; }
+.log-modal-close { width: 28px; height: 28px; border: none; background: transparent; font-size: 20px; color: var(--text-secondary); cursor: pointer; }
+.log-modal-close:hover { color: var(--text-primary); }
+.log-modal-tabs { display: flex; border-bottom: 1px solid var(--border-lighter); padding: 0 24px; }
+.log-modal-tab { padding: 10px 16px; cursor: pointer; font-size: 14px; color: var(--text-regular); border-bottom: 2px solid transparent; }
+.log-modal-tab.active { color: var(--tab-active); border-bottom: 2px solid var(--tab-active); font-weight: 500; }
+.log-modal-body { flex: 1; overflow-y: auto; padding: 16px 24px; font-size: 13px; line-height: 1.8; color: var(--text-primary); }
+.log-op-record { display: none; }
+.log-op-record.show { display: block; }
+.log-calc-trace { display: none; white-space: pre; font-family: "SF Mono", Consolas, monospace; font-size: 12px; line-height: 1.7; color: var(--text-regular); }
+.log-calc-trace.show { display: block; }
+.log-op-item { padding: 8px 0; border-bottom: 1px dashed var(--border-lighter); display: flex; gap: 12px; }
+.log-op-item:last-child { border-bottom: none; }
+.log-op-time { color: var(--text-secondary); font-size: 12px; min-width: 140px; }
+.log-op-action { flex: 1; }
+/* ===== 产品说明页面 CSS（全屏多维表格视图） ===== */
+.proto-view { transition: opacity 0.2s; }
+.proto-view.hidden-view { display: none !important; }
+
+/* 产品说明页面容器 */
+.spec-page { display: none; position: fixed; inset: 0; z-index: 9999; background: #f5f6f7; flex-direction: column; }
+.spec-page.show { display: flex; }
+
+/* 顶部栏 */
+.spec-page-topbar { display: flex; align-items: center; padding: 0 24px; height: 56px; background: #1f2329; color: #fff; flex-shrink: 0; gap: 16px; }
+.spec-page-topbar .spt-back { display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.1); border: none; color: #fff; padding: 6px 14px; border-radius: 4px; font-size: 13px; cursor: pointer; }
+.spec-page-topbar .spt-back:hover { background: rgba(255,255,255,0.2); }
+.spec-page-topbar .spt-title { font-size: 16px; font-weight: 600; }
+.spec-page-topbar .spt-title .spt-sub { font-size: 12px; color: #86929c; font-weight: 400; margin-left: 8px; }
+.spec-page-topbar .spt-actions { margin-left: auto; display: flex; gap: 8px; }
+.spec-page-topbar .spt-actions button { height: 32px; padding: 0 14px; border-radius: 4px; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+.spec-page-topbar .spt-ai-btn { background: #722ed1; border: none; color: #fff; }
+.spec-page-topbar .spt-ai-btn:hover { background: #531dab; }
+.spec-page-topbar .spt-publish-btn { background: #52c41a; border: none; color: #fff; }
+.spec-page-topbar .spt-publish-btn:hover { background: #389e0d; }
+.spec-page-topbar .spt-export-btn { background: transparent; border: 1px solid rgba(255,255,255,0.3); color: #fff; }
+.spec-page-topbar .spt-export-btn:hover { border-color: #fff; }
+
+/* 工具栏（搜索 + 统计） */
+.spec-page-toolbar { display: flex; align-items: center; gap: 12px; padding: 12px 24px; background: #fff; border-bottom: 1px solid #e5e6eb; flex-shrink: 0; }
+.spec-page-toolbar .spt-search { flex: 0 0 280px; height: 32px; padding: 0 12px; border: 1px solid #d9d9d9; border-radius: 4px; font-size: 13px; }
+.spec-page-toolbar .spt-search:focus { outline: none; border-color: #3487ff; }
+.spec-page-toolbar .spt-stat { font-size: 12px; color: #86929c; }
+.spec-page-toolbar .spt-stat b { color: #1f2329; }
+.spec-page-toolbar .spt-expand-actions { margin-left: auto; display: flex; gap: 8px; }
+.spec-page-toolbar .spt-expand-actions button { height: 28px; padding: 0 10px; border: 1px solid #d9d9d9; background: #fff; border-radius: 4px; font-size: 12px; color: #4e5969; cursor: pointer; }
+.spec-page-toolbar .spt-expand-actions button:hover { border-color: #3487ff; color: #3487ff; }
+
+/* 表格区 */
+.spec-page-body { flex: 1; overflow: auto; padding: 16px 24px; }
+
+/* 表格 */
+.spec-table { width: 100%; border-collapse: separate; border-spacing: 0; background: #fff; border: 1px solid #e5e6eb; border-radius: 6px; overflow: hidden; }
+.spec-table thead th { background: #f7f8fa; color: #4e5969; font-size: 12px; font-weight: 600; text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e6eb; white-space: nowrap; }
+.spec-table thead th.col-element { min-width: 180px; }
+.spec-table thead th.col-type { width: 90px; }
+.spec-table thead th.col-source { min-width: 200px; }
+.spec-table thead th.col-rule { min-width: 240px; }
+.spec-table thead th.col-interaction { min-width: 240px; }
+.spec-table thead th.col-status { width: 100px; text-align: center; }
+.spec-table thead th.col-actions { width: 170px; text-align: center; }
+
+/* 分组行（区域） */
+.spec-table tr.spec-group td { background: #fafbfc; padding: 10px 12px; border-bottom: 1px solid #e5e6eb; border-top: 1px solid #e5e6eb; cursor: pointer; user-select: none; }
+.spec-table tr.spec-group td:hover { background: #f0f2f5; }
+.spec-table tr.spec-group .sg-toggle { display: inline-block; width: 16px; transition: transform 0.15s; color: #86929c; font-size: 12px; }
+.spec-table tr.spec-group.collapsed .sg-toggle { transform: rotate(-90deg); }
+.spec-table tr.spec-group .sg-name { font-size: 14px; font-weight: 600; color: #1f2329; }
+.spec-table tr.spec-group .sg-count { font-size: 12px; color: #86929c; margin-left: 8px; font-weight: 400; }
+.spec-table tr.spec-group .sg-confirmed { font-size: 11px; color: #00b42a; margin-left: 8px; }
+.spec-table tr.spec-group .sg-add { float: right; font-size: 12px; color: #3487ff; cursor: pointer; padding: 2px 8px; border-radius: 3px; }
+.spec-table tr.spec-group .sg-add:hover { background: #e8f3ff; }
+.spec-table tr.spec-group.collapsed + tr.spec-row { display: none; }
+
+/* 元素行 */
+.spec-table tr.spec-row td { padding: 8px 12px; border-bottom: 1px solid #f0f1f2; font-size: 13px; vertical-align: top; }
+.spec-table tr.spec-row:hover td { background: #fafcff; }
+.spec-table tr.spec-row.confirmed td { background: #f7fff7; }
+.spec-table tr.spec-row.confirmed .st-element { color: #86929c; }
+.spec-table tr.spec-row.confirmed .st-element::before { content: '🔒 '; }
+
+/* 可编辑单元格 */
+.spec-cell-edit { width: 100%; border: 1px solid transparent; background: transparent; border-radius: 3px; padding: 4px 6px; font-size: 13px; font-family: inherit; color: #1f2329; min-height: 28px; line-height: 1.5; resize: none; overflow: hidden; }
+.spec-cell-edit:hover { border-color: #e5e6eb; background: #fff; }
+.spec-cell-edit:focus { outline: none; border-color: #3487ff; background: #fff; box-shadow: 0 0 0 2px rgba(52,135,255,0.1); }
+.spec-cell-edit.empty { color: #c9cdd4; font-style: italic; }
+.spec-cell-edit[disabled] { color: #86929c; cursor: not-allowed; background: transparent; border-color: transparent; }
+
+/* 类型标签 */
+.spec-type-tag { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 10px; white-space: nowrap; }
+.spec-type-tag.fixed { color: #86909c; background: #f7f8fa; border: 1px solid #e5e6eb; }
+.spec-type-tag.dynamic { color: #00b42a; background: #e8ffea; border: 1px solid #c9f0d0; }
+.spec-type-tag.config { color: #ff7d00; background: #fff7e8; border: 1px solid #ffd9a8; }
+
+/* 状态标签 */
+.spec-status-tag { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; padding: 2px 8px; border-radius: 10px; }
+.spec-status-tag.draft { color: #86929c; background: #f7f8fa; border: 1px solid #e5e6eb; }
+.spec-status-tag.confirmed { color: #00b42a; background: #e8ffea; border: 1px solid #c9f0d0; }
+
+/* 操作按钮 */
+.spec-row-actions { display: flex; gap: 4px; justify-content: center; flex-wrap: wrap; }
+.spec-row-actions button { height: 24px; padding: 0 8px; border-radius: 3px; font-size: 12px; cursor: pointer; border: 1px solid transparent; white-space: nowrap; }
+.spec-row-actions .act-confirm { background: #00b42a; color: #fff; border: none; }
+.spec-row-actions .act-confirm:hover { background: #009a29; }
+.spec-row-actions .act-edit { background: #fff; border: 1px solid #d9d9d9; color: #4e5969; }
+.spec-row-actions .act-edit:hover { border-color: #3487ff; color: #3487ff; }
+.spec-row-actions .act-delete { background: #fff; border: 1px solid #d9d9d9; color: #f53f3f; }
+.spec-row-actions .act-delete:hover { background: #fff1f0; border-color: #f53f3f; }
+.spec-row-actions .act-anchor { background: #fff; border: 1px solid #d9d9d9; color: #722ed1; }
+.spec-row-actions .act-anchor:hover { background: #f9f0ff; border-color: #722ed1; }
+.spec-row-actions .act-anchor-bound { background: #e8f3ff; border: 1px solid #a5d3ff; color: #3487ff; }
+.spec-row-actions .act-anchor-bound:hover { background: #d6ebff; }
+.spec-row-actions .act-anchor-unbind { background: #fff; border: 1px solid #d9d9d9; color: #f53f3f; padding: 0 6px; }
+.spec-row-actions .act-anchor-unbind:hover { background: #fff1f0; border-color: #f53f3f; }
+.spec-row-actions .act-anchor-disabled { background: #f7f8fa; border: 1px solid #e5e6eb; color: #c9cdd4; cursor: not-allowed; }
+
+/* 空状态 */
+.spec-empty-state { text-align: center; padding: 80px 20px; color: #c4c6cc; }
+.spec-empty-state .ses-icon { font-size: 48px; display: block; margin-bottom: 12px; opacity: 0.4; }
+.spec-empty-state .ses-text { font-size: 14px; line-height: 2; }
+.spec-empty-state .ses-btn { margin-top: 16px; height: 36px; padding: 0 20px; background: #722ed1; border: none; color: #fff; border-radius: 4px; font-size: 13px; cursor: pointer; }
+.spec-empty-state .ses-btn:hover { background: #531dab; }
+
+/* AI识别进度 */
+.spec-ai-loading { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 10000; display: none; align-items: center; justify-content: center; }
+.spec-ai-loading.show { display: flex; }
+.spec-ai-loading .sal-box { background: #fff; padding: 24px 32px; border-radius: 8px; text-align: center; box-shadow: 0 8px 32px rgba(0,0,0,0.15); }
+.spec-ai-loading .sal-icon { font-size: 32px; margin-bottom: 8px; }
+.spec-ai-loading .sal-text { font-size: 14px; color: #4e5969; }
+.spec-ai-loading .sal-detail { font-size: 12px; color: #86929c; margin-top: 6px; }
+
+/* ===== 锚定角标 + 查看弹窗 CSS ===== */
+/* 锚定高亮 */
+.spec-anchored { position: relative; }
+.spec-anchored.spec-anchor-hover { outline: 2px dashed #722ed1 !important; outline-offset: 2px; }
+
+/* 角标 */
+.spec-anchor-badge { position: absolute; top: 50%; right: -12px; transform: translateY(-50%); width: 20px; height: 20px; background: var(--primary, #3487FF); color: #fff; border-radius: 50%; font-size: 11px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 50; box-shadow: 0 1px 4px rgba(52,135,255,0.4); border: 2px solid #fff; transition: background 0.15s; line-height: 1; }
+.spec-anchor-badge:hover { background: var(--primary-dark, #2575ff); transform: translateY(-50%) scale(1.15); }
+.spec-anchor-badge.spec-badge-pulse { animation: specPulse 1.5s ease-in-out; }
+@keyframes specPulse { 0%,100%{box-shadow:0 1px 4px rgba(52,135,255,0.4);} 50%{box-shadow:0 0 0 6px rgba(52,135,255,0.15);} }
+
+/* 查看弹窗 */
+.spec-view-popover { position: fixed; width: 360px; background: #fff; border-radius: 8px; box-shadow: 0 8px 32px rgba(0,0,0,0.18); z-index: 9998; display: none; }
+.spec-view-popover.show { display: block; }
+.spec-view-popover .svp-arrow { position: absolute; width: 10px; height: 10px; background: #fff; transform: rotate(45deg); }
+.spec-view-popover.svp-pos-bottom .svp-arrow { top: -5px; left: 24px; border-left: 1px solid #e5e6eb; border-top: 1px solid #e5e6eb; }
+.spec-view-popover.svp-pos-top .svp-arrow { bottom: -5px; left: 24px; border-right: 1px solid #e5e6eb; border-bottom: 1px solid #e5e6eb; }
+.spec-view-popover.svp-pos-left .svp-arrow { top: 24px; right: -5px; border-right: 1px solid #e5e6eb; border-bottom: 1px solid #e5e6eb; }
+.spec-view-popover.svp-pos-right .svp-arrow { top: 24px; left: -5px; border-left: 1px solid #e5e6eb; border-top: 1px solid #e5e6eb; }
+.spec-view-popover .svp-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid #f0f1f2; }
+.spec-view-popover .svp-title { font-size: 14px; font-weight: 600; color: #1f2329; display: flex; align-items: center; gap: 6px; }
+.spec-view-popover .svp-group-tag { font-size: 11px; color: #86929c; background: #f7f8fa; padding: 1px 6px; border-radius: 3px; font-weight: 400; }
+.spec-view-popover .svp-close { width: 24px; height: 24px; border: none; background: transparent; font-size: 16px; color: #86929c; cursor: pointer; border-radius: 3px; }
+.spec-view-popover .svp-close:hover { background: #f2f3f5; color: #1f2329; }
+.spec-view-popover .svp-body { padding: 12px 16px; max-height: 320px; overflow-y: auto; }
+.spec-view-popover .svp-field { margin-bottom: 10px; }
+.spec-view-popover .svp-field:last-child { margin-bottom: 0; }
+.spec-view-popover .svp-field-label { font-size: 11px; color: #86929c; margin-bottom: 3px; display: flex; align-items: center; gap: 4px; }
+.spec-view-popover .svp-field-value { font-size: 13px; color: #1f2329; line-height: 1.6; word-break: break-word; }
+.spec-view-popover .svp-field-value.empty { color: #c9cdd4; font-style: italic; }
+.spec-view-popover .svp-type-row { display: flex; gap: 8px; margin-bottom: 10px; }
+.spec-view-popover .svp-type-tag { font-size: 11px; padding: 1px 8px; border-radius: 10px; }
+
+/* 锚定模式（在产品说明页点"绑定"时激活） */
+body.spec-anchoring-mode { cursor: crosshair; }
+body.spec-anchoring-mode * { cursor: crosshair !important; }
+body.spec-anchoring-mode .spec-anchoring-hint { position: fixed; top: 16px; left: 50%; transform: translateX(-50%); background: #722ed1; color: #fff; padding: 8px 20px; border-radius: 20px; font-size: 13px; z-index: 10001; box-shadow: 0 4px 16px rgba(114,46,209,0.3); display: flex; align-items: center; gap: 10px; }
+body.spec-anchoring-mode .spec-anchoring-hint .hint-cancel { background: rgba(255,255,255,0.2); border: none; color: #fff; padding: 2px 10px; border-radius: 10px; font-size: 12px; cursor: pointer; }
+body.spec-anchoring-mode .spec-anchoring-target:hover { outline: 2px solid #722ed1 !important; outline-offset: 2px; background: rgba(114,46,209,0.08) !important; }
+body.spec-anchoring-mode [data-no-anchor="true"] { cursor: not-allowed !important; opacity: 0.5; }
+body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !important; background: transparent !important; }
+
+.annotated-mark { background: #fff3a8; text-decoration: underline; text-decoration-color: #fadb14; text-decoration-thickness: 2px; text-underline-offset: 3px; border-radius: 2px; cursor: pointer; padding: 0 1px; }
+.annotated-mark:hover { background: #ffe94d; }
+.annotated-mark.active { background: #ffe94d; }
+.comment-panel { width: 0; overflow: hidden; flex-shrink: 0; transition: width 0.25s; }
+.comment-panel.open { width: 320px; }
+.comment-toggle-btn { position: fixed; right: 0; top: 50%; transform: translateY(-50%); width: 28px; height: 72px; background: #3487FF; color: #fff; border-radius: 6px 0 0 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 100; box-shadow: -2px 0 6px rgba(0,0,0,0.1); font-size: 12px; writing-mode: vertical-rl; letter-spacing: 3px; transition: opacity 0.2s; }
+.comment-toggle-btn.hide { opacity: 0; pointer-events: none; }
+.comment-toggle-btn .badge { position: absolute; top: 6px; left: 50%; transform: translateX(-50%); background: #f53f3f; color: #fff; font-size: 10px; min-width: 16px; height: 16px; border-radius: 8px; text-align: center; line-height: 16px; writing-mode: horizontal-tb; letter-spacing: 0; padding: 0 4px; }
+.comment-inner { padding: 16px 14px; height: 100vh; overflow-y: auto; border-left: 1px solid #e5e6eb; background: #fafbfc; }
+.comment-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.comment-header .title { font-size: 14px; font-weight: 600; }
+.comment-close { cursor: pointer; color: #86929c; font-size: 20px; line-height: 1; }
+.comment-close:hover { color: #3487FF; }
+.comment-empty { text-align: center; color: #c4c6cc; font-size: 13px; padding: 40px 0; line-height: 2; }
+.comment-item { margin-bottom: 14px; }
+.comment-item .quote { font-size: 12px; color: #86929c; background: #fffbe6; border-left: 3px solid #fadb14; padding: 5px 10px; border-radius: 0 4px 4px 0; margin-bottom: 6px; line-height: 1.5; cursor: pointer; }
+.comment-item .quote:hover { background: #fff1b8; }
+.comment-item .body { background: #fff; border: 1px solid #e5e6eb; border-radius: 6px; padding: 10px 12px; }
+.comment-item .time { font-size: 11px; color: #c4c6cc; margin-bottom: 4px; }
+.comment-item .text { font-size: 13px; color: #1f2329; line-height: 1.6; word-break: break-word; }
+.comment-item .images { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.comment-item .images img { width: 80px; height: 80px; object-fit: cover; border-radius: 4px; cursor: pointer; border: 1px solid #e5e6eb; }
+.comment-item .images img:hover { border-color: #3487FF; }
+.comment-item .actions { margin-top: 8px; display: flex; gap: 12px; }
+.comment-item .actions a { font-size: 11px; cursor: pointer; text-decoration: none; }
+.comment-item .actions .edit-link { color: #3487FF; }
+.comment-item .actions .del-link { color: #f53f3f; }
+.comment-item.editing .body { display: none; }
+.comment-item.editing .edit-area { display: block; }
+.comment-item .edit-area { display: none; }
+.comment-item .edit-area textarea { width: 100%; min-height: 56px; padding: 8px 10px; border: 1px solid #d9d9d9; border-radius: 4px; font-size: 13px; font-family: inherit; resize: vertical; }
+.comment-item .edit-area textarea:focus { outline: none; border-color: #3487FF; }
+.comment-item .edit-area .btns { margin-top: 6px; display: flex; gap: 6px; justify-content: flex-end; }
+.comment-item .edit-area .img-preview { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0; }
+.comment-item .edit-area .img-preview .thumb { position: relative; width: 60px; height: 60px; }
+.comment-item .edit-area .img-preview .thumb img { width: 60px; height: 60px; object-fit: cover; border-radius: 4px; border: 1px solid #e5e6eb; }
+.comment-item .edit-area .img-preview .thumb .remove { position: absolute; top: -4px; right: -4px; width: 16px; height: 16px; background: #f53f3f; color: #fff; border-radius: 50%; text-align: center; line-height: 16px; font-size: 10px; cursor: pointer; }
+.comment-edit { margin-top: 10px; }
+.comment-edit .edit-toolbar { display: flex; gap: 6px; margin-bottom: 6px; }
+.comment-edit .edit-toolbar .tool-btn { background: #f2f3f5; border: none; color: #4e5969; font-size: 12px; padding: 3px 8px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; gap: 3px; }
+.comment-edit .edit-toolbar .tool-btn:hover { background: #e8e8e8; color: #3487FF; }
+.comment-edit textarea { width: 100%; min-height: 56px; padding: 8px 10px; border: 1px solid #d9d9d9; border-radius: 4px; font-size: 13px; font-family: inherit; resize: vertical; }
+.comment-edit textarea:focus { outline: none; border-color: #3487FF; }
+.comment-edit .img-preview { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0; }
+.comment-edit .img-preview .thumb { position: relative; width: 60px; height: 60px; }
+.comment-edit .img-preview .thumb img { width: 60px; height: 60px; object-fit: cover; border-radius: 4px; border: 1px solid #e5e6eb; }
+.comment-edit .img-preview .thumb .remove { position: absolute; top: -4px; right: -4px; width: 16px; height: 16px; background: #f53f3f; color: #fff; border-radius: 50%; text-align: center; line-height: 16px; font-size: 10px; cursor: pointer; }
+.comment-edit .btns { margin-top: 6px; display: flex; gap: 6px; justify-content: flex-end; }
+.btn-primary { background: #3487FF; color: #fff; border: none; padding: 4px 14px; border-radius: 4px; font-size: 12px; cursor: pointer; }
+.btn-primary:hover { background: #2870d9; }
+.btn-cancel { background: #fff; color: #606266; border: 1px solid #d9d9d9; padding: 4px 14px; border-radius: 4px; font-size: 12px; cursor: pointer; }
+.img-viewer { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 999; display: none; align-items: center; justify-content: center; cursor: zoom-out; }
+.img-viewer.show { display: flex; }
+.img-viewer img { max-width: 90vw; max-height: 90vh; border-radius: 8px; }
+.img-viewer .close-hint { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,0.7); font-size: 13px; }
+.comment-type-row { display: flex; gap: 6px; align-items: center; margin: 6px 0; }
+.comment-type-row select { flex: 1; height: 26px; padding: 0 8px; border: 1px solid #d9d9d9; border-radius: 4px; font-size: 12px; color: #4e5969; background: #fff; }
+.comment-type-tag { display: inline-block; font-size: 10px; padding: 1px 6px; border-radius: 3px; margin-right: 6px; vertical-align: 1px; }
+.comment-type-tag.t-note { background: #f2f3f5; color: #86929c; }
+.comment-type-tag.t-add { background: #e8ffea; color: #00b42a; border: 1px solid #b9f2c2; }
+.comment-type-tag.t-del { background: #ffece8; color: #f53f3f; border: 1px solid #ffccc7; }
+.comment-type-tag.t-text { background: #e8f3ff; color: #3487ff; border: 1px solid #b6dfff; }
+.comment-type-tag.t-verify { background: #fff3e8; color: #ff7d00; border: 1px solid #ffd6a8; }
+.comment-type-tag.t-ai { background: #f5e8ff; color: #722ed1; border: 1px solid #d6b3ff; }
+.comment-type-tag.t-feature { background: #e8fff3; color: #00b87a; border: 1px solid #b3f2d4; }
+.comment-type-tag.t-style { background: #fff0f6; color: #eb2f96; border: 1px solid #ffd6e7; }
+.comment-type-tag.t-component { background: #fffbe6; color: #d4b106; border: 1px solid #fff1b8; }
+.comment-filter { margin-bottom: 8px; }
+.comment-filter select { width: 100%; height: 28px; padding: 0 8px; border: 1px solid #e5e6eb; border-radius: 4px; font-size: 12px; color: #4e5969; background: #fff; }
+.comment-sort { display: flex; gap: 6px; margin-bottom: 12px; }
+.comment-sort button { flex: 1; background: #fff; border: 1px solid #e5e6eb; border-radius: 4px; font-size: 11px; padding: 4px 0; cursor: pointer; color: #86929c; }
+.comment-sort button.active { background: #e8f3ff; border-color: #3487ff; color: #3487ff; font-weight: 500; }
+.comment-toolbar { display: flex; gap: 6px; margin-bottom: 10px; }
+.comment-toolbar button { flex: 1; background: #fff; border: 1px solid #d9d9d9; border-radius: 4px; font-size: 12px; padding: 5px 0; cursor: pointer; color: #4e5969; }
+.comment-toolbar button:hover { border-color: #3487FF; color: #3487FF; }
+/* ===== 飞书式评论组件 CSS 结束 ===== */
+</style>
+</head>
+<body>
+
+<!-- ===== 版本导航条 ===== -->
+<div class="version-bar">
+  <span class="vb-current">📌 迭代版 · 第2次迭代（最新）</span>
+  <div class="vb-right-actions">
+    <button class="vb-badge-toggle" id="badgeToggleBtn" onclick="toggleBadges()" title="显示/隐藏原型上的产品说明角标">
+      <span id="badgeToggleIcon">🔵</span>
+      <span id="badgeToggleText">隐藏角标</span>
+    </button>
+    <button class="vb-spec-btn" id="specTopBtn" onclick="toggleSpecPanel()">
+      <span>📋 产品说明</span>
+      <span class="spec-badge" id="specBadge" style="display:none;">0</span>
+    </button>
+    <div class="vb-dropdown">
+      <button class="vb-drop-btn" onclick="document.getElementById('vbMenu').classList.toggle('show')">历史版本 ▾</button>
+      <div class="vb-drop-menu" id="vbMenu">
+        <a class="current" href="#">● 迭代版 · 第2次（当前）</a>
+        <div class="vb-drop-sep"></div>
+        <div style="padding:4px 16px;font-size:11px;color:#86929c;">最近迭代快照（保留3个）</div>
+        <a href="../iterations/原型_智能发货_迭代2_0709.html">⏱ 迭代2 · 0709（本次）</a>
+        <a href="../iterations/原型_智能发货_迭代1_0709.html">⏱ 迭代1 · 0709</a>
+        <div class="vb-drop-sep"></div>
+        <div style="padding:4px 16px;font-size:11px;color:#86929c;">评审版</div>
+        <a href="../milestones/原型_智能发货_v1_0708评审版.html">🔒 v1 · 0708 评审版</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 飞书式评论组件 HTML 骨架 ===== -->
+<div class="selection-toolbar" id="toolbar">
+  <button onclick="onCommentSelected()">评论</button>
+</div>
+
+<!-- 日志弹窗（两个Tab：操作记录/计算过程） -->
+<div class="log-modal-mask" id="logModalMask">
+  <div class="log-modal">
+    <div class="log-modal-header">
+      <h3 id="logModalTitle">发货明细日志</h3>
+      <button class="log-modal-close" onclick="closeLogModal()">×</button>
+    </div>
+    <div class="log-modal-tabs">
+      <div class="log-modal-tab active" onclick="switchLogTab('op')">操作记录</div>
+      <div class="log-modal-tab" onclick="switchLogTab('calc')">计算过程</div>
+    </div>
+    <div class="log-modal-body">
+      <div class="log-op-record show" id="logOpRecord"></div>
+      <div class="log-calc-trace" id="logCalcTrace"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 浮动评论气泡（在被标注文字右下方） -->
+<div class="comment-popover" id="popover">
+  <div class="pop-arrow"></div>
+  <div class="pop-quote" id="popQuote"></div>
+  <div class="pop-type-row">
+    <select id="popType">
+      <option value="note">仅记录</option>
+      <option value="text">改动被标注的文案</option>
+      <option value="style">改动被标注的样式</option>
+      <option value="component">改动被标注的组件</option>
+      <option value="verify">待业务核实/提供</option>
+      <option value="ai">需AI讨论后改动</option>
+      <option value="feature">新增功能/字段</option>
+      <option value="add">列表新增查询条件</option>
+      <option value="del">删除</option>
+    </select>
+  </div>
+  <textarea id="popInput" placeholder="输入评论内容…（回车发送，Shift+回车换行）"></textarea>
+  <div class="pop-btns">
+    <button class="btn-cancel" onclick="closePopover()">取消</button>
+    <button class="btn-primary" onclick="savePopover()">发送</button>
+  </div>
+</div>
+<div class="comment-toggle-btn" id="toggleBtn" onclick="openPanel()">
+  评论
+  <span class="badge" id="totalBadge" style="display:none;">0</span>
+</div>
+<div class="img-viewer" id="imgViewer" onclick="closeImgViewer()">
+  <img id="imgViewerImg" src="">
+  <div class="close-hint">点击任意处关闭</div>
+</div>
+
+<div class="page-root">
+<div class="content" id="content">
+
+<!-- 顶部导航：采购 active（智能发货在采购模块下） -->
+<div class="topbar">
+  <div class="logo">信诚ERP</div>
+  <div class="top-menus">
+    <div class="top-menu-item">信诚BI</div>
+    <div class="top-menu-item">销售</div>
+    <div class="top-menu-item">商品</div>
+    <div class="top-menu-item">PMC</div>
+    <div class="top-menu-item active">采购</div>
+    <div class="top-menu-item">头程</div>
+    <div class="top-menu-item">仓库</div>
+    <div class="top-menu-item">订单</div>
+    <div class="top-menu-item">物流</div>
+  </div>
+</div>
+
+<div class="layout">
+  <!-- 侧边栏：采购模块真实分组，智能发货在"计划需求及发货"下 -->
+  <div class="sidebar">
+    <div class="group-title">计划需求及发货</div>
+    <div class="menu-item">多平台备货分析</div>
+    <div class="menu-item">多平台备货计划待确认</div>
+    <div class="menu-item">备库需求单</div>
+    <div class="menu-item">预发货计划</div>
+    <div class="menu-item">发货计划</div>
+    <div class="menu-item active">智能发货</div>
+    <div class="group-title">采购管理</div>
+    <div class="menu-item">下单待提交</div>
+    <div class="menu-item">审核采购单</div>
+    <div class="menu-item">采购单管理</div>
+    <div class="group-title">产品管理</div>
+    <div class="menu-item">产品列表</div>
+  </div>
+
+  <div class="main">
+    <div class="breadcrumb">
+      首页 <span class="sep">/</span> 采购 <span class="sep">/</span> 备货需求及发货 <span class="sep">/</span> <span class="cur">智能发货</span>
+    </div>
+
+    <!-- 页面级Tab（FBA发货建议 / 海外仓发货建议） -->
+    <div class="page-tabs">
+      <div class="page-tab-item" data-page="fba">FBA发货建议</div>
+      <div class="page-tab-item active" data-page="overseas">海外仓发货建议</div>
+    </div>
+
+    <!-- 查询条件区（平铺） -->
+    <div class="query-bar">
+      <div class="query-row">
+        <div class="query-item"><label>PR单号</label><input class="input" placeholder="如 PR202607030009" /></div>
+        <div class="query-item"><label>SKU</label><input class="input" placeholder="请输入" /></div>
+        <div class="query-item"><label>国家</label>
+          <select class="input select"><option>请选择</option><option>美国(US)</option><option>英国(UK)</option><option>德国(DE)</option><option>法国(FR)</option></select>
+        </div>
+        <div class="query-item"><label>运营人员</label><input class="input" placeholder="请输入" /></div>
+        <div class="query-item"><label>需求日期</label>
+          <div class="date-range">
+            <input type="text" placeholder="开始日期" />
+            <span class="date-sep">~</span>
+            <input type="text" placeholder="结束日期" />
+          </div>
+        </div>
+        <div class="query-item"><label>截仓发货日</label>
+          <div class="date-range">
+            <input type="text" placeholder="开始日期" />
+            <span class="date-sep">~</span>
+            <input type="text" placeholder="结束日期" />
+          </div>
+        </div>
+        <div class="query-item"><label>可售天数</label>
+          <select class="input select"><option>请选择</option><option>&lt;15天（紧急）</option><option>15-30天</option><option>30-60天</option><option>&gt;60天</option></select>
+        </div>
+        <div class="query-item"><label>备货方式</label>
+          <select class="input select"><option>请选择</option><option>普通发货</option><option>外验回仓</option><option>工厂直发</option></select>
+        </div>
+        <div class="query-item"><label>目的仓</label><input class="input" placeholder="请输入" /></div>
+        <div class="query-item"><label>货源状态</label>
+          <select class="input select"><option>请选择</option><option>现货可发</option><option>待入库</option><option>待采购</option></select>
+        </div>
+        <div class="query-item"><label>物流属性</label>
+          <select class="input select"><option>请选择</option><option>普货</option><option>带电</option><option>带磁</option><option>液体</option><option>粉末</option></select>
+        </div>
+        <div class="query-item"><label>运输方式</label>
+          <select class="input select"><option>请选择</option><option>快递</option><option>空运</option><option>快船</option><option>卡航</option><option>卡航整柜</option><option>铁路</option><option>慢船</option><option>海运整柜</option></select>
+        </div>
+        <div class="query-actions">
+          <button class="op-btn primary">查询</button>
+          <button class="op-btn">重置</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab（对齐批次状态机4态：待确认/待审核/已生成/已驳回，按明细条数统计） -->
+    <div class="el-tabs">
+      <div class="tab-item active" data-tab="pending">待确认 <span class="count">(42)</span></div>
+      <div class="tab-item" data-tab="review">待审核 <span class="count">(18)</span></div>
+      <div class="tab-item" data-tab="done">已生成 <span class="count">(312)</span></div>
+      <div class="tab-item" data-tab="rejected">已驳回 <span class="count">(5)</span></div>
+    </div>
+
+    <!-- 批量操作条 -->
+    <div class="batch-bar">
+      <span>已选 <span class="sel-count">3</span> 条明细</span>
+      <button class="op-btn sm">批量调整</button>
+      <button class="op-btn sm">美国配置比例</button>
+      <button class="op-btn sm" onclick="alert('已对勾选明细重新计算发货建议\n→ 基于最新销量/库存/入库数据重新拆批')">重新计算</button>
+      <span class="muted" style="margin-left:auto;">智能拆批每日定时0点执行 · 数据更新日：2026-07-20 · 更新成功45条发货建议，失败0条</span>
+    </div>
+
+    <!-- 数据表格（vxe-grid 结构） -->
+    <div class="table-wrap">
+    <table class="data-table">
+    <thead>
+    <!-- 信诚式：单行分组表头（每列是一个信息分组，单元格内纵向堆叠子字段。可拖动改宽） -->
+    <tr>
+      <th style="width:40px;"><span class="vxe-checkbox checked"></span></th>
+      <th style="width:200px; min-width:200px;">商品信息<div class="col-resizer"></div></th>
+      <th style="width:200px; min-width:200px;">采购申请信息<div class="col-resizer"></div></th>
+      <th style="width:210px; min-width:210px;">采购单信息<div class="col-resizer"></div></th>
+      <th style="width:180px; min-width:180px;">销售信息<div class="col-resizer"></div></th>
+      <th style="width:160px; min-width:160px;">单箱尺寸信息(商品)<div class="col-resizer"></div></th>
+      <th style="width:200px; min-width:200px;">发货方式<div class="col-resizer"></div></th>
+      <th style="width:640px; min-width:640px;">智能拆批<div class="col-resizer"></div></th>
+      <th style="width:90px; min-width:90px;" class="th-fixed-op">操作</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    <tr class="row-main">
+      <td><span class="vxe-checkbox checked"></span></td>
+      <!-- 商品信息 -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-value col-code">8143903</span></div>
+        <div class="field-line"><span class="muted">马自达MX-5防水车罩</span></div>
+        <div class="field-line"><span class="field-label">活跃度:</span> <span class="tag tag-key">重点</span></div>
+        <div class="field-line"><span class="field-label">物流属性:</span> <span class="field-value">普货</span></div>
+        <div class="field-line"><span class="field-label">组合SKU:</span> <span class="field-value">否</span></div>
+        <div class="field-line"><span class="field-label">定制化:</span> <span class="field-value">否</span></div>
+      </div></td>
+      <!-- 采购申请信息 -->
+      <td><div class="field-stack">
+        <div class="field-line key"><span class="field-label">PR单号:</span> <span class="field-value col-code">PR202607030009</span></div>
+        <div class="field-line key"><span class="field-label">PR需求数:</span> <span class="field-value metric">100</span></div>
+        <div class="field-line"><span class="field-label">默认运输方式:</span> <span class="field-value">空运</span></div>
+        <div class="field-line"><span class="field-label">需求日期:</span> <span class="field-value">2026-07-03</span></div>
+      </div></td>
+      <!-- 采购单信息 -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">PO单号:</span> <span class="field-value col-code">PO202607030012</span></div>
+        <div class="field-line"><span class="field-label">备货方式:</span> <span class="field-value">普通发货</span></div>
+        <div class="field-line key"><span class="field-label">PO下单数:</span> <span class="field-value metric">100</span></div>
+        <div class="field-line"><span class="field-label">入库数:</span> <span class="field-value metric">100</span></div>
+      </div></td>
+      <!-- 销售信息 -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">国家:</span> <span class="field-value">英国(UK)</span></div>
+        <div class="field-line"><span class="field-label">运营人员:</span> <span class="field-value">ShirleyLiu</span></div>
+        <div class="field-line key"><span class="field-label">可售天数:</span> <span class="field-value metric">8天</span> <span class="warn-text">⚠ 低于安全库存</span></div>
+        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">橙联英国仓</span></div>
+      </div></td>
+      <!-- 单箱尺寸信息(商品) -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">长×宽×高:</span> <span class="field-value">42×42×43 cm</span></div>
+        <div class="field-line"><span class="field-label">单箱数量:</span> <span class="field-value">16</span></div>
+        <div class="field-line"><span class="field-label">单箱重量:</span> <span class="field-value">8.00 kg</span></div>
+      </div></td>
+      <!-- 发货方式 -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">发货仓:</span> <span class="field-value">深圳-02仓</span></div>
+        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">橙联英国仓</span></div>
+        <div class="field-line"><span class="field-label">计费重:</span> <span class="field-value">120 kg (抛率85%)</span></div>
+        <div class="field-line"><span class="field-label">实际重/体积重/体积:</span> <span class="field-value muted">102kg / 141kg / 1.20m³</span></div>
+      </div></td>
+      <!-- 智能拆批（信诚式嵌套子表格：复选框+可编辑数量+货源状态+底部按钮区） -->
+      <td>
+        <table class="nested-table">
+          <thead><tr>
+            <th class="nt-ck"><span class="vxe-checkbox checked"></span></th>
+            <th style="width:24px;">#</th>
+            <th>批次</th>
+            <th>数量</th>
+            <th>货源状态</th>
+            <th>运输</th>
+            <th>截仓发货日</th>
+            <th>状态</th>
+          </tr></thead>
+          <tbody>
+            <tr>
+              <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
+              <td>1</td>
+              <td><span class="batch-type urgent">急</span><span class="batch-urgency urgent">今日必确认</span></td>
+              <td><input class="nt-input" value="40" /></td>
+              <td><span class="src-stock">现货可发</span></td>
+              <td>快递<span class="ship-level up">↑升</span></td>
+              <td>7/24（周四）</td>
+              <td><span class="tag tag-orange">待确认</span></td>
+            </tr>
+            <tr>
+              <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
+              <td>2</td>
+              <td><span class="batch-type normal">正常</span><span class="batch-urgency normal">本周内</span></td>
+              <td><input class="nt-input" value="60" /></td>
+              <td><span class="src-stock">现货可发</span></td>
+              <td>快船<span class="ship-level down">↓降</span></td>
+              <td>7/24（周四）</td>
+              <td><span class="tag tag-orange">待确认</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="batch-summary">已勾选 <span class="sum-num sel-qty">100</span> 件 / PR需 <span class="sum-num">100</span> / 现货可用 <span class="sum-num">100</span> · <span class="countdown">英国仓可售8天，今日确认7/10前到货最稳</span></div>
+        <div class="nt-actions">
+          <button class="nt-btn primary">确认发货批次</button>
+          <button class="nt-btn link">新增批次</button>
+        </div>
+      </td>
+      <td class="td-op"><button class="nt-btn link" data-act="log">日志</button></td>
+    </tr>
+
+    <tr class="row-main">
+      <td><span class="vxe-checkbox checked"></span></td>
+      <!-- 商品信息 -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-value col-code">7234012</span></div>
+        <div class="field-line"><span class="muted">LED车灯模组 H7</span></div>
+        <div class="field-line"><span class="field-label">活跃度:</span> <span class="tag tag-new">新品</span></div>
+        <div class="field-line"><span class="field-label">物流属性:</span> <span class="field-value">普货</span></div>
+        <div class="field-line"><span class="field-label">组合SKU:</span> <span class="field-value">否</span></div>
+        <div class="field-line"><span class="field-label">定制化:</span> <span class="field-value">否</span></div>
+      </div></td>
+      <!-- 采购申请信息 -->
+      <td><div class="field-stack">
+        <div class="field-line key"><span class="field-label">PR单号:</span> <span class="field-value col-code">PR202607020016</span></div>
+        <div class="field-line key"><span class="field-label">PR需求数:</span> <span class="field-value metric">500</span></div>
+        <div class="field-line"><span class="field-label">默认运输方式:</span> <span class="field-value">慢船</span></div>
+        <div class="field-line"><span class="field-label">需求日期:</span> <span class="field-value">2026-07-02</span></div>
+      </div></td>
+      <!-- 采购单信息（2个PO，默认展示1个，展开看第2个） -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">PO单号:</span> <span class="field-value col-code">PO202607020022</span></div>
+        <div class="field-line"><span class="field-label">备货方式:</span> <span class="field-value">普通发货</span></div>
+        <div class="field-line key"><span class="field-label">PO下单数:</span> <span class="field-value metric">500</span></div>
+        <div class="field-line"><span class="field-label">入库数:</span> <span class="field-value metric">300</span><span class="muted">(余200预7/20到)</span></div>
+      </div></td>
+      <!-- 销售信息 -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">国家:</span> <span class="field-value">德国(DE)</span></div>
+        <div class="field-line"><span class="field-label">运营人员:</span> <span class="field-value">MaxZou</span></div>
+        <div class="field-line key"><span class="field-label">可售天数:</span> <span class="field-value metric">45天</span> <span class="ok-text">正常</span></div>
+        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">橙联德国仓</span></div>
+      </div></td>
+      <!-- 单箱尺寸信息(商品) -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">长×宽×高:</span> <span class="field-value">35×28×30 cm</span></div>
+        <div class="field-line"><span class="field-label">单箱数量:</span> <span class="field-value">24</span></div>
+        <div class="field-line"><span class="field-label">单箱重量:</span> <span class="field-value">1.80 kg</span></div>
+      </div></td>
+      <!-- 发货方式 -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">发货仓:</span> <span class="field-value">深圳-02仓</span></div>
+        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">橙联德国仓</span></div>
+        <div class="field-line"><span class="field-label">计费重:</span> <span class="field-value">240 kg (抛率30%)</span></div>
+        <div class="field-line"><span class="field-label">实际重/体积重/体积:</span> <span class="field-value muted">185kg / 260kg / 1.75m³</span></div>
+      </div></td>
+      <!-- 智能拆批（嵌套子表格：基于需求数500拆3批，部分入库，演示🟡待入库场景） -->
+      <td>
+        <table class="nested-table">
+          <thead><tr>
+            <th class="nt-ck"><span class="vxe-checkbox checked"></span></th>
+            <th style="width:24px;">#</th>
+            <th>批次</th>
+            <th>数量</th>
+            <th>货源状态</th>
+            <th>运输</th>
+            <th>截仓发货日</th>
+            <th>状态</th>
+          </tr></thead>
+          <tbody>
+            <tr>
+              <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
+              <td>1</td>
+              <td><span class="batch-type slow">缓</span><span class="batch-urgency slow">本月内</span></td>
+              <td><input class="nt-input" value="200" /></td>
+              <td><span class="src-stock">现货可发</span></td>
+              <td>慢船</td>
+              <td>7/24（周四）</td>
+                            <td><span class="tag tag-orange">待确认</span></td>
+            </tr>
+            <tr>
+              <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
+              <td>2</td>
+              <td><span class="batch-type slow">缓</span><span class="batch-urgency slow">本月内</span></td>
+              <td><input class="nt-input" value="100" /></td>
+              <td><span class="src-stock">现货可发</span></td>
+              <td>慢船</td>
+              <td>7/24（周四）</td>
+                            <td><span class="tag tag-orange">待确认</span></td>
+            </tr>
+            <tr>
+              <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
+              <td>3</td>
+              <td><span class="batch-type slow">缓</span><span class="batch-urgency slow">本月内</span></td>
+              <td><input class="nt-input" value="200" /></td>
+              <td><span class="src-incoming">待入库</span><span class="muted">（预7/20到）</span></td>
+              <td>慢船</td>
+              <td>7/24（周四）</td>
+                            <td><span class="tag tag-orange">待确认</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="batch-summary">已勾选 <span class="sum-num sel-qty">500</span> 件 / PR需 <span class="sum-num">500</span> / 现货可用 <span class="sum-num">300</span> · <span class="countdown-ok">德国仓可售45天从容，3批控仓储（批次3等7/20入库）</span></div>
+        <div class="nt-actions">
+          <button class="nt-btn primary">确认发货批次</button>
+          <button class="nt-btn link">新增批次</button>
+        </div>
+      </td>
+      <td class="td-op"><button class="nt-btn link" data-act="log">日志</button></td>
+    </tr>
+
+    <tr class="row-main">
+      <td><span class="vxe-checkbox checked"></span></td>
+      <!-- 商品信息 -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-value col-code">5560890</span></div>
+        <div class="field-line"><span class="muted">电动车充气泵</span></div>
+        <div class="field-line"><span class="field-label">活跃度:</span> <span class="tag tag-rush">冲量</span></div>
+        <div class="field-line"><span class="field-label">物流属性:</span> <span class="field-value">带电</span></div>
+        <div class="field-line"><span class="field-label">组合SKU:</span> <span class="field-value">否</span></div>
+        <div class="field-line"><span class="field-label">定制化:</span> <span class="field-value">否</span></div>
+      </div></td>
+      <!-- 采购申请信息 -->
+      <td><div class="field-stack">
+        <div class="field-line key"><span class="field-label">PR单号:</span> <span class="field-value col-code">PR202607020011</span></div>
+        <div class="field-line key"><span class="field-label">PR需求数:</span> <span class="field-value metric">300</span></div>
+        <div class="field-line"><span class="field-label">默认运输方式:</span> <span class="field-value">快船</span></div>
+        <div class="field-line"><span class="field-label">需求日期:</span> <span class="field-value">2026-07-02</span></div>
+      </div></td>
+      <!-- 采购单信息 -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">PO单号:</span> <span class="field-value col-code">PO202607020018</span></div>
+        <div class="field-line"><span class="field-label">备货方式:</span> <span class="field-value">普通发货</span></div>
+        <div class="field-line key"><span class="field-label">PO下单数:</span> <span class="field-value metric">300</span></div>
+        <div class="field-line"><span class="field-label">入库数:</span> <span class="field-value metric">300</span></div>
+      </div></td>
+      <!-- 销售信息 -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">国家:</span> <span class="field-value">法国(FR)</span></div>
+        <div class="field-line"><span class="field-label">运营人员:</span> <span class="field-value">WayZhu</span></div>
+        <div class="field-line key"><span class="field-label">可售天数:</span> <span class="field-value metric">5天</span> <span class="warn-text">⚠ 断货风险</span></div>
+        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">橙联法国仓</span></div>
+      </div></td>
+      <!-- 单箱尺寸信息(商品) -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">长×宽×高:</span> <span class="field-value">50×40×45 cm</span></div>
+        <div class="field-line"><span class="field-label">单箱数量:</span> <span class="field-value">12</span></div>
+        <div class="field-line"><span class="field-label">单箱重量:</span> <span class="field-value">5.60 kg</span></div>
+      </div></td>
+      <!-- 发货方式 -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">发货仓:</span> <span class="field-value">深圳-02仓</span></div>
+        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">橙联法国仓</span></div>
+        <div class="field-line"><span class="field-label">计费重:</span> <span class="field-value">210 kg (抛率60%)</span></div>
+        <div class="field-line"><span class="field-label">实际重/体积重/体积:</span> <span class="field-value muted">168kg / 280kg / 1.50m³</span></div>
+      </div></td>
+      <!-- 智能拆批（嵌套子表格：紧急拆2批，断货风险，货源全现货） -->
+      <td>
+        <table class="nested-table">
+          <thead><tr>
+            <th class="nt-ck"><span class="vxe-checkbox checked"></span></th>
+            <th style="width:24px;">#</th>
+            <th>批次</th>
+            <th>数量</th>
+            <th>货源状态</th>
+            <th>运输</th>
+            <th>截仓发货日</th>
+            <th>状态</th>
+          </tr></thead>
+          <tbody>
+            <tr>
+              <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
+              <td>1</td>
+              <td><span class="batch-type urgent">急</span><span class="batch-urgency urgent">今日必确认</span></td>
+              <td><input class="nt-input" value="200" /></td>
+              <td><span class="src-stock">现货可发</span></td>
+              <td>空运<span class="ship-level up">↑升</span></td>
+              <td>7/24（周四）</td>
+                            <td><span class="tag tag-orange">待确认</span></td>
+            </tr>
+            <tr>
+              <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
+              <td>2</td>
+              <td><span class="batch-type normal">正常</span><span class="batch-urgency normal">本周内</span></td>
+              <td><input class="nt-input" value="100" /></td>
+              <td><span class="src-stock">现货可发</span></td>
+              <td>快船</td>
+              <td>7/24（周四）</td>
+                            <td><span class="tag tag-orange">待确认</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="batch-summary">已勾选 <span class="sum-num sel-qty">300</span> 件 / PR需 <span class="sum-num">300</span> / 现货可用 <span class="sum-num">300</span> · <span class="countdown">⚠ 法国仓可售5天，今日确认7/11前到货，否则断货</span></div>
+        <div class="nt-actions">
+          <button class="nt-btn primary">确认发货批次</button>
+          <button class="nt-btn link">新增批次</button>
+        </div>
+      </td>
+      <td class="td-op"><button class="nt-btn link" data-act="log">日志</button></td>
+    </tr>
+
+    <tr class="row-main row-hold">
+      <td><span class="vxe-checkbox" style="opacity:0.4;"></span></td>
+      <!-- 商品信息 -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-value col-code">8143903</span></div>
+        <div class="field-line"><span class="muted">马自达MX-5防水车罩</span></div>
+        <div class="field-line"><span class="field-label">活跃度:</span> <span class="tag tag-clear">清库</span></div>
+        <div class="field-line"><span class="field-label">物流属性:</span> <span class="field-value">普货</span></div>
+        <div class="field-line"><span class="field-label">组合SKU:</span> <span class="field-value">否</span></div>
+        <div class="field-line"><span class="field-label">定制化:</span> <span class="field-value">否</span></div>
+      </div></td>
+      <!-- 采购申请信息 -->
+      <td><div class="field-stack">
+        <div class="field-line key"><span class="field-label">PR单号:</span> <span class="field-value col-code">PR202607020008</span></div>
+        <div class="field-line key"><span class="field-label">PR需求数:</span> <span class="field-value metric">200</span></div>
+        <div class="field-line"><span class="field-label">默认运输方式:</span> <span class="field-value">快船</span></div>
+        <div class="field-line"><span class="field-label">需求日期:</span> <span class="field-value">2026-07-02</span></div>
+      </div></td>
+      <!-- 采购单信息 -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">PO单号:</span> <span class="field-value muted">—</span></div>
+        <div class="field-line"><span class="field-label">备货方式:</span> <span class="field-value">普通发货</span></div>
+        <div class="field-line"><span class="field-label">状态:</span> <span class="tag tag-gray">未下PO</span></div>
+        <div class="field-line"><span class="field-label">入库数:</span> <span class="field-value muted">—</span></div>
+      </div></td>
+      <!-- 销售信息 -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">国家:</span> <span class="field-value">美国(US)</span></div>
+        <div class="field-line"><span class="field-label">运营人员:</span> <span class="field-value">ShirleyLiu</span></div>
+        <div class="field-line key"><span class="field-label">可售天数:</span> <span class="field-value metric">62天</span> <span class="ok-text">充足</span></div>
+        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">橙联美国仓</span></div>
+      </div></td>
+      <!-- 单箱尺寸信息(商品) -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">长×宽×高:</span> <span class="field-value">42×42×43 cm</span></div>
+        <div class="field-line"><span class="field-label">单箱数量:</span> <span class="field-value">16</span></div>
+        <div class="field-line"><span class="field-label">单箱重量:</span> <span class="field-value">8.00 kg</span></div>
+      </div></td>
+      <!-- 发货方式 -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">发货仓:</span> <span class="field-value">深圳-02仓</span></div>
+        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">橙联美国仓</span></div>
+        <div class="field-line"><span class="field-label">计费重:</span> <span class="field-value muted">—（暂缓不发货）</span></div>
+      </div></td>
+      <!-- 智能拆批（暂缓行：整行置灰，复选框禁选，仅提供新增批次=强制发货入口） -->
+      <td>
+        <table class="nested-table">
+          <thead><tr>
+            <th class="nt-ck"><span class="vxe-checkbox"></span></th>
+            <th style="width:24px;">#</th>
+            <th>批次</th>
+            <th>数量</th>
+            <th>货源状态</th>
+            <th>运输</th>
+            <th>截仓发货日</th>
+            <th>状态</th>
+          </tr></thead>
+          <tbody>
+            <tr class="tr-hold">
+              <td class="nt-ck"><span class="vxe-checkbox"></span></td>
+              <td>—</td>
+              <td><span class="batch-type slow">暂缓</span><span class="batch-urgency slow">无需规划</span></td>
+              <td>200</td>
+              <td><span class="src-purchase">待采购</span></td>
+              <td colspan="3" style="color:var(--text-secondary);">未下PO</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="batch-summary">PR需 <span class="sum-num">200</span> / 现货可用 <span class="sum-num">0</span> · <span class="countdown-ok">美国仓可售62天充足，本轮无需规划发货</span></div>
+        <div class="nt-actions">
+          <button class="nt-btn link">新增批次</button>
+        </div>
+      </td>
+      <td class="td-op"><span class="muted" style="font-size:12px;">—</span></td>
+    </tr>
+
+    </tbody>
+    </table>
+
+    <!-- 分页（vxe-pager 完整结构） -->
+    <div class="pagination">
+      <span class="pg-total">共 42 条</span>
+      <button class="pg-btn jump-btn" disabled title="第一页">«</button>
+      <button class="pg-btn jump-btn" disabled title="上一组">‹‹</button>
+      <button class="pg-btn jump-btn" disabled title="上一页">‹</button>
+      <button class="pg-btn active">1</button>
+      <button class="pg-btn">2</button>
+      <button class="pg-btn">3</button>
+      <span class="pg-sep">/</span>
+      <span style="color:var(--text-regular);">5</span>
+      <button class="pg-btn jump-btn" title="下一页">›</button>
+      <button class="pg-btn jump-btn" title="下一组">››</button>
+      <select class="pg-sizes"><option>10 条/页</option><option selected>20 条/页</option><option>50 条/页</option><option>100 条/页</option></select>
+      <span>前往</span>
+      <input class="pg-goto" type="text" value="1" />
+      <span>页</span>
+    </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 原型内容结束，闭合 content -->
+</div><!-- /content -->
+
+<!-- 右侧评论栏 -->
+<div class="comment-panel" id="panel">
+  <div class="comment-inner">
+    <div class="comment-header">
+      <span class="title">评论 (<span id="panelCount">0</span>)</span>
+      <span class="comment-close" onclick="closePanel()">×</span>
+    </div>
+    <div class="comment-toolbar">
+      <button onclick="exportComments()">导出</button>
+      <button onclick="document.getElementById('importFileInput').click()">导入</button>
+      <input type="file" id="importFileInput" accept="application/json" style="display:none" onchange="importComments(event)">
+    </div>
+    <div class="comment-filter">
+      <select id="typeFilter" onchange="renderAllAnnotations()">
+        <option value="all">全部类型</option>
+        <option value="note">仅记录</option>
+        <option value="text">改文案</option>
+        <option value="style">改样式</option>
+        <option value="component">改组件</option>
+        <option value="verify">待核实</option>
+        <option value="ai">待AI讨论</option>
+        <option value="feature">新增功能</option>
+        <option value="add">加查询条件</option>
+        <option value="del">删除</option>
+      </select>
+    </div>
+    <div id="commentList">
+      <div class="comment-empty">选中正文中的文字<br>点击"评论"来添加评论</div>
+    </div>
+    <div class="comment-edit" id="editArea" style="display:none;">
+      <div id="quotePreview" style="font-size:12px;color:#86929c;background:#fffbe6;border-left:3px solid #fadb14;padding:5px 10px;border-radius:0 4px 4px 0;margin-bottom:6px;line-height:1.5;"></div>
+      <div class="comment-type-row">
+        <select id="editType">
+          <option value="note">仅记录</option>
+          <option value="text">改动被标注的文案</option>
+          <option value="style">改动被标注的样式</option>
+          <option value="component">改动被标注的组件</option>
+          <option value="verify">待业务核实/提供</option>
+          <option value="ai">需AI讨论后改动</option>
+          <option value="feature">新增功能/字段</option>
+          <option value="add">列表新增查询条件</option>
+          <option value="del">删除</option>
+        </select>
+      </div>
+      <div class="edit-toolbar">
+        <button class="tool-btn" onclick="document.getElementById('imgFileInput').click()">图片</button>
+      </div>
+      <textarea id="editInput" placeholder="输入评论内容…（回车发送，Shift+回车换行）"></textarea>
+      <div class="img-preview" id="newImgPreview"></div>
+      <input type="file" id="imgFileInput" accept="image/*" multiple style="display:none" onchange="onImgSelect(event,'new')">
+      <div class="btns">
+        <button class="btn-cancel" onclick="cancelEdit()">取消</button>
+        <button class="btn-primary" onclick="saveEdit()">发送</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div><!-- /page-root -->
+
+<!-- 产品说明全屏页面 -->
+<div class="spec-page" id="specPage">
+  <div class="spec-page-topbar">
+    <button class="spt-back" onclick="closeSpecPage()">← 返回原型</button>
+    <div class="spt-title">产品说明 <span class="spt-sub" id="sptDataSource">给开发看的元素级说明</span></div>
+    <div class="spt-actions">
+      <button class="spt-publish-btn" onclick="publishSpecs()">📦 发布到原型</button>
+      <button class="spt-ai-btn" onclick="aiRecognize()">🤖 AI 按区域汇总</button>
+      <button class="spt-export-btn" onclick="exportSpecs()">导出 JSON</button>
+    </div>
+  </div>
+  <div class="spec-page-toolbar">
+    <input type="text" class="spt-search" id="specSearch" placeholder="搜索元素 / 说明内容..." oninput="renderSpecTable()">
+    <div class="spt-stat" id="specStat">共 <b>0</b> 项，已确认 <b>0</b> 项</div>
+    <div class="spt-expand-actions">
+      <button onclick="expandAllGroups(true)">全部展开</button>
+      <button onclick="expandAllGroups(false)">全部折叠</button>
+    </div>
+  </div>
+  <div class="spec-page-body" id="specPageBody">
+    <div class="spec-empty-state">
+      <span class="ses-icon">📋</span>
+      <div class="ses-text">还没有产品说明<br>点击「AI 按区域汇总」自动识别原型元素并预填<br>或手动新增</div>
+      <button class="ses-btn" onclick="aiRecognize()">🤖 AI 按区域汇总</button>
+    </div>
+  </div>
+</div>
+
+<!-- 内嵌的产品说明数据（发布快照，开发打开即看到；PM 的工作副本在 localStorage） -->
+<script type="application/json" id="spec-embedded-data">[]</script>
+<!-- 内嵌的评论数据（发布快照，开发打开即看到 PM 的评审标注） -->
+<script type="application/json" id="comments-embedded-data">[]</script>
+
+<!-- AI 识别进度遮罩 -->
+<div class="spec-ai-loading" id="specAiLoading">
+  <div class="sal-box">
+    <div class="sal-icon">🤖</div>
+    <div class="sal-text" id="specAiText">正在识别原型结构...</div>
+    <div class="sal-detail" id="specAiDetail">扫描页面元素中</div>
+  </div>
+</div>
+
+<script>
+// === 全局状态 ===
+let currentTab = 'pending';
+
+// === Tab 切换：按状态改变子表格底部按钮（对齐批次状态机4态，每行带日志） ===
+const _logBtn = '<button class="nt-btn link" data-act="log">日志</button>';
+const tabBtnConfig = {
+  pending:  '<button class="nt-btn primary" data-act="confirm">确认发货批次</button><button class="nt-btn link" data-act="add">新增批次</button>',
+  review:   '<button class="nt-btn primary" data-act="approve">审核通过</button><button class="nt-btn danger" data-act="reject">驳回</button>',
+  done:     '<span class="muted" style="font-size:12px;">已生成正式发货批次</span> <button class="nt-btn link" data-act="unapprove" style="margin-left:8px;">反审</button>',
+  rejected: '<button class="nt-btn primary" data-act="redo">重新调整</button>'
+};
+const tabHoldConfig = {
+  pending:  '<button class="nt-btn link">新增批次</button>' + _logBtn,
+  review:   '<span class="muted" style="font-size:12px;">—</span>' + _logBtn,
+  done:     '<span class="muted" style="font-size:12px;">—</span>' + _logBtn,
+  rejected: '<button class="nt-btn link">新增批次</button>' + _logBtn
+};
+
+document.querySelectorAll('.tab-item').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    currentTab = tab.dataset.tab;
+    // 更新按钮区
+    document.querySelectorAll('.nt-actions').forEach((act, idx) => {
+      act.innerHTML = (idx === 3) ? tabHoldConfig[currentTab] : tabBtnConfig[currentTab];
+    });
+    // 已生成批次时：所有复选框禁选 + 清空选中（子表格+主表+表头）
+    const lockAll = (currentTab === 'done');
+    document.querySelectorAll('.nt-ck .vxe-checkbox').forEach(ck => {
+      if (lockAll) {
+        ck.classList.remove('checked');
+        ck.style.opacity = '0.4';
+        ck.style.pointerEvents = 'none';
+      } else if (!ck.closest('.tr-hold')) {
+        ck.style.opacity = '';
+        ck.style.pointerEvents = '';
+      }
+    });
+    // 主表复选框和表头全选
+    document.querySelectorAll('tbody > tr.row-main > td:first-child .vxe-checkbox').forEach(ck => {
+      if (lockAll) { ck.classList.remove('checked'); ck.style.opacity = '0.4'; ck.style.pointerEvents = 'none'; }
+      else if (!ck.closest('.row-hold')) { ck.style.opacity = ''; ck.style.pointerEvents = ''; }
+    });
+    if (headerCk) {
+      if (lockAll) { headerCk.classList.remove('checked'); }
+    }
+    if (lockAll) updateAllSummary();
+    updateMainSelected();
+  });
+});
+
+// === 子表格复选框：点击切换 + 统计行联动 ===
+function updateSummary(table) {
+  let total = 0;
+  table.querySelectorAll('tbody tr').forEach(tr => {
+    const ck = tr.querySelector('.nt-ck .vxe-checkbox');
+    const input = tr.querySelector('.nt-input');
+    if (ck && ck.classList.contains('checked') && input) {
+      total += parseInt(input.value) || 0;
+    }
+  });
+  const cell = table.parentElement.querySelector('.sel-qty');
+  if (cell) cell.textContent = total;
+}
+
+function updateAllSummary() {
+  document.querySelectorAll('.nested-table').forEach(updateSummary);
+}
+
+document.querySelectorAll('.nested-table').forEach(table => {
+  table.querySelectorAll('.nt-ck .vxe-checkbox').forEach(ck => {
+    ck.addEventListener('click', (e) => {
+      e.stopPropagation();
+      // 暂缓行 / 已生成锁定：不可点
+      if (ck.closest('.tr-hold')) return;
+      if (currentTab === 'done') return;
+      ck.classList.toggle('checked');
+      updateSummary(table);
+    });
+  });
+  // 数量输入框变化时，若该行已勾选，重新统计
+  table.querySelectorAll('.nt-input').forEach(inp => {
+    inp.addEventListener('input', () => updateSummary(table));
+  });
+});
+
+// === 主表复选框：切换选中 + 顶部"已选N条"联动 ===
+function updateMainSelected() {
+  let count = 0;
+  document.querySelectorAll('tbody > tr.row-main').forEach(tr => {
+    const ck = tr.querySelector('td:first-child .vxe-checkbox');
+    if (ck && ck.classList.contains('checked')) count++;
+  });
+  const el = document.querySelector('.sel-count');
+  if (el) el.textContent = count;
+}
+
+document.querySelectorAll('tbody > tr.row-main > td:first-child .vxe-checkbox').forEach(ck => {
+  ck.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (currentTab === 'done') return;
+    ck.classList.toggle('checked');
+    updateMainSelected();
+  });
+});
+
+// === 表头全选（主表） ===
+const headerCk = document.querySelector('thead .vxe-checkbox');
+if (headerCk) {
+  headerCk.addEventListener('click', () => {
+    if (currentTab === 'done') return;
+    const willCheck = !headerCk.classList.contains('checked');
+    headerCk.classList.toggle('checked', willCheck);
+    document.querySelectorAll('tbody > tr.row-main > td:first-child .vxe-checkbox').forEach(ck => {
+      if (!ck.closest('.row-hold')) ck.classList.toggle('checked', willCheck);
+    });
+    updateMainSelected();
+  });
+}
+
+// === 子表格底部按钮动作（对齐状态机流转） ===
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-act]');
+  if (!btn) return;
+  const act = btn.dataset.act;
+  const actions = document.querySelectorAll('.nt-actions');
+  // 找到所属行（按钮所在的 nt-actions 的父 td 的父 tr）
+  const row = btn.closest('tr.row-main');
+  const sku = row ? (row.querySelector('.col-code')?.textContent || '该明细') : '该明细';
+  const prNo = row ? (row.querySelector('.field-line.key .col-code')?.textContent || '') : '';
+
+  if (act === 'confirm') {
+    alert(`已确认 ${sku} 的勾选批次\n→ 批次状态转为「待审核」，等待运营审核`);
+  } else if (act === 'add') {
+    alert(`新增批次\n→ 为 ${sku} 手动添加一个发货批次（如强制发货场景）`);
+  } else if (act === 'approve') {
+    if (confirm(`审核通过 ${sku} 的发货批次？\n→ 批次状态转为「已生成」，生成正式发货批次`)) {
+      alert('✓ 已生成正式发货批次');
+    }
+  } else if (act === 'reject') {
+    const reason = prompt(`驳回 ${sku} 的发货批次\n请填写驳回原因（将退回给计划人员重新调整）：`, '');
+    if (reason !== null) {
+      alert(reason.trim() ? `✓ 已驳回\n原因：${reason}\n→ 批次状态转为「已驳回」` : '✓ 已驳回（未填原因）\n→ 批次状态转为「已驳回」');
+    }
+  } else if (act === 'unapprove') {
+    if (confirm(`反审 ${sku} 的已生成批次？\n→ 退回「待审核」，由运营重新审核`)) {
+      alert('✓ 已反审，退回待审核');
+    }
+  } else if (act === 'redo') {
+    alert(`重新调整 ${sku}\n→ 批次状态退回「待确认」，计划人员可重新拆批`);
+  } else if (act === 'log') {
+    openLogModal(sku, prNo);
+  }
+});
+
+// === 日志弹窗（两个Tab：操作记录/计算过程） ===
+function openLogModal(sku, prNo) {
+  document.getElementById('logModalTitle').textContent = '发货明细日志' + (prNo ? '（' + prNo + '）' : '');
+  // 操作记录
+  document.getElementById('logOpRecord').innerHTML = [
+    {time:'2026-07-14 09:00', action:'系统自动计算发货建议（基于最新销量/库存）'},
+    {time:'2026-07-14 09:00', action:'生成拆批建议：2批（快船60+快递40）'},
+    {time:'2026-07-13 09:00', action:'系统自动计算，前次建议已作废'},
+    {time:'2026-07-07 14:30', action:'关联PO-022入库100件，触发拆批重算'},
+    {time:'2026-07-05 10:15', action:'PR审核通过，建立发货明细跟踪'},
+  ].map(r => '<div class="log-op-item"><span class="log-op-time">' + r.time + '</span><span class="log-op-action">' + r.action + '</span></div>').join('');
+  // 计算过程
+  document.getElementById('logCalcTrace').textContent =
+    '【发货建议计算日志】' + sku + '\n' +
+    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n' +
+    '计算时间：2026-07-14 09:00\n' +
+    '数据基准：库存=1000件 | 日销=50件/天 | 安全天数=10 | 目标库存=17天\n\n' +
+    '第一步 库存推演：\n' +
+    '  安全线触发日 D* = 第20天（2026-08-03）\n\n' +
+    '第二步 时间窗口（含截仓）：\n' +
+    '  最早PO审核日 = 2026-07-01\n' +
+    '  当前在供应商交期LT段内：是\n' +
+    '  供应商交期LT段剩余天数 = 5天\n' +
+    '  最早可发货日 = 7.14 + 5 + 7 = 7.26（周日）\n' +
+    '  物流截仓日（英国/省内）= 周四\n' +
+    '  7.26 > 本周四(7.24) → 顺延\n' +
+    '  截仓预计发货日 = 7.31（下周四）\n' +
+    '  默认运输上架日 = 7.31 + 35 + 3 = 9.07\n\n' +
+    '第三步 判断要不要发：\n' +
+    '  D*(8.03) 预计库存=8 < 安全天数(10) → 触发\n\n' +
+    '第四步 决策怎么发：\n' +
+    '  D*(8.03) < 默认上架日(9.07) → 来不及\n' +
+    '  毛利=25% ≥ 20% → 升级+默认\n\n' +
+    '第五步 计算发多少：\n' +
+    '  默认运输量 = max(0, 17-2) = 15天 = 750件\n' +
+    '  升级运输量 = 最小k → k=10天 = 500件\n\n' +
+    '第六步 装箱调整：\n' +
+    '  默认：750/16=46.9箱 → 47箱 → 752件\n' +
+    '  升级：500/16=31.25箱 → 32箱 → 512件\n' +
+    '  总和=1264 > PR需(1250) → 从默认扣减14 → 默认738';
+  document.getElementById('logModalMask').classList.add('show');
+  switchLogTab('op');
+}
+function closeLogModal() {
+  document.getElementById('logModalMask').classList.remove('show');
+}
+function switchLogTab(tab) {
+  document.querySelectorAll('.log-modal-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.log-modal-tab').forEach(t => {
+    if ((tab === 'op' && t.textContent === '操作记录') || (tab === 'calc' && t.textContent === '计算过程')) t.classList.add('active');
+  });
+  document.getElementById('logOpRecord').classList.toggle('show', tab === 'op');
+  document.getElementById('logCalcTrace').classList.toggle('show', tab === 'calc');
+}
+
+// === 多PO展示更多（折叠/展开） ===
+document.querySelectorAll('.po-more').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const extra = btn.previousElementSibling;
+    const isOpen = extra.classList.contains('show');
+    if (isOpen) {
+      extra.classList.remove('show');
+      btn.textContent = '▾ 展开第2个PO（共2个）';
+    } else {
+      extra.classList.add('show');
+      btn.textContent = '▴ 收起';
+    }
+  });
+});
+
+// === 列拖动改宽 ===
+document.querySelectorAll('th .col-resizer').forEach(resizer => {
+  resizer.addEventListener('mousedown', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const th = resizer.parentElement;
+    resizer.classList.add('dragging');
+    const startX = e.pageX;
+    const startWidth = th.offsetWidth;
+    const onMove = (ev) => {
+      const newWidth = Math.max(120, startWidth + (ev.pageX - startX));
+      th.style.width = newWidth + 'px';
+    };
+    const onUp = () => {
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup', onUp);
+      resizer.classList.remove('dragging');
+    };
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+  });
+});
+</script>
+
+<!-- ===== 飞书式评论组件 JS（含类型/回车/刷新恢复/筛选/导出导入）===== -->
+<script>
+let annotations = [];
+let nextId = 1;
+let pendingSelection = null;
+let editingId = null;
+let pendingImages = [];
+
+// 评论数据分层（同产品说明）：
+//   1. 内嵌 JSON（id="comments-embedded-data"）= 发布快照
+//   2. localStorage（feishu_comments_sfp）= PM 工作副本
+function getEmbeddedComments() {
+  try {
+    const el = document.getElementById('comments-embedded-data');
+    if (!el) return [];
+    const data = JSON.parse(el.textContent.trim() || '[]');
+    return Array.isArray(data) ? data : (data.comments || []);
+  } catch(e) { return []; }
+}
+
+function loadAnnotations() {
+  const embedded = getEmbeddedComments();
+  let local = [];
+  try { local = JSON.parse(localStorage.getItem('feishu_comments_sfp') || '[]'); } catch(e) { local = []; }
+  // 工作副本有数据就用工作副本（PM 继续编辑），否则用内嵌快照（开发看到的）
+  if (local.length > 0) {
+    annotations = local;
+  } else if (embedded.length > 0) {
+    annotations = embedded;
+    localStorage.setItem('feishu_comments_sfp', JSON.stringify(embedded));
+  } else {
+    annotations = [];
+  }
+  nextId = annotations.length > 0 ? Math.max(...annotations.map(a=>a.id)) + 1 : 1;
+}
+function saveAnnotations() { localStorage.setItem('feishu_comments_sfp', JSON.stringify(annotations)); }
+function p(n) { return String(n).padStart(2,'0'); }
+function nowStr() { const n = new Date(); return n.getFullYear()+'-'+p(n.getMonth()+1)+'-'+p(n.getDate())+' '+p(n.getHours())+':'+p(n.getMinutes()); }
+function escapeHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+document.addEventListener('mouseup', function(e) {
+  if (e.target.closest('#toolbar') || e.target.closest('#panel') || e.target.closest('#toggleBtn') || e.target.closest('#imgViewer')) return;
+  setTimeout(function() {
+    const sel = window.getSelection();
+    const text = sel.toString().trim();
+    if (text.length > 0 && text.length < 200) {
+      const range = sel.getRangeAt(0);
+      if (!document.getElementById('content').contains(range.commonAncestorContainer)) return;
+      pendingSelection = { text: text, range: range.cloneRange() };
+      const rect = range.getBoundingClientRect();
+      const tb = document.getElementById('toolbar');
+      tb.style.left = (rect.left + rect.width/2 - 30 + window.scrollX) + 'px';
+      tb.style.top = (rect.top - 38 + window.scrollY) + 'px';
+      tb.classList.add('show');
+    } else {
+      document.getElementById('toolbar').classList.remove('show');
+      pendingSelection = null;
+    }
+  }, 10);
+});
+
+function onCommentSelected() {
+  if (!pendingSelection) return;
+  document.getElementById('toolbar').classList.remove('show');
+  // 浮动气泡定位在被标注文字右下方
+  const rect = pendingSelection.range.getBoundingClientRect();
+  const pop = document.getElementById('popover');
+  document.getElementById('popQuote').textContent = '"' + pendingSelection.text + '"';
+  document.getElementById('popInput').value = '';
+  document.getElementById('popType').value = 'note';
+  let left = rect.left + window.scrollX + 10;
+  let top = rect.bottom + window.scrollY + 8;
+  const maxLeft = window.scrollX + window.innerWidth - 300;
+  if (left > maxLeft) left = maxLeft;
+  pop.style.left = left + 'px';
+  pop.style.top = top + 'px';
+  pop.classList.add('show');
+  openPanel();
+  setTimeout(function(){ document.getElementById('popInput').focus(); }, 100);
+}
+
+function closePopover() {
+  document.getElementById('popover').classList.remove('show');
+}
+
+function savePopover() {
+  const text = document.getElementById('popInput').value.trim();
+  if (!text || !pendingSelection) { closePopover(); return; }
+  const type = document.getElementById('popType').value || 'note';
+  const id = nextId++;
+  annotations.push({ id: id, quote: pendingSelection.text, text: text, type: type, time: nowStr(), images: [] });
+  try { const range = pendingSelection.range; const span = document.createElement('span'); span.className = 'annotated-mark'; span.dataset.annotationId = id; span.addEventListener('click', function() { scrollToAnnotation(id); }); range.surroundContents(span); }
+  catch(e) { try { const range2 = pendingSelection.range; const span2 = document.createElement('span'); span2.className = 'annotated-mark'; span2.dataset.annotationId = id; span2.addEventListener('click', function() { scrollToAnnotation(id); }); const frag = range2.extractContents(); span2.appendChild(frag); range2.insertNode(span2); } catch(e2) {} }
+  saveAnnotations(); closePopover(); pendingSelection = null; renderAllAnnotations();
+}
+
+function onImgSelect(event, mode) {
+  Array.from(event.target.files).forEach(function(file) {
+    if (!file.type.startsWith('image/')) return;
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      const base64 = ev.target.result;
+      if (mode === 'new') { pendingImages.push(base64); renderNewImgPreview(); }
+      else if (mode === 'edit') { const ann = annotations.find(a => a.id === editingId); if (ann) { if(!ann.images) ann.images=[]; ann.images.push(base64); renderEditImgPreview(ann); } }
+    };
+    reader.readAsDataURL(file);
+  });
+  event.target.value = '';
+}
+
+function removeNewImg(idx) { pendingImages.splice(idx, 1); renderNewImgPreview(); }
+function renderNewImgPreview() {
+  document.getElementById('newImgPreview').innerHTML = pendingImages.map(function(src, i) {
+    return '<div class="thumb"><img src="'+src+'"><div class="remove" onclick="removeNewImg('+i+')">×</div></div>';
+  }).join('');
+}
+
+function removeEditImg(annId, imgIdx) { const ann = annotations.find(a => a.id === annId); if (ann && ann.images) { ann.images.splice(imgIdx, 1); renderEditImgPreview(ann); } }
+function renderEditImgPreview(ann) {
+  const c = document.getElementById('editImgPreview_' + ann.id); if (!c) return;
+  c.innerHTML = (ann.images||[]).map(function(src, i) {
+    return '<div class="thumb"><img src="'+src+'"><div class="remove" onclick="removeEditImg('+ann.id+','+i+')">×</div></div>';
+  }).join('');
+}
+
+function viewImg(src) { document.getElementById('imgViewerImg').src = src; document.getElementById('imgViewer').classList.add('show'); }
+function closeImgViewer() { document.getElementById('imgViewer').classList.remove('show'); }
+
+const TYPE_META = {
+  note:      { label: '仅记录', cls: 't-note' },
+  text:      { label: '改文案', cls: 't-text' },
+  style:     { label: '改样式', cls: 't-style' },
+  component: { label: '改组件', cls: 't-component' },
+  verify:    { label: '待核实', cls: 't-verify' },
+  ai:        { label: '待AI讨论', cls: 't-ai' },
+  feature:   { label: '新增功能', cls: 't-feature' },
+  add:       { label: '加查询条件', cls: 't-add' },
+  del:       { label: '删除', cls: 't-del' }
+};
+const TYPE_OPTIONS = [
+  ['note','仅记录'], ['text','改动被标注的文案'], ['style','改动被标注的样式'], ['component','改动被标注的组件'],
+  ['verify','待业务核实/提供'], ['ai','需AI讨论后改动'], ['feature','新增功能/字段'], ['add','列表新增查询条件'], ['del','删除']
+];
+function typeTag(type) {
+  const m = TYPE_META[type] || TYPE_META.note;
+  return '<span class="comment-type-tag ' + m.cls + '">' + m.label + '</span>';
+}
+
+function saveEdit() {
+  const text = document.getElementById('editInput').value.trim();
+  if (!text || !pendingSelection) { cancelEdit(); return; }
+  const type = document.getElementById('editType').value || 'note';
+  const id = nextId++;
+  annotations.push({ id: id, quote: pendingSelection.text, text: text, type: type, time: nowStr(), images: pendingImages.slice() });
+  try { const range = pendingSelection.range; const span = document.createElement('span'); span.className = 'annotated-mark'; span.dataset.annotationId = id; span.addEventListener('click', function() { scrollToAnnotation(id); }); range.surroundContents(span); }
+  catch(e) { try { const range2 = pendingSelection.range; const span2 = document.createElement('span'); span2.className = 'annotated-mark'; span2.dataset.annotationId = id; span2.addEventListener('click', function() { scrollToAnnotation(id); }); const frag = range2.extractContents(); span2.appendChild(frag); range2.insertNode(span2); } catch(e2) {} }
+  saveAnnotations(); cancelEdit(); renderAllAnnotations();
+}
+
+function unwrapAnnotation(id) {
+  const mark = document.querySelector('.annotated-mark[data-annotation-id="' + id + '"]');
+  if (mark) { const parent = mark.parentNode; while (mark.firstChild) { parent.insertBefore(mark.firstChild, mark); } parent.removeChild(mark); parent.normalize(); }
+}
+
+function startEdit(id) {
+  editingId = id;
+  document.querySelectorAll('.comment-item').forEach(function(el) { el.classList.remove('editing'); });
+  const item = document.querySelector('.comment-item[data-id="' + id + '"]'); if (item) item.classList.add('editing');
+  const ann = annotations.find(a => a.id === id); if (ann) renderEditImgPreview(ann);
+}
+function saveEditExisting(id) {
+  const ann = annotations.find(a => a.id === id); if (!ann) return;
+  const ta = document.getElementById('editTextarea_' + id); if (ta) ann.text = ta.value.trim();
+  const ts = document.getElementById('editTypeSel_' + id); if (ts) ann.type = ts.value;
+  ann.time = nowStr() + '（已编辑）'; saveAnnotations(); editingId = null; renderAllAnnotations();
+}
+function cancelEditExisting() { editingId = null; renderAllAnnotations(); }
+function deleteAnnotation(id) { unwrapAnnotation(id); annotations = annotations.filter(function(a) { return a.id !== id; }); saveAnnotations(); renderAllAnnotations(); }
+
+function cancelEdit() {
+  document.getElementById('editArea').style.display = 'none';
+  document.getElementById('editInput').value = '';
+  document.getElementById('newImgPreview').innerHTML = '';
+  pendingImages = []; pendingSelection = null;
+  renderAllAnnotations();
+}
+
+// === 排序：永远按文档布局位置（从左到右、从上到下） ===
+function getMarkPos(annId) {
+  const mark = document.querySelector('.annotated-mark[data-annotation-id="' + annId + '"]');
+  if (!mark) return { top: 999999, left: 999999 };
+  const r = mark.getBoundingClientRect();
+  return { top: r.top + window.scrollY, left: r.left + window.scrollX };
+}
+
+function renderAllAnnotations() {
+  const filter = document.getElementById('typeFilter') ? document.getElementById('typeFilter').value : 'all';
+  let filtered = filter === 'all' ? annotations.slice() : annotations.filter(a => (a.type || 'note') === filter);
+  filtered.sort(function(a, b) {
+    const pa = getMarkPos(a.id), pb = getMarkPos(b.id);
+    if (Math.abs(pa.top - pb.top) > 20) return pa.top - pb.top;
+    return pa.left - pb.left;
+  });
+  const list = document.getElementById('commentList');
+  if (filtered.length === 0) {
+    list.innerHTML = '<div class="comment-empty">' + (annotations.length === 0 ? '选中正文中的文字<br>点击"评论"来添加评论' : '当前筛选无评论') + '</div>';
+  } else {
+    list.innerHTML = filtered.map(function(a) {
+      const imgs = a.images || [];
+      const imgHtml = imgs.length > 0 ? '<div class="images">' + imgs.map(function(src) { return '<img src="'+src+'" onclick="viewImg(\''+src+'\')">'; }).join('') + '</div>' : '';
+      return '<div class="comment-item" data-id="' + a.id + '">' +
+        '<div class="quote" onclick="scrollToAnnotation(' + a.id + ')">' + typeTag(a.type) + '"' + escapeHtml(a.quote) + '"</div>' +
+        '<div class="body"><div class="time">' + a.time + '</div><div class="text">' + escapeHtml(a.text) + '</div>' + imgHtml +
+        '<div class="actions"><a class="edit-link" onclick="startEdit(' + a.id + ')">编辑</a><a class="del-link" onclick="deleteAnnotation(' + a.id + ')">删除</a></div></div>' +
+        '<div class="edit-area"><textarea id="editTextarea_' + a.id + '" placeholder="编辑评论内容…（Ctrl+Enter保存）">' + escapeHtml(a.text) + '</textarea>' +
+        '<div class="comment-type-row"><select id="editTypeSel_' + a.id + '">' +
+        TYPE_OPTIONS.map(function(t){ return '<option value="'+t[0]+'"' + ((a.type||'note')===t[0]?' selected':'') + '>'+t[1]+'</option>'; }).join('') +
+        '</select></div>' +
+        '<div class="edit-toolbar"><button class="tool-btn" onclick="document.getElementById(\'editImgInput_' + a.id + '\').click()">图片</button></div>' +
+        '<div class="img-preview" id="editImgPreview_' + a.id + '"></div>' +
+        '<input type="file" id="editImgInput_' + a.id + '" accept="image/*" multiple style="display:none" onchange="onImgSelect(event,\'edit\')">' +
+        '<div class="btns"><button class="btn-cancel" onclick="cancelEditExisting()">取消</button><button class="btn-primary" onclick="saveEditExisting(' + a.id + ')">保存</button></div></div></div>';
+    }).join('');
+  }
+  const c = annotations.length;
+  document.getElementById('panelCount').textContent = c;
+  const badge = document.getElementById('totalBadge'); badge.textContent = c; badge.style.display = c > 0 ? 'block' : 'none';
+}
+
+function scrollToAnnotation(id) {
+  openPanel();
+  setTimeout(function() {
+    const item = document.querySelector('.comment-item[data-id="' + id + '"]');
+    if (item) { item.scrollIntoView({ behavior: 'smooth', block: 'center' }); item.style.transition = 'background 0.3s'; item.style.background = '#fff3a8'; setTimeout(function() { item.style.background = ''; }, 1500); }
+  }, 200);
+}
+
+// === 回车保存（Enter发送，Shift+Enter换行；编辑态Ctrl+Enter保存）===
+document.addEventListener('keydown', function(e) {
+  if (e.key !== 'Enter') return;
+  const popInput = document.getElementById('popInput');
+  if (document.activeElement === popInput) {
+    if (e.shiftKey) return;
+    e.preventDefault(); savePopover(); return;
+  }
+  const editInput = document.getElementById('editInput');
+  if (document.activeElement === editInput) {
+    if (e.shiftKey) return;
+    e.preventDefault(); saveEdit(); return;
+  }
+  const ta = document.activeElement;
+  if (ta && ta.id && ta.id.indexOf('editTextarea_') === 0) {
+    if (e.ctrlKey || e.metaKey) { e.preventDefault(); saveEditExisting(ta.id.replace('editTextarea_','')); }
+  }
+});
+
+// 点击气泡外关闭
+document.addEventListener('mousedown', function(e) {
+  const pop = document.getElementById('popover');
+  if (pop && pop.classList.contains('show') && !pop.contains(e.target) && !e.target.closest('#toolbar')) {
+    closePopover();
+  }
+});
+
+// === 刷新后恢复高亮（文本查找）===
+function restoreHighlights() {
+  const content = document.getElementById('content');
+  if (!content) return;
+  annotations.forEach(function(ann) {
+    if (document.querySelector('.annotated-mark[data-annotation-id="' + ann.id + '"]')) return;
+    const quote = ann.quote;
+    const walker = document.createTreeWalker(content, NodeFilter.SHOW_TEXT, null);
+    let node;
+    while ((node = walker.nextNode())) {
+      const idx = node.nodeValue.indexOf(quote);
+      if (idx >= 0 && node.parentNode && !node.parentNode.classList.contains('annotated-mark') && getComputedStyle(node.parentNode).display !== 'none') {
+        try {
+          const range = document.createRange();
+          range.setStart(node, idx);
+          range.setEnd(node, idx + quote.length);
+          const span = document.createElement('span');
+          span.className = 'annotated-mark';
+          span.dataset.annotationId = ann.id;
+          span.addEventListener('click', function() { scrollToAnnotation(ann.id); });
+          range.surroundContents(span);
+        } catch(e) {}
+        break;
+      }
+    }
+  });
+}
+
+// === 导出/导入 JSON ===
+function exportComments() {
+  const data = JSON.stringify({ version: 1, exportedAt: nowStr(), doc: '智能发货原型', comments: annotations }, null, 2);
+  const blob = new Blob([data], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = '评论_智能发货原型_' + nowStr().replace(/[\s:]/g, '-').substring(0, 16) + '.json';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+function importComments(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    try {
+      const data = JSON.parse(ev.target.result);
+      const imported = data.comments || data;
+      if (!confirm('导入会覆盖现有 ' + annotations.length + ' 条评论，确认？')) return;
+      annotations.forEach(a => unwrapAnnotation(a.id));
+      annotations = imported;
+      nextId = annotations.length > 0 ? Math.max(...annotations.map(a => a.id)) + 1 : 1;
+      saveAnnotations();
+      restoreHighlights();
+      renderAllAnnotations();
+      alert('已导入 ' + annotations.length + ' 条评论');
+    } catch(e) { alert('导入失败：JSON 格式错误'); }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+function openPanel() { document.getElementById('panel').classList.add('open'); document.getElementById('toggleBtn').classList.add('hide'); document.getElementById('content').classList.add('with-panel'); renderAllAnnotations(); }
+function closePanel() { document.getElementById('panel').classList.remove('open'); document.getElementById('toggleBtn').classList.remove('hide'); document.getElementById('content').classList.remove('with-panel'); cancelEdit(); }
+
+document.addEventListener('mousedown', function(e) { if (!e.target.closest('#toolbar') && !window.getSelection().toString()) { document.getElementById('toolbar').classList.remove('show'); } });
+
+// 初始渲染按钮（对齐当前Tab=pending）
+document.querySelectorAll('.nt-actions').forEach((act, idx) => {
+  act.innerHTML = (idx === 3) ? tabHoldConfig[currentTab] : tabBtnConfig[currentTab];
+});
+
+loadAnnotations();
+restoreHighlights();
+renderAllAnnotations();
+
+// ===== 页面级Tab切换（FBA发货建议 / 海外仓发货建议） =====
+document.querySelectorAll('.page-tabs .page-tab-item').forEach(tab => {
+  tab.addEventListener('click', function() {
+    document.querySelectorAll('.page-tabs .page-tab-item').forEach(t => t.classList.remove('active'));
+    this.classList.add('active');
+    const pageName = this.dataset.page;
+    const pageLabel = this.textContent.trim();
+    // 视觉反馈：数据区淡入（当前原型两页共用数据视图，未来可切换不同数据集）
+    const main = document.querySelector('.main');
+    if (main) { main.style.opacity = '0.4'; setTimeout(() => main.style.opacity = '1', 200); }
+    console.log('[页面Tab] 切换到:', pageLabel, '(', pageName, ')');
+  });
+});
+
+// ===== 产品说明页面 JS =====
+// 数据模型：specs = [ { id, group, element, type, source, rule, interaction, status, createdAt, confirmedAt } ]
+// 数据分层：
+//   1. 内嵌 JSON（<script id="spec-embedded-data">）= 发布快照，开发打开看到的就是这个
+//   2. localStorage（SPEC_KEY）= PM 的工作副本，PM 改动先存这里
+// 加载策略：先读内嵌 JSON 作为基础 → 如果 localStorage 有更新的工作副本则覆盖
+const SPEC_KEY = 'product_spec_v2_' + location.pathname.replace(/[\/.]/g,'_');
+const EMBEDDED_DATA_ID = 'spec-embedded-data';
+let specs = [];
+let specNextId = 1;
+let collapsedGroups = new Set();
+let dataSource = 'empty'; // 'embedded'=来自内嵌快照 | 'local'=来自本地工作副本 | 'empty'=空
+
+function getEmbeddedSpecs() {
+  try {
+    const el = document.getElementById(EMBEDDED_DATA_ID);
+    if (!el) return [];
+    const data = JSON.parse(el.textContent.trim() || '[]');
+    return Array.isArray(data) ? data : (data.specs || []);
+  } catch(e) { return []; }
+}
+
+function loadSpecs() {
+  // 1. 先读内嵌 JSON（发布快照）
+  const embedded = getEmbeddedSpecs();
+
+  // 2. 读 localStorage（工作副本）
+  let local = [];
+  try { local = JSON.parse(localStorage.getItem(SPEC_KEY) || '[]'); } catch(e) { local = []; }
+
+  // 3. 决策：哪个更新就用哪个
+  // 比较"最后修改时间"：取两边最大的 updatedAt / confirmedAt / createdAt
+  const getLatestTime = (arr) => {
+    if (!arr || arr.length === 0) return 0;
+    return Math.max(...arr.map(s => {
+      const t = s.updatedAt || s.confirmedAt || s.createdAt || '';
+      return new Date(t).getTime() || 0;
+    }));
+  };
+  const embeddedTime = getLatestTime(embedded);
+  const localTime = getLatestTime(local);
+
+  if (local.length > 0 && localTime >= embeddedTime) {
+    // 工作副本更新，用工作副本（PM 继续编辑）
+    specs = local;
+    dataSource = 'local';
+  } else if (embedded.length > 0) {
+    // 内嵌快照更新（开发打开的场景），用内嵌数据，并同步到 localStorage 方便后续操作
+    specs = embedded;
+    dataSource = 'embedded';
+    localStorage.setItem(SPEC_KEY, JSON.stringify(embedded));
+  } else {
+    specs = [];
+    dataSource = 'empty';
+  }
+  specNextId = specs.length > 0 ? Math.max(...specs.map(s => s.id)) + 1 : 1;
+}
+function saveSpecs() { localStorage.setItem(SPEC_KEY, JSON.stringify(specs)); dataSource = 'local'; }
+function specNow() {
+  const d = new Date(); const p = n => String(n).padStart(2,'0');
+  return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes());
+}
+function specEscape(s) { return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+const SPEC_TYPE_MAP = { fixed:{label:'固定',cls:'fixed'}, dynamic:{label:'动态',cls:'dynamic'}, config:{label:'可配置',cls:'config'} };
+
+// ===== 视图切换 =====
+function toggleSpecPanel() { openSpecPage(); }
+function openSpecPage() {
+  document.querySelector('.version-bar').style.display = 'none';
+  document.getElementById('content').style.display = 'none';
+  const panel = document.getElementById('panel'); if (panel) panel.style.display = 'none';
+  const tb = document.getElementById('toggleBtn'); if (tb) tb.style.display = 'none';
+  const ctb = document.querySelector('.comment-toggle-btn'); if (ctb) ctb.style.display = 'none';
+  document.getElementById('specPage').classList.add('show');
+  renderSpecTable();
+}
+function closeSpecPage() {
+  document.getElementById('specPage').classList.remove('show');
+  document.querySelector('.version-bar').style.display = '';
+  document.getElementById('content').style.display = '';
+  const tb = document.getElementById('toggleBtn'); if (tb) tb.style.display = '';
+  renderAnchoredBadges();
+}
+
+// ===== 渲染多维表格 =====
+function renderSpecTable() {
+  const body = document.getElementById('specPageBody');
+  const search = document.getElementById('specSearch').value.trim().toLowerCase();
+
+  let filtered = specs.filter(s => {
+    if (!search) return true;
+    return [s.element, s.source, s.rule, s.interaction, s.group].some(v => (v||'').toLowerCase().includes(search));
+  });
+
+  const confirmedCount = specs.filter(s => s.status === 'confirmed').length;
+  document.getElementById('specStat').innerHTML = `共 <b>${specs.length}</b> 项，已确认 <b>${confirmedCount}</b> 项`;
+
+  if (filtered.length === 0 && specs.length === 0) {
+    body.innerHTML = `<div class="spec-empty-state"><span class="ses-icon">📋</span><div class="ses-text">还没有产品说明<br>点击「AI 按区域汇总」自动识别原型元素并预填</div><button class="ses-btn" onclick="aiRecognize()">🤖 AI 按区域汇总</button></div>`;
+    return;
+  }
+  if (filtered.length === 0) {
+    body.innerHTML = `<div class="spec-empty-state"><span class="ses-icon">🔍</span><div class="ses-text">没有匹配"${specEscape(search)}"的说明</div></div>`;
+    return;
+  }
+
+  // 按区域分组
+  const groups = {};
+  filtered.forEach(s => { const g = s.group || '未分组'; if (!groups[g]) groups[g] = []; groups[g].push(s); });
+
+  // 区域显示顺序（从重要到次要）
+  const GROUP_ORDER = ['查询条件区','状态Tab','批量操作','主表-列','子表格-列','页面级Tab','侧边栏菜单','顶部导航栏','面包屑','分页','日志弹窗'];
+  // 把"主表-XXX"（按列分组）排在主表-列后面
+  const sortedGroupNames = Object.keys(groups).sort((a, b) => {
+    const ia = GROUP_ORDER.findIndex(p => a === p || a.startsWith('主表-') && p === '主表-列');
+    const ib = GROUP_ORDER.findIndex(p => b === p || b.startsWith('主表-') && p === '主表-列');
+    const ra = ia === -1 ? 99 : ia;
+    const rb = ib === -1 ? 99 : ib;
+    if (ra !== rb) return ra - rb;
+    return a.localeCompare(b);
+  });
+
+  // 默认全部折叠（首次进入或未手动展开过）
+  if (!window._specExpandedInit) {
+    window._specExpandedInit = true;
+    Object.keys(groups).forEach(g => { if (!collapsedGroups.has(g)) collapsedGroups.add(g); });
+  }
+
+  let html = `<table class="spec-table"><thead><tr>
+    <th class="col-element">元素</th><th class="col-type">类型</th>
+    <th class="col-source">数据来源</th><th class="col-rule">规则/校验</th>
+    <th class="col-interaction">交互说明</th><th class="col-status">状态</th><th class="col-actions">操作</th>
+  </tr></thead><tbody>`;
+
+  sortedGroupNames.forEach(gname => {
+    const items = groups[gname];
+    const gConfirmed = items.filter(s => s.status === 'confirmed').length;
+    const isCollapsed = collapsedGroups.has(gname);
+    const safeGname = specEscape(gname).replace(/'/g,"\\'");
+    html += `<tr class="spec-group ${isCollapsed?'collapsed':''}" onclick="toggleGroup('${safeGname}', event)">
+      <td colspan="7">
+        <span class="sg-toggle">▼</span>
+        <span class="sg-name">${specEscape(gname)}</span>
+        <span class="sg-count">${items.length} 项</span>
+        ${gConfirmed > 0 ? `<span class="sg-confirmed">✓ ${gConfirmed} 已确认</span>` : ''}
+        <span class="sg-add" onclick="event.stopPropagation(); addSpecRow('${safeGname}')">+ 添加元素</span>
+      </td>
+    </tr>`;
+    if (!isCollapsed) items.forEach(s => { html += renderSpecRow(s); });
+  });
+
+  html += `</tbody></table>`;
+  body.innerHTML = html;
+  // 初始化 textarea 高度
+  body.querySelectorAll('.spec-cell-edit').forEach(ta => autoGrow(ta));
+}
+
+function renderSpecRow(s) {
+  const tm = SPEC_TYPE_MAP[s.type] || SPEC_TYPE_MAP.fixed;
+  const isConfirmed = s.status === 'confirmed';
+  const dis = isConfirmed ? 'disabled' : '';
+  const emptyCls = (v) => (v ? '' : ' empty');
+  const anchored = !!s.anchor;
+  return `<tr class="spec-row ${isConfirmed?'confirmed':''}" data-id="${s.id}">
+    <td><textarea class="spec-cell-edit st-element${emptyCls(s.element)}" ${dis} data-id="${s.id}" data-f="element" placeholder="元素名" oninput="onCellEdit(${s.id},this,'element');autoGrow(this)">${specEscape(s.element)}</textarea></td>
+    <td>${isConfirmed ? `<span class="spec-type-tag ${tm.cls}">${tm.label}</span>` :
+      `<select class="spec-cell-edit" data-id="${s.id}" onchange="onCellEdit(${s.id},this,'type')" style="height:30px;padding:0 6px;">
+        <option value="fixed" ${s.type==='fixed'?'selected':''}>固定</option>
+        <option value="dynamic" ${s.type==='dynamic'?'selected':''}>动态</option>
+        <option value="config" ${s.type==='config'?'selected':''}>可配置</option>
+      </select>`}</td>
+    <td><textarea class="spec-cell-edit${emptyCls(s.source)}" ${dis} data-id="${s.id}" placeholder="接口/计算来源" oninput="onCellEdit(${s.id},this,'source');autoGrow(this)">${specEscape(s.source)}</textarea></td>
+    <td><textarea class="spec-cell-edit${emptyCls(s.rule)}" ${dis} data-id="${s.id}" placeholder="校验规则/默认值" oninput="onCellEdit(${s.id},this,'rule');autoGrow(this)">${specEscape(s.rule)}</textarea></td>
+    <td><textarea class="spec-cell-edit${emptyCls(s.interaction)}" ${dis} data-id="${s.id}" placeholder="点击/选择后发生什么" oninput="onCellEdit(${s.id},this,'interaction');autoGrow(this)">${specEscape(s.interaction)}</textarea></td>
+    <td style="text-align:center;">${isConfirmed ? `<span class="spec-status-tag confirmed">✓ 已确认</span>` : `<span class="spec-status-tag draft">草稿</span>`}</td>
+    <td><div class="spec-row-actions">
+      ${anchored ? `<button class="act-anchor-bound" onclick="removeAnchor(${s.id})" title="重新选择元素绑定">📎 重绑</button><button class="act-anchor-unbind" onclick="unbindAnchor(${s.id})" title="解除绑定">解绑</button>` :
+        (isConfirmed ? `<button class="act-anchor" onclick="startAnchoring(${s.id})" title="绑定到原型元素">📎 绑定</button>` :
+        `<button class="act-anchor-disabled" disabled title="需先确认才能绑定">📎 绑定</button>`)}
+      ${isConfirmed ? `<button class="act-edit" onclick="unconfirmSpec(${s.id})">撤回</button>` : `<button class="act-confirm" onclick="confirmSpec(${s.id})">确认</button>`}
+      <button class="act-delete" onclick="deleteSpec(${s.id})">删除</button>
+    </div></td>
+  </tr>`;
+}
+
+function onCellEdit(id, el, field) {
+  const s = specs.find(x => x.id === id);
+  if (!s || s.status === 'confirmed') return;
+  const val = el.value.trim();
+  s[field] = val;
+  if (val) el.classList.remove('empty'); else el.classList.add('empty');
+  saveSpecs();
+}
+function autoGrow(el) { el.style.height = 'auto'; el.style.height = Math.max(28, el.scrollHeight) + 'px'; }
+
+// ===== 分组折叠 =====
+function toggleGroup(gname, event) {
+  if (event && (event.target.classList.contains('spec-cell-edit') || event.target.closest('.sg-add') || event.target.tagName === 'TEXTAREA')) return;
+  if (collapsedGroups.has(gname)) collapsedGroups.delete(gname); else collapsedGroups.add(gname);
+  renderSpecTable();
+}
+function expandAllGroups(expand) {
+  if (expand) collapsedGroups.clear();
+  else specs.forEach(s => collapsedGroups.add(s.group || '未分组'));
+  renderSpecTable();
+}
+
+// ===== CRUD =====
+function addSpecRow(group) {
+  const s = { id: specNextId++, group: group || '未分组', element: '', type: 'dynamic', source: '', rule: '', interaction: '', status: 'draft', createdAt: specNow() };
+  specs.push(s); saveSpecs(); renderSpecTable();
+  setTimeout(() => {
+    const row = document.querySelector(`tr.spec-row[data-id="${s.id}"]`);
+    if (row) { row.scrollIntoView({behavior:'smooth',block:'center'}); const ta = row.querySelector('.st-element'); if (ta) ta.focus(); }
+  }, 50);
+}
+function confirmSpec(id) {
+  const s = specs.find(x => x.id === id);
+  if (!s) return;
+  if (!s.element) { alert('请先填写元素名'); return; }
+  s.status = 'confirmed'; s.confirmedAt = specNow();
+  saveSpecs(); renderSpecTable();
+}
+function unconfirmSpec(id) {
+  const s = specs.find(x => x.id === id);
+  if (!s) return;
+  s.status = 'draft'; delete s.confirmedAt;
+  saveSpecs(); renderSpecTable();
+}
+function deleteSpec(id) {
+  const s = specs.find(x => x.id === id);
+  if (!s) return;
+  if (!confirm(`确认删除「${s.element || '此元素'}」的产品说明？\n删除后该元素不再需要说明。`)) return;
+  specs = specs.filter(x => x.id !== id);
+  saveSpecs(); renderSpecTable();
+}
+
+// ===== 导出 =====
+function exportSpecs() {
+  const data = { version: 2, exportedAt: specNow(), page: location.pathname, confirmedCount: specs.filter(s=>s.status==='confirmed').length, specs: specs };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = '产品说明_' + (location.pathname.split('/').pop() || 'prototype').replace('.html','') + '_' + Date.now() + '.json';
+  a.click();
+}
+
+// 发布：把当前产品说明 + 评论内嵌到 HTML 文件里，导出一个"已发布"的新 HTML
+// 开发下载/部署这个 HTML，打开就能看到原型 + 产品说明 + 评论，不依赖 localStorage
+function publishSpecs() {
+  const confirmedCount = specs.filter(s => s.status === 'confirmed').length;
+  const anchoredCount = specs.filter(s => s.anchor).length;
+  const commentCount = annotations.length;
+  if (specs.length === 0 && commentCount === 0) { alert('还没有产品说明和评论，无需发布。'); return; }
+  if (!confirm(`发布到原型 HTML？\n\n📦 产品说明：${specs.length} 条\n   - 已确认 ${confirmedCount} 条（开发会看到角标）\n   - 已绑定 ${anchoredCount} 条\n💬 评论：${commentCount} 条（开发只读查看）\n\n发布后会下载一个新的 HTML 文件（文件名带 _已发布），\n把这个文件部署到 GitHub Pages 或发给开发即可。\n原型本身的改动（布局/列宽/查询条件等）也会一起发布。`)) return;
+
+  // 获取当前页面的完整 HTML（含原型所有改动）
+  const html = document.documentElement.outerHTML;
+
+  // 构造产品说明的内嵌数据
+  const specData = {
+    version: 2, publishedAt: specNow(), publishedBy: 'PM',
+    specs: specs.map(s => ({
+      id: s.id, group: s.group, element: s.element, type: s.type,
+      source: s.source, rule: s.rule, interaction: s.interaction,
+      status: s.status, anchor: s.anchor, anchorText: s.anchorText,
+      createdAt: s.createdAt, confirmedAt: s.confirmedAt
+    }))
+  };
+  // 构造评论的内嵌数据
+  const commentData = {
+    version: 1, publishedAt: specNow(), publishedBy: 'PM',
+    comments: annotations.map(a => ({
+      id: a.id, quote: a.quote, text: a.text, type: a.type,
+      time: a.time, images: a.images || []
+    }))
+  };
+
+  const specJson = JSON.stringify(specData);
+  const commentJson = JSON.stringify(commentData);
+
+  // 替换 HTML 里的两个内嵌数据标签（用拼接避免 HTML 解析器误闭合 script）
+  const so = '<scr' + 'ipt type="application/json" id="';
+  const sc = '</scr' + 'ipt>';
+  let newHtml = html;
+
+  // 替换产品说明标签
+  const specTagRegex = new RegExp('<scr' + 'ipt\\s+type="application/json"\\s+id="spec-embedded-data">[\\s\\S]*?</scr' + 'ipt>');
+  newHtml = newHtml.replace(specTagRegex, so + 'spec-embedded-data">' + specJson + sc);
+
+  // 替换评论标签
+  const commentTagRegex = new RegExp('<scr' + 'ipt\\s+type="application/json"\\s+id="comments-embedded-data">[\\s\\S]*?</scr' + 'ipt>');
+  newHtml = newHtml.replace(commentTagRegex, so + 'comments-embedded-data">' + commentJson + sc);
+
+  if (newHtml === html) {
+    alert('发布失败：未找到内嵌数据标签。请联系技术排查。');
+    return;
+  }
+
+  // 下载发布版 HTML
+  const blob = new Blob([newHtml], { type: 'text/html;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  const origName = (location.pathname.split('/').pop() || 'prototype').replace('.html','');
+  a.download = origName + '_已发布_' + new Date().toISOString().slice(0,10).replace(/-/g,'') + '.html';
+  a.click();
+
+  // 同步更新当前页面的内嵌标签（这样不刷新也能保持一致）
+  document.getElementById(EMBEDDED_DATA_ID).textContent = specJson;
+  document.getElementById('comments-embedded-data').textContent = commentJson;
+  dataSource = 'local';
+  updateDataSourceLabel();
+  alert('✅ 发布成功！\n\n已下载发布版 HTML 文件，包含：\n  📦 产品说明 ' + specs.length + ' 条\n  💬 评论 ' + commentCount + ' 条\n  📐 原型当前布局\n\n下一步：\n1. 用这个文件替换 GitHub Pages 仓库里的原型\n2. 开发刷新页面即可看到全部内容');
+}
+
+// 更新数据来源标识
+function updateDataSourceLabel() {
+  const el = document.getElementById('sptDataSource');
+  if (!el) return;
+  if (dataSource === 'embedded') {
+    el.innerHTML = '📡 来自发布快照（只读视图，你的改动存本地）';
+    el.style.color = '#52c41a';
+  } else if (dataSource === 'local') {
+    el.innerHTML = '✏️ 本地工作副本（发布后开发才能看到）';
+    el.style.color = '#faad14';
+  } else {
+    el.innerHTML = '给开发看的元素级说明';
+    el.style.color = '#86929c';
+  }
+}
+
+// ===== AI 按区域识别预填 =====
+function aiRecognize() {
+  const loading = document.getElementById('specAiLoading');
+  const text = document.getElementById('specAiText');
+  const detail = document.getElementById('specAiDetail');
+  loading.classList.add('show');
+  text.textContent = '正在扫描原型结构...';
+  detail.textContent = '识别页面区域和元素';
+
+  setTimeout(() => {
+    try {
+      const recognized = scanPrototypeStructure();
+      text.textContent = '正在汇总为区域分组...';
+      detail.textContent = `识别到 ${recognized.length} 个元素`;
+      setTimeout(() => {
+        const existingKeys = new Set(specs.map(s => (s.group||'') + '|' + (s.element||'')));
+        let added = 0, anchored = 0;
+        recognized.forEach(r => {
+          const key = (r.group||'') + '|' + (r.element||'');
+          if (r.element && !existingKeys.has(key)) {
+            const item = { id: specNextId++, group: r.group, element: r.element, type: r.type || 'dynamic', source: '', rule: '', interaction: r.interaction || '', status: 'draft', createdAt: specNow(), aiGenerated: true };
+            // 自动绑定 anchor（如果识别时拿到了 selector 且能匹配到元素）
+            if (r.selector) {
+              try {
+                const matched = document.querySelectorAll(r.selector);
+                if (matched.length > 0) {
+                  item.anchor = r.selector;
+                  item.anchorText = matched[0].textContent.trim().slice(0, 50);
+                  item.autoAnchored = true;
+                  anchored++;
+                }
+              } catch(e) {}
+            }
+            specs.push(item);
+            existingKeys.add(key); added++;
+          }
+        });
+        saveSpecs(); loading.classList.remove('show'); renderSpecTable();
+        if (added > 0) alert(`AI 识别完成，新增 ${added} 个元素（均为草稿）。\n其中 ${anchored} 个已自动绑定到原型元素，确认后即显示角标。\n可点「📎 已绑」修改或解绑。`);
+        else alert('AI 未发现新的可识别元素（可能已全部识别过）。');
+      }, 500);
+    } catch(e) { loading.classList.remove('show'); alert('识别失败：' + e.message); }
+  }, 300);
+}
+
+// 扫描原型 DOM，按区域提取元素（同时生成 selector 供自动绑定）
+function scanPrototypeStructure() {
+  const result = [];
+  const push = (el, group, element, type, interaction) => {
+    const selector = generateSelector(el);
+    result.push({ group, element, type, interaction, selector });
+  };
+  document.querySelectorAll('.topbar .top-menu-item').forEach(el => { const t = el.textContent.trim(); if (t) push(el, '顶部导航栏', '菜单-'+t, 'fixed', el.classList.contains('active')?'当前激活:'+t:'点击切换模块'); });
+  document.querySelectorAll('.sidebar .menu-item').forEach(el => { const t = el.textContent.trim(); if (t) push(el, '侧边栏菜单', '菜单-'+t, 'fixed', el.classList.contains('active')?'当前激活:'+t:'点击进入'+t); });
+  document.querySelectorAll('.breadcrumb').forEach(el => { const t = el.textContent.trim().replace(/\s+/g,' '); if (t) push(el, '面包屑', '面包屑路径', 'fixed', '显示当前位置:'+t); });
+  document.querySelectorAll('.page-tabs .page-tab-item').forEach(el => { const t = el.textContent.trim(); if (t) push(el, '页面级Tab', 'Tab-'+t, 'config', el.classList.contains('active')?'当前激活:'+t:'点击切换'+t); });
+  document.querySelectorAll('.query-bar .query-item').forEach(el => { const label = el.querySelector('label')?el.querySelector('label').textContent.trim():''; const input = el.querySelector('input,select'); const placeholder = input?(input.placeholder||''):''; push(el, '查询条件区', label||placeholder||'未命名条件', 'dynamic', placeholder?'输入'+placeholder:'输入筛选'); });
+  document.querySelectorAll('.el-tabs .tab-item, .el-tabs [class*="tab"]').forEach(el => { const t = el.textContent.trim(); if (t && t.length < 20) push(el, '状态Tab', 'Tab-'+t, 'config', '点击筛选该状态记录'); });
+  document.querySelectorAll('.batch-bar button, .batch-bar .op-btn').forEach(el => { const t = el.textContent.trim(); if (t && t.length < 20) push(el, '批量操作', '按钮-'+t, 'fixed', '点击执行'+t); });
+  document.querySelectorAll('.table-wrap th').forEach(el => { const t = el.textContent.trim(); if (t && t.length < 20 && !/^(全选|操作|)$/i.test(t)) push(el, '主表-列', '列-'+t, 'dynamic', '展示字段:'+t); });
+  document.querySelectorAll('.sub-table th, .nested-table th').forEach(el => { const t = el.textContent.trim(); if (t && t.length < 20 && !/^(全选|操作|)$/i.test(t)) push(el, '子表格-列', '子表列-'+t, 'dynamic', '展示批次字段:'+t); });
+  // 主表字段级（每个 field-stack 下的 field-line，按所属列头分组）
+  document.querySelectorAll('.table-wrap .field-stack').forEach(stack => {
+    const td = stack.closest('td');
+    if (!td) return;
+    const tr = td.parentNode;
+    const tdIdx = Array.from(tr.children).indexOf(td);
+    const ths = tr.closest('table').querySelectorAll('thead th');
+    const colName = ths[tdIdx] ? ths[tdIdx].textContent.trim() : '';
+    const groupName = colName ? '主表-'+colName : '主表-字段';
+    stack.querySelectorAll('.field-line').forEach(line => {
+      const labelEl = line.querySelector('.field-label');
+      let fieldName = labelEl ? labelEl.textContent.trim().replace(/[:：]$/, '') : '';
+      if (!fieldName) {
+        const fullText = line.textContent.trim();
+        fieldName = fullText.length < 15 ? fullText : fullText.slice(0,12)+'...';
+      }
+      if (fieldName && fieldName.length < 20) {
+        push(line, groupName, fieldName, 'dynamic', '展示字段：'+colName+'/'+fieldName);
+      }
+    });
+  });
+  const pager = document.querySelector('.pagination'); if (pager) push(pager, '分页', '分页器', 'config', '翻页、设置每页条数');
+  document.querySelectorAll('.log-modal-tab').forEach(el => { const t = el.textContent.trim(); if (t) push(el, '日志弹窗', 'Tab-'+t, 'fixed', '点击切换查看'+t); });
+  return result;
+}
+
+// ===== 跨版本继承（供新版本原型调用） =====
+function inheritSpecsFrom(oldPagePath) {
+  const oldKey = 'product_spec_v2_' + oldPagePath.replace(/[\/.]/g,'_');
+  let oldSpecs = []; try { oldSpecs = JSON.parse(localStorage.getItem(oldKey) || '[]'); } catch(e) { oldSpecs = []; }
+  const confirmed = oldSpecs.filter(s => s.status === 'confirmed');
+  if (confirmed.length === 0) return 0;
+  const existingKeys = new Set(specs.map(s => (s.group||'') + '|' + (s.element||'')));
+  let added = 0;
+  confirmed.forEach(s => {
+    const key = (s.group||'') + '|' + (s.element||'');
+    if (s.element && !existingKeys.has(key)) {
+      specs.push({ id: specNextId++, group:s.group, element:s.element, type:s.type, source:s.source, rule:s.rule, interaction:s.interaction, status:'confirmed', createdAt:specNow(), inheritedFrom:oldPagePath, confirmedAt:s.confirmedAt });
+      added++;
+    }
+  });
+  saveSpecs();
+  return added;
+}
+
+// ===== 锚定机制：绑定说明到原型 DOM 元素 =====
+let anchoringSpecId = null; // 正在绑定中的说明 id
+
+// 生成元素唯一选择器（尽量短且稳定）
+function generateSelector(el) {
+  // 如果点的是深层文本节点（span/纯文本），向上找到有 class 的容器
+  let target = el;
+  let upLevels = 0;
+  while (target && target.id !== 'content' && target.tagName !== 'BODY') {
+    const hasClass = target.className && typeof target.className === 'string' && target.className.trim();
+    // 常见的有意义容器 class
+    const meaningfulClass = /query-item|field-line|field-stack|menu-item|top-menu-item|tab-item|page-tab-item|op-btn|breadcrumb|th|td|batch-bar|pagination/.test(target.className || '');
+    if (hasClass && (meaningfulClass || target.tagName === 'TD' || target.tagName === 'TH' || upLevels > 2)) break;
+    target = target.parentNode;
+    upLevels++;
+  }
+  if (!target || target.tagName === 'BODY') target = el; // fallback
+
+  const finalEl = target;
+  if (finalEl.id) return '#' + finalEl.id;
+  const content = document.getElementById('content');
+  if (!content || !content.contains(finalEl)) return null;
+
+  const path = [];
+  let cur = finalEl;
+  while (cur && cur !== content && cur !== document.body) {
+    let selector = cur.tagName.toLowerCase();
+    if (cur.className && typeof cur.className === 'string') {
+      const mainClass = cur.className.trim().split(/\s+/)[0];
+      if (mainClass && !mainClass.match(/^(spec-)/)) selector += '.' + mainClass;
+    }
+    // 用 nth-child（比 nth-of-type 更可靠，因为按所有子元素计数）
+    const allSiblings = Array.from(cur.parentNode.children);
+    if (allSiblings.length > 1) {
+      const idx = allSiblings.indexOf(cur) + 1;
+      selector += `:nth-child(${idx})`;
+    }
+    path.unshift(selector);
+    cur = cur.parentNode;
+  }
+  const result = path.length > 0 ? ('#content ' + path.join(' > ')) : null;
+  // 验证：选择器必须能唯一匹配到 finalEl
+  if (result) {
+    try {
+      const matched = document.querySelectorAll(result);
+      if (matched.length === 1 && matched[0] === finalEl) return result;
+      // 如果匹配到多个，返回 null 让调用方处理
+      console.warn('[产品说明] 选择器匹配到', matched.length, '个元素:', result);
+      return result; // 仍然返回，renderAnchoredBadges 会取第一个
+    } catch(e) { return result; }
+  }
+  return null;
+}
+
+// 开始锚定模式：从产品说明页切回原型，让用户点选元素
+function startAnchoring(specId) {
+  anchoringSpecId = specId;
+  const s = specs.find(x => x.id === specId);
+  if (!s) return;
+  if (!s.element) { alert('请先填写元素名'); return; }
+  // 切回原型视图
+  closeSpecPageKeepData();
+  // 进入锚定模式
+  document.body.classList.add('spec-anchoring-mode');
+  // 标记可锚定的区域（content 内的元素）
+  document.querySelectorAll('#content *').forEach(el => el.classList.add('spec-anchoring-target'));
+  // 显示提示条
+  const hint = document.createElement('div');
+  hint.className = 'spec-anchoring-hint';
+  hint.innerHTML = `📎 点击原型中的「${specEscape(s.element)}」来绑定 <button class="hint-cancel" onclick="cancelAnchoring()">取消</button>`;
+  document.body.appendChild(hint);
+  // 绑定一次性点击
+  setTimeout(() => {
+    document.querySelectorAll('.spec-anchoring-target').forEach(el => {
+      el.addEventListener('click', anchoringClickHandler, true);
+    });
+  }, 0);
+}
+
+function anchoringClickHandler(e) {
+  if (e.target.closest('.spec-anchoring-hint')) return;
+  e.preventDefault();
+  e.stopPropagation();
+  const el = e.target;
+  // 生成选择器
+  const selector = generateSelector(el);
+  if (!selector) { alert('无法绑定此元素，请选其他元素'); return; }
+  // 校验选择器能定位到元素
+  const found = document.querySelectorAll(selector);
+  if (found.length === 0) { alert('选择器生成失败，请选其他元素'); return; }
+  // 保存
+  const s = specs.find(x => x.id === anchoringSpecId);
+  if (s) {
+    s.anchor = selector;
+    s.anchorText = el.textContent.trim().slice(0, 50);
+    saveSpecs();
+  }
+  // 退出锚定模式（移除高亮等）
+  exitAnchoringMode();
+  // 关键：停在原型视图，立即渲染角标，让用户看到效果
+  // （不自动跳回产品说明页，避免用户看不到角标）
+  renderAnchoredBadges();
+  // 短暂延迟后提示，确保角标已渲染
+  setTimeout(() => {
+    const badgeFound = s ? document.querySelector('.spec-anchor-badge[data-spec-id="'+s.id+'"]') : null;
+    if (badgeFound) {
+      // 角标成功出现，闪烁提示
+      badgeFound.classList.add('spec-badge-pulse');
+      setTimeout(() => badgeFound.classList.remove('spec-badge-pulse'), 1500);
+    } else {
+      console.error('[产品说明] 角标渲染失败。选择器:', selector, '匹配数:', found.length);
+      alert('绑定已保存，但角标未能显示。\n选择器: ' + selector + '\n匹配到 ' + found.length + ' 个元素。\n可重新选择更具体的元素。');
+    }
+    // 显示"返回产品说明"浮动提示条
+    showAnchoringReturnHint();
+  }, 50);
+}
+
+// 绑定成功后，原型页顶部显示返回提示
+function showAnchoringReturnHint() {
+  const existing = document.querySelector('.spec-return-hint');
+  if (existing) existing.remove();
+  const hint = document.createElement('div');
+  hint.className = 'spec-anchoring-hint';
+  hint.innerHTML = `✓ 绑定成功，角标已显示 &nbsp;&nbsp;<button class="hint-cancel" onclick="this.parentNode.remove();openSpecPage();">返回产品说明 →</button>`;
+  document.body.appendChild(hint);
+  // 5秒后自动消失
+  setTimeout(() => { if (hint.parentNode) hint.remove(); }, 8000);
+}
+
+function cancelAnchoring() { exitAnchoringMode(); openSpecPage(); }
+
+function exitAnchoringMode() {
+  document.body.classList.remove('spec-anchoring-mode');
+  document.querySelectorAll('.spec-anchoring-target').forEach(el => {
+    el.classList.remove('spec-anchoring-target');
+    el.removeEventListener('click', anchoringClickHandler, true);
+  });
+  const hint = document.querySelector('.spec-anchoring-hint');
+  if (hint) hint.remove();
+  anchoringSpecId = null;
+}
+
+// 关闭产品说明页但不重置（用于锚定中途切换）
+function closeSpecPageKeepData() {
+  document.getElementById('specPage').classList.remove('show');
+  document.querySelector('.version-bar').style.display = '';
+  document.getElementById('content').style.display = '';
+}
+
+function removeAnchor(specId) {
+  // 点击"已绑"按钮：弹出选项（重新绑定 / 解绑）
+  const s = specs.find(x => x.id === specId);
+  if (!s) return;
+  const choice = confirm(`「${s.element}」当前已绑定到原型元素。\n\n[确定] = 重新选择元素绑定\n[取消] = 保持不变\n\n（要彻底解绑请在弹窗后再操作）`);
+  if (choice) {
+    // 重新绑定
+    startAnchoring(specId);
+  }
+}
+
+function unbindAnchor(specId) {
+  const s = specs.find(x => x.id === specId);
+  if (!s) return;
+  if (!confirm('确认解除此元素的原型锚定？\n解除后原型上将不再显示角标。')) return;
+  delete s.anchor; delete s.anchorText; delete s.autoAnchored;
+  saveSpecs();
+  renderSpecTable();
+}
+
+// ===== 原型角标渲染 + 查看弹窗 =====
+let badgesVisible = true; // 角标是否显示
+
+function toggleBadges() {
+  badgesVisible = !badgesVisible;
+  const btn = document.getElementById('badgeToggleBtn');
+  const icon = document.getElementById('badgeToggleIcon');
+  const text = document.getElementById('badgeToggleText');
+  if (badgesVisible) {
+    renderAnchoredBadges();
+    btn.classList.remove('badges-hidden');
+    icon.textContent = '🔵';
+    text.textContent = '隐藏角标';
+  } else {
+    document.querySelectorAll('.spec-anchor-badge').forEach(b => b.style.display = 'none');
+    btn.classList.add('badges-hidden');
+    icon.textContent = '⚪';
+    text.textContent = '显示角标';
+  }
+}
+
+function renderAnchoredBadges() {
+  // 清除旧角标
+  document.querySelectorAll('.spec-anchor-badge').forEach(b => b.remove());
+  document.querySelectorAll('.spec-anchored').forEach(el => { el.classList.remove('spec-anchored'); });
+  // 如果角标被隐藏，不渲染
+  if (!badgesVisible) return;
+
+  const confirmed = specs.filter(s => s.status === 'confirmed' && s.anchor);
+  console.log('[产品说明] 渲染角标，已确认且有锚定的说明:', confirmed.length, '条');
+  confirmed.forEach((s, idx) => {
+    try {
+      const els = document.querySelectorAll(s.anchor);
+      if (els.length === 0) {
+        console.warn('[产品说明] 选择器匹配 0 个元素:', s.element, '选择器:', s.anchor);
+        return;
+      }
+      const target = els[0];
+      // 确保 target 可定位（角标用 absolute 定位）
+      const pos = getComputedStyle(target).position;
+      if (pos === 'static') target.style.position = 'relative';
+      target.classList.add('spec-anchored');
+      // 创建角标
+      const badge = document.createElement('div');
+      badge.className = 'spec-anchor-badge';
+      badge.textContent = '📋';
+      badge.dataset.specId = s.id;
+      badge.title = s.element + '（点击查看产品说明）';
+      badge.onclick = function(e) { e.stopPropagation(); e.preventDefault(); showSpecPopover(s.id, target); };
+      target.appendChild(badge);
+      console.log('[产品说明] 角标已添加到:', s.element, '->', s.anchor);
+    } catch(e) { console.warn('[产品说明] 角标渲染失败:', s.element, e); }
+  });
+}
+
+let specPopoverEl = null;
+function showSpecPopover(specId, anchorEl) {
+  const s = specs.find(x => x.id === specId);
+  if (!s) return;
+  // 关闭已有
+  closeSpecPopover();
+  const tm = SPEC_TYPE_MAP[s.type] || SPEC_TYPE_MAP.fixed;
+  const fieldHtml = (label, val) => val ?
+    `<div class="svp-field"><div class="svp-field-label">${label}</div><div class="svp-field-value">${specEscape(val)}</div></div>` :
+    `<div class="svp-field"><div class="svp-field-label">${label}</div><div class="svp-field-value empty">未填写</div></div>`;
+
+  const popover = document.createElement('div');
+  popover.className = 'spec-view-popover';
+  popover.innerHTML = `
+    <div class="svp-arrow"></div>
+    <div class="svp-header">
+      <div class="svp-title">📋 ${specEscape(s.element)} <span class="svp-group-tag">${specEscape(s.group)}</span></div>
+      <button class="svp-close" onclick="closeSpecPopover()">×</button>
+    </div>
+    <div class="svp-body">
+      <div class="svp-type-row"><span class="spec-type-tag ${tm.cls}">${tm.label}</span></div>
+      ${fieldHtml('数据来源', s.source)}
+      ${fieldHtml('规则/校验', s.rule)}
+      ${fieldHtml('交互说明', s.interaction)}
+    </div>
+  `;
+  document.body.appendChild(popover);
+  specPopoverEl = popover;
+
+  // 智能定位：计算不遮挡锚点元素的位置
+  const rect = anchorEl.getBoundingClientRect();
+  const popRect = { width: 360, height: popover.offsetHeight };
+  const margin = 8;
+  const vpW = window.innerWidth;
+  const vpH = window.innerHeight;
+
+  let posClass = 'svp-pos-bottom';
+  let top, left;
+
+  // 优先放右侧
+  if (rect.right + margin + popRect.width < vpW) {
+    posClass = 'svp-pos-right';
+    left = rect.right + margin;
+    top = rect.top;
+  }
+  // 其次放下方
+  else if (rect.bottom + margin + popRect.height < vpH) {
+    posClass = 'svp-pos-bottom';
+    left = Math.max(margin, Math.min(rect.left, vpW - popRect.width - margin));
+    top = rect.bottom + margin;
+  }
+  // 再次放上方
+  else if (rect.top - margin - popRect.height > 0) {
+    posClass = 'svp-pos-top';
+    left = Math.max(margin, Math.min(rect.left, vpW - popRect.width - margin));
+    top = rect.top - margin - popRect.height;
+  }
+  // 最后放左侧
+  else {
+    posClass = 'svp-pos-left';
+    left = Math.max(margin, rect.left - margin - popRect.width);
+    top = rect.top;
+  }
+
+  popover.classList.add(posClass);
+  popover.style.top = top + 'px';
+  popover.style.left = left + 'px';
+  popover.classList.add('show');
+  document.body.style.overflow = 'hidden'; // 锁定背景滚动
+}
+
+function closeSpecPopover() {
+  if (specPopoverEl) { specPopoverEl.remove(); specPopoverEl = null; }
+  document.body.style.overflow = ''; // 恢复背景滚动
+}
+
+// 点击外部关闭弹窗
+document.addEventListener('mousedown', function(e) {
+  if (specPopoverEl && !specPopoverEl.contains(e.target) && !e.target.classList.contains('spec-anchor-badge')) {
+    closeSpecPopover();
+  }
+});
+
+loadSpecs();
+renderAnchoredBadges();
+updateDataSourceLabel();
+</script>
+</body>
+</html>
