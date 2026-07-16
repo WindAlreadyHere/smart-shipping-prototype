@@ -326,22 +326,22 @@ table.data-table th .col-resizer.dragging { background: var(--primary); }
 .spec-page.show { display: flex; }
 
 /* 顶部栏 */
-.spec-page-topbar { display: flex; align-items: center; padding: 0 24px; height: 56px; background: #1f2329; color: #fff; flex-shrink: 0; gap: 16px; }
-.spec-page-topbar .spt-back { display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.1); border: none; color: #fff; padding: 6px 14px; border-radius: 4px; font-size: 13px; cursor: pointer; }
-.spec-page-topbar .spt-back:hover { background: rgba(255,255,255,0.2); }
-.spec-page-topbar .spt-title { font-size: 16px; font-weight: 600; }
-.spec-page-topbar .spt-title .spt-sub { font-size: 12px; color: #86929c; font-weight: 400; margin-left: 8px; }
+.spec-page-topbar { display: flex; align-items: center; padding: 0 24px; height: 56px; background: #fff; color: var(--text-primary); flex-shrink: 0; gap: 16px; border-bottom: 1px solid var(--border-lighter); box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+.spec-page-topbar .spt-back { display: flex; align-items: center; gap: 6px; background: var(--bg-hover); border: 1px solid var(--border-color); color: var(--text-regular); padding: 6px 14px; border-radius: 4px; font-size: 13px; cursor: pointer; }
+.spec-page-topbar .spt-back:hover { background: var(--primary-light); color: var(--tab-active); border-color: var(--primary); }
+.spec-page-topbar .spt-title { font-size: 16px; font-weight: 600; color: var(--text-primary); }
+.spec-page-topbar .spt-title .spt-sub { font-size: 12px; color: var(--text-secondary); font-weight: 400; margin-left: 8px; }
 .spec-page-topbar .spt-actions { margin-left: auto; display: flex; gap: 8px; }
-.spec-page-topbar .spt-actions button { height: 32px; padding: 0 14px; border-radius: 4px; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 5px; }
-.spec-page-topbar .spt-ai-btn { background: #722ed1; border: none; color: #fff; }
-.spec-page-topbar .spt-ai-btn:hover { background: #531dab; }
+.spec-page-topbar .spt-actions button { height: 32px; padding: 0 14px; border-radius: 4px; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: all 0.15s; }
+/* 同步：主按钮（蓝色实心，对应原型的 op-btn primary） */
+.spec-page-topbar .spt-sync-btn { background: var(--tab-active); border: 1px solid var(--tab-active); color: #fff; }
+.spec-page-topbar .spt-sync-btn:hover { background: var(--primary-dark); border-color: var(--primary-dark); }
+.spec-page-topbar .spt-sync-btn:disabled { background: #c0c4cc; border-color: #c0c4cc; cursor: not-allowed; }
+/* AI汇总/导出/下载：次按钮（白底边框，对应原型的 op-btn） */
+.spec-page-topbar .spt-ai-btn, .spec-page-topbar .spt-export-btn { background: #fff; border: 1px solid var(--border-color); color: var(--text-regular); }
+.spec-page-topbar .spt-ai-btn:hover, .spec-page-topbar .spt-export-btn:hover { border-color: var(--primary); color: var(--tab-active); background: var(--primary-light); }
 .spec-page-topbar .spt-publish-btn { background: #52c41a; border: none; color: #fff; }
 .spec-page-topbar .spt-publish-btn:hover { background: #389e0d; }
-.spec-page-topbar .spt-sync-btn { background: #0969da; border: none; color: #fff; }
-.spec-page-topbar .spt-sync-btn:hover { background: #0550ae; }
-.spec-page-topbar .spt-sync-btn:disabled { background: #57606a; cursor: not-allowed; }
-.spec-page-topbar .spt-export-btn { background: transparent; border: 1px solid rgba(255,255,255,0.3); color: #fff; }
-.spec-page-topbar .spt-export-btn:hover { border-color: #fff; }
 
 /* 工具栏（搜索 + 统计） */
 .spec-page-toolbar { display: flex; align-items: center; gap: 12px; padding: 12px 24px; background: #fff; border-bottom: 1px solid #e5e6eb; flex-shrink: 0; }
@@ -1221,10 +1221,10 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
     <button class="spt-back" onclick="closeSpecPage()">← 返回原型</button>
     <div class="spt-title">产品说明 <span class="spt-sub" id="sptDataSource">给开发看的元素级说明</span></div>
     <div class="spt-actions">
-      <button class="spt-sync-btn" onclick="syncToGitHub()">🚀 同步到开发</button>
-      <button class="spt-ai-btn" onclick="aiRecognize()">🤖 AI 按区域汇总</button>
+      <button class="spt-sync-btn" onclick="syncToGitHub()">同步到开发</button>
+      <button class="spt-ai-btn" onclick="aiRecognize()">AI 按区域汇总</button>
       <button class="spt-export-btn" onclick="exportSpecs()">导出 JSON</button>
-      <button class="spt-export-btn" onclick="publishSpecs()" title="下载含内嵌数据的HTML文件（离线场景备选）">📥 下载HTML</button>
+      <button class="spt-export-btn" onclick="publishSpecs()" title="下载含内嵌数据的HTML文件（离线场景备选）">下载HTML</button>
     </div>
   </div>
   <div class="spec-page-toolbar">
@@ -2212,23 +2212,23 @@ function buildPublishedHtml() {
 }
 
 async function syncToGitHub() {
-  const btn = document.querySelector('.spt-sync-btn');
-  const token = getGitHubToken();
-
-  // 没有_token，先让用户输入
-  if (!token) {
-    showTokenInput();
-    return;
-  }
-
-  // 确认发布
-  const confirmedCount = specs.filter(s => s.status === 'confirmed').length;
-  if (!confirm(`同步到 GitHub？开发将立即看到最新版。\n\n📦 产品说明 ${specs.length} 条（确认 ${confirmedCount}）\n💬 评论 ${annotations.length} 条\n📐 原型当前布局\n\n线上地址：${GITHUB_CONFIG.pagesUrl}`)) return;
-
-  // 按钮置为同步中
-  if (btn) { btn.disabled = true; btn.textContent = '🔄 同步中...'; }
-
   try {
+    const btn = document.querySelector('.spt-sync-btn');
+    const token = getGitHubToken();
+
+    // 没有 token，先让用户输入
+    if (!token) {
+      showTokenInput();
+      return;
+    }
+
+    // 确认发布
+    const confirmedCount = specs.filter(s => s.status === 'confirmed').length;
+    if (!confirm(`同步到 GitHub？开发将立即看到最新版。\n\n产品说明 ${specs.length} 条（确认 ${confirmedCount}）\n评论 ${annotations.length} 条\n原型当前布局\n\n线上地址：${GITHUB_CONFIG.pagesUrl}`)) return;
+
+    // 按钮置为同步中
+    if (btn) { btn.disabled = true; btn.textContent = '同步中...'; }
+
     // 1. 生成内嵌 HTML
     const htmlContent = buildPublishedHtml();
 
@@ -2263,16 +2263,21 @@ async function syncToGitHub() {
     dataSource = 'local'; updateDataSourceLabel();
 
     // 5. 完成
-    if (btn) { btn.disabled = false; btn.textContent = '🚀 同步到开发'; }
-    alert('✅ 同步成功！\n\n开发现在访问就能看到最新版：\n' + GITHUB_CONFIG.pagesUrl + '\n\n（GitHub Pages 构建约需 10-30 秒，刷新即可）');
+    if (btn) { btn.disabled = false; }
+    alert('同步成功！开发现在访问就能看到最新版：\n' + GITHUB_CONFIG.pagesUrl + '\n（GitHub Pages 构建约需 10-30 秒，刷新即可）');
+
+    // 5. 完成
+    if (btn) { btn.disabled = false; }
+    alert('同步成功！开发现在访问就能看到最新版：\n' + GITHUB_CONFIG.pagesUrl + '\n（GitHub Pages 构建约需 10-30 秒，刷新即可）');
   } catch(e) {
-    if (btn) { btn.disabled = false; btn.textContent = '🚀 同步到开发'; }
+    const btn = document.querySelector('.spt-sync-btn');
+    if (btn) { btn.disabled = false; }
     if (e.message && e.message.includes('Bad credentials')) {
       alert('Token 无效或已过期，请重新输入。');
       localStorage.removeItem(GITHUB_TOKEN_KEY);
       showTokenInput();
     } else {
-      alert('同步失败：' + e.message);
+      alert('同步失败：' + (e.message || e));
     }
   }
 }
