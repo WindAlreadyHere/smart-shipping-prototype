@@ -253,23 +253,23 @@ table.data-table th .col-resizer.dragging { background: var(--primary); }
 .pagination .pg-goto { width: 44px; height: 30px; padding: 0 6px; text-align: center; border: 1px solid var(--border-color); border-radius: 4px; font-size: 13px; color: var(--text-primary); background: #fff; }
 
 /* ===== 版本导航条 ===== */
-.version-bar { position: sticky; top: 0; z-index: 150; background: #1f2329; color: #c9cdd4; padding: 6px 20px; font-size: 12px; display: flex; align-items: center; gap: 10px; box-shadow: 0 1px 4px rgba(0,0,0,0.15); }
-.version-bar .vb-current { color: #ffe94d; font-weight: 500; }
+.version-bar { position: sticky; top: 0; z-index: 150; background: #fff; color: var(--text-regular); padding: 8px 20px; font-size: 12px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border-lighter); box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+.version-bar .vb-current { color: var(--tab-active); font-weight: 500; }
 .version-bar .vb-current.milestone { color: #52c41a; }
-.version-bar .vb-label { color: #86929c; }
-.version-bar .vb-link { color: #3487ff; text-decoration: none; padding: 2px 8px; background: rgba(52,135,255,0.15); border-radius: 3px; }
-.version-bar .vb-link:hover { background: rgba(52,135,255,0.3); color: #5a9fff; }
+.version-bar .vb-label { color: var(--text-secondary); }
+.version-bar .vb-link { color: var(--tab-active); text-decoration: none; padding: 2px 8px; background: var(--primary-light); border-radius: 3px; }
+.version-bar .vb-link:hover { background: var(--primary); color: #fff; }
 .version-bar .vb-dropdown { position: relative; }
 .version-bar .vb-right-actions { margin-left: auto; display: flex; align-items: center; gap: 8px; }
-.version-bar .vb-spec-btn { position: relative; background: rgba(255,233,77,0.15); color: #ffe94d; border: 1px solid rgba(255,233,77,0.3); padding: 4px 12px; border-radius: 3px; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 5px; }
-.version-bar .vb-spec-btn:hover { background: rgba(255,233,77,0.28); }
-.version-bar .vb-spec-btn.active { background: #ffe94d; color: #1f2329; border-color: #ffe94d; }
+.version-bar .vb-spec-btn { position: relative; background: var(--primary-light); color: var(--tab-active); border: 1px solid var(--border-color); padding: 4px 12px; border-radius: 3px; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+.version-bar .vb-spec-btn:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+.version-bar .vb-spec-btn.active { background: var(--tab-active); color: #fff; border-color: var(--tab-active); }
 .version-bar .vb-spec-btn .spec-badge { background: #ff7d00; color: #fff; font-size: 10px; min-width: 16px; height: 16px; border-radius: 8px; text-align: center; line-height: 16px; padding: 0 4px; }
-.version-bar .vb-badge-toggle { background: rgba(52,135,255,0.15); color: #3487ff; border: 1px solid rgba(52,135,255,0.3); padding: 4px 12px; border-radius: 3px; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 5px; }
-.version-bar .vb-badge-toggle:hover { background: rgba(52,135,255,0.28); }
+.version-bar .vb-badge-toggle { background: #fff; color: var(--text-regular); border: 1px solid var(--border-color); padding: 4px 12px; border-radius: 3px; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+.version-bar .vb-badge-toggle:hover { border-color: var(--primary); color: var(--tab-active); }
 .version-bar .vb-badge-toggle.badges-hidden { opacity: 0.5; }
-.version-bar .vb-drop-btn { background: rgba(52,135,255,0.15); color: #3487ff; border: none; padding: 4px 12px; border-radius: 3px; font-size: 12px; cursor: pointer; }
-.version-bar .vb-drop-btn:hover { background: rgba(52,135,255,0.3); }
+.version-bar .vb-drop-btn { background: #fff; color: var(--text-regular); border: 1px solid var(--border-color); padding: 4px 12px; border-radius: 3px; font-size: 12px; cursor: pointer; }
+.version-bar .vb-drop-btn:hover { background: var(--primary-light); border-color: var(--primary); color: var(--tab-active); }
 .version-bar .vb-drop-menu { display: none; position: absolute; right: 0; top: 100%; background: #fff; border: 1px solid #e5e6eb; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); min-width: 180px; padding: 4px 0; z-index: 200; }
 .version-bar .vb-drop-menu.show { display: block; }
 .version-bar .vb-drop-menu a { display: block; padding: 8px 16px; color: #1f2329; text-decoration: none; font-size: 13px; }
@@ -436,6 +436,24 @@ table.data-table th .col-resizer.dragging { background: var(--primary); }
 .spec-ai-loading .sal-text { font-size: 14px; color: #4e5969; }
 .spec-ai-loading .sal-detail { font-size: 12px; color: #86929c; margin-top: 6px; }
 
+/* Token 配置弹窗（复用 spec-modal 样式体系） */
+.spec-modal-mask { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 10001; display: none; align-items: center; justify-content: center; }
+.spec-modal-mask.show { display: flex; }
+.spec-modal-mask .spec-modal { width: 480px; max-height: 86vh; background: #fff; border-radius: 8px; box-shadow: 0 8px 32px rgba(0,0,0,0.15); display: flex; flex-direction: column; }
+.spec-modal-mask .spec-modal-header { padding: 16px 20px; border-bottom: 1px solid #e5e6eb; display: flex; justify-content: space-between; align-items: center; }
+.spec-modal-mask .spec-modal-header h3 { font-size: 15px; font-weight: 600; color: var(--text-primary); }
+.spec-modal-mask .spec-modal-close { width: 28px; height: 28px; border: none; background: transparent; font-size: 20px; color: var(--text-secondary); cursor: pointer; border-radius: 3px; }
+.spec-modal-mask .spec-modal-close:hover { background: var(--bg-hover); color: var(--text-primary); }
+.spec-modal-mask .spec-modal-body { padding: 16px 20px; overflow-y: auto; flex: 1; }
+.spec-modal-mask .spec-form-row { margin-bottom: 14px; }
+.spec-modal-mask .spec-form-row label { display: block; font-size: 12px; color: var(--text-regular); margin-bottom: 5px; font-weight: 500; }
+.spec-modal-mask .spec-modal-foot { padding: 12px 20px; border-top: 1px solid #e5e6eb; display: flex; justify-content: flex-end; gap: 8px; }
+.spec-modal-mask .spec-modal-foot button { height: 32px; padding: 0 16px; border-radius: 4px; font-size: 13px; cursor: pointer; }
+.spec-modal-mask .btn-cancel { background: #fff; border: 1px solid var(--border-color); color: var(--text-regular); }
+.spec-modal-mask .btn-cancel:hover { border-color: var(--primary); color: var(--tab-active); }
+.spec-modal-mask .btn-primary { background: var(--tab-active); border: 1px solid var(--tab-active); color: #fff; }
+.spec-modal-mask .btn-primary:hover { background: var(--primary-dark); }
+
 /* ===== 锚定角标 + 查看弹窗 CSS ===== */
 /* 锚定高亮 */
 .spec-anchored { position: relative; }
@@ -563,7 +581,6 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
   <span class="vb-current">📌 迭代版 · 第2次迭代（最新）</span>
   <div class="vb-right-actions">
     <button class="vb-badge-toggle" id="badgeToggleBtn" onclick="toggleBadges()" title="显示/隐藏原型上的产品说明角标">
-      <span id="badgeToggleIcon">🔵</span>
       <span id="badgeToggleText">隐藏角标</span>
     </button>
     <button class="vb-spec-btn" id="specTopBtn" onclick="toggleSpecPanel()">
@@ -2628,17 +2645,14 @@ let badgesVisible = true; // 角标是否显示
 function toggleBadges() {
   badgesVisible = !badgesVisible;
   const btn = document.getElementById('badgeToggleBtn');
-  const icon = document.getElementById('badgeToggleIcon');
   const text = document.getElementById('badgeToggleText');
   if (badgesVisible) {
     renderAnchoredBadges();
     btn.classList.remove('badges-hidden');
-    icon.textContent = '🔵';
     text.textContent = '隐藏角标';
   } else {
     document.querySelectorAll('.spec-anchor-badge').forEach(b => b.style.display = 'none');
     btn.classList.add('badges-hidden');
-    icon.textContent = '⚪';
     text.textContent = '显示角标';
   }
 }
