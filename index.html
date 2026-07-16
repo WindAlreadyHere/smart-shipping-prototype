@@ -337,6 +337,9 @@ table.data-table th .col-resizer.dragging { background: var(--primary); }
 .spec-page-topbar .spt-ai-btn:hover { background: #531dab; }
 .spec-page-topbar .spt-publish-btn { background: #52c41a; border: none; color: #fff; }
 .spec-page-topbar .spt-publish-btn:hover { background: #389e0d; }
+.spec-page-topbar .spt-sync-btn { background: #0969da; border: none; color: #fff; }
+.spec-page-topbar .spt-sync-btn:hover { background: #0550ae; }
+.spec-page-topbar .spt-sync-btn:disabled { background: #57606a; cursor: not-allowed; }
 .spec-page-topbar .spt-export-btn { background: transparent; border: 1px solid rgba(255,255,255,0.3); color: #fff; }
 .spec-page-topbar .spt-export-btn:hover { border-color: #fff; }
 
@@ -1218,6 +1221,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
     <button class="spt-back" onclick="closeSpecPage()">← 返回原型</button>
     <div class="spt-title">产品说明 <span class="spt-sub" id="sptDataSource">给开发看的元素级说明</span></div>
     <div class="spt-actions">
+      <button class="spt-sync-btn" onclick="syncToGitHub()">🚀 同步到开发</button>
       <button class="spt-publish-btn" onclick="publishSpecs()">📦 发布到原型</button>
       <button class="spt-ai-btn" onclick="aiRecognize()">🤖 AI 按区域汇总</button>
       <button class="spt-export-btn" onclick="exportSpecs()">导出 JSON</button>
@@ -2172,6 +2176,153 @@ function publishSpecs() {
   dataSource = 'local';
   updateDataSourceLabel();
   alert('✅ 发布成功！\n\n已下载发布版 HTML 文件，包含：\n  📦 产品说明 ' + specs.length + ' 条\n  💬 评论 ' + commentCount + ' 条\n  📐 原型当前布局\n\n下一步：\n1. 用这个文件替换 GitHub Pages 仓库里的原型\n2. 开发刷新页面即可看到全部内容');
+}
+
+// ===== 一键同步到 GitHub（开发直接看到） =====
+// 需要 Personal Access Token（存在 localStorage，不会发布给开发）
+const GITHUB_CONFIG = {
+  owner: 'WindAlreadyHere',
+  repo: 'smart-shipping-prototype',
+  path: 'index.html',
+  pagesUrl: 'https://windalreadyhere.github.io/smart-shipping-prototype/'
+};
+const GITHUB_TOKEN_KEY = 'github_pat';
+
+function getGitHubToken() {
+  return localStorage.getItem(GITHUB_TOKEN_KEY) || '';
+}
+
+// 生成内嵌数据的 HTML（提取自 publishSpecs，供同步复用）
+function buildPublishedHtml() {
+  const html = document.documentElement.outerHTML;
+  const specData = { version: 2, publishedAt: specNow(), publishedBy: 'PM',
+    specs: specs.map(s => ({ id: s.id, group: s.group, element: s.element, type: s.type,
+      source: s.source, rule: s.rule, interaction: s.interaction, status: s.status,
+      anchor: s.anchor, anchorText: s.anchorText, createdAt: s.createdAt, confirmedAt: s.confirmedAt })) };
+  const commentData = { version: 1, publishedAt: specNow(), publishedBy: 'PM',
+    comments: annotations.map(a => ({ id: a.id, quote: a.quote, text: a.text, type: a.type, time: a.time, images: a.images || [] })) };
+  const specJson = JSON.stringify(specData);
+  const commentJson = JSON.stringify(commentData);
+  const so = '<scr' + 'ipt type="application/json" id="';
+  const sc = '</scr' + 'ipt>';
+  let newHtml = html;
+  newHtml = newHtml.replace(new RegExp('<scr' + 'ipt\\s+type="application/json"\\s+id="spec-embedded-data">[\\s\\S]*?</scr' + 'ipt>'), so + 'spec-embedded-data">' + specJson + sc);
+  newHtml = newHtml.replace(new RegExp('<scr' + 'ipt\\s+type="application/json"\\s+id="comments-embedded-data">[\\s\\S]*?</scr' + 'ipt>'), so + 'comments-embedded-data">' + commentJson + sc);
+  return newHtml;
+}
+
+async function syncToGitHub() {
+  const btn = document.querySelector('.spt-sync-btn');
+  const token = getGitHubToken();
+
+  // 没有_token，先让用户输入
+  if (!token) {
+    showTokenInput();
+    return;
+  }
+
+  // 确认发布
+  const confirmedCount = specs.filter(s => s.status === 'confirmed').length;
+  if (!confirm(`同步到 GitHub？开发将立即看到最新版。\n\n📦 产品说明 ${specs.length} 条（确认 ${confirmedCount}）\n💬 评论 ${annotations.length} 条\n📐 原型当前布局\n\n线上地址：${GITHUB_CONFIG.pagesUrl}`)) return;
+
+  // 按钮置为同步中
+  if (btn) { btn.disabled = true; btn.textContent = '🔄 同步中...'; }
+
+  try {
+    // 1. 生成内嵌 HTML
+    const htmlContent = buildPublishedHtml();
+
+    // 2. 获取远程文件当前 SHA（用于更新而非创建）
+    let sha = '';
+    try {
+      const fileRes = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.path}`, {
+        headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json' }
+      });
+      if (fileRes.ok) { const fileData = await fileRes.json(); sha = fileData.sha; }
+    } catch(e) {}
+
+    // 3. 更新远程文件
+    const updateRes = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.path}`, {
+      method: 'PUT',
+      headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: '同步原型: 产品说明' + specs.length + '条 评论' + annotations.length + '条 (' + specNow() + ')',
+        content: btoa(unescape(encodeURIComponent(htmlContent))),
+        sha: sha || undefined
+      })
+    });
+
+    if (!updateRes.ok) {
+      const err = await updateRes.json().catch(() => ({}));
+      throw new Error(err.message || 'HTTP ' + updateRes.status);
+    }
+
+    // 4. 同步更新本地内嵌标签
+    const specData = { version: 2, publishedAt: specNow(), specs: specs };
+    document.getElementById(EMBEDDED_DATA_ID).textContent = JSON.stringify(specData);
+    dataSource = 'local'; updateDataSourceLabel();
+
+    // 5. 完成
+    if (btn) { btn.disabled = false; btn.textContent = '🚀 同步到开发'; }
+    alert('✅ 同步成功！\n\n开发现在访问就能看到最新版：\n' + GITHUB_CONFIG.pagesUrl + '\n\n（GitHub Pages 构建约需 10-30 秒，刷新即可）');
+  } catch(e) {
+    if (btn) { btn.disabled = false; btn.textContent = '🚀 同步到开发'; }
+    if (e.message && e.message.includes('Bad credentials')) {
+      alert('Token 无效或已过期，请重新输入。');
+      localStorage.removeItem(GITHUB_TOKEN_KEY);
+      showTokenInput();
+    } else {
+      alert('同步失败：' + e.message);
+    }
+  }
+}
+
+function showTokenInput() {
+  const existing = document.getElementById('tokenModalMask');
+  if (existing) existing.remove();
+  const mask = document.createElement('div');
+  mask.className = 'spec-modal-mask show';
+  mask.id = 'tokenModalMask';
+  mask.style.zIndex = 10001;
+  mask.innerHTML = `
+    <div class="spec-modal" style="width:480px;">
+      <div class="spec-modal-header">
+        <h3>🔑 配置 GitHub Token</h3>
+        <button class="spec-modal-close" onclick="document.getElementById('tokenModalMask').remove()">×</button>
+      </div>
+      <div class="spec-modal-body">
+        <p style="font-size:13px;color:#4e5969;line-height:1.8;margin-bottom:12px;">
+          一键同步需要一个 GitHub Personal Access Token。<br>
+          Token 存在你本地浏览器，<b>不会发布给开发</b>。
+        </p>
+        <div class="spec-form-row">
+          <label>GitHub Token</label>
+          <input type="password" id="tokenInput" placeholder="ghp_xxxxxx 或 github_pat_xxxxxx" style="width:100%;height:36px;padding:0 10px;border:1px solid #d9d9d9;border-radius:4px;">
+          <div class="sp-hint" style="margin-top:6px;font-size:12px;color:#86929c;line-height:1.6;">
+            获取方式：<br>
+            1. 打开 https://github.com/settings/tokens?type=beta<br>
+            2. 点「Generate new token」<br>
+            3. Repository access 选 <b>Only select repositories</b> → smart-shipping-prototype<br>
+            4. Permissions → Repository permissions → <b>Contents: Read and write</b><br>
+            5. 生成后复制 token 粘贴到上方
+          </div>
+        </div>
+      </div>
+      <div class="spec-modal-foot">
+        <button class="btn-cancel" onclick="document.getElementById('tokenModalMask').remove()">取消</button>
+        <button class="btn-primary" onclick="saveToken()">保存并同步</button>
+      </div>
+    </div>`;
+  document.body.appendChild(mask);
+}
+
+function saveToken() {
+  const token = document.getElementById('tokenInput').value.trim();
+  if (!token) { alert('请输入 Token'); return; }
+  localStorage.setItem(GITHUB_TOKEN_KEY, token);
+  const mask = document.getElementById('tokenModalMask');
+  if (mask) mask.remove();
+  syncToGitHub();
 }
 
 // 更新数据来源标识
