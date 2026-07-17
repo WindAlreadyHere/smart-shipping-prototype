@@ -883,7 +883,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
             </tr>
           </tbody>
         </table>
-        <div class="batch-summary">已勾选 <span class="sum-num sel-qty">100</span> 件 / PR需 <span class="sum-num">100</span> / 待创建批次 <span class="sum-num">0</span> · <span class="countdown">英国仓可售8天，今日确认7/10前到货最稳</span></div>
+        <div class="batch-summary">已勾选 <span class="sum-num sel-qty">100</span> 件 / PR需 <span class="sum-num">100</span> · <span class="countdown">英国仓可售8天，今日确认7/10前到货最稳</span></div>
         <div class="nt-actions">
           <button class="nt-btn primary">确认发货批次</button>
           <button class="nt-btn link">新增批次</button>
@@ -988,7 +988,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
             </tr>
           </tbody>
         </table>
-        <div class="batch-summary">已勾选 <span class="sum-num sel-qty">400</span> 件 / PR需 <span class="sum-num">500</span> / 待创建批次 <span class="sum-num" style="color:var(--warning);">100</span> · <span class="countdown-ok">德国仓可售45天从容，3批控仓储（批次3等7/20入库，还有100待安排）</span></div>
+        <div class="batch-summary">已勾选 <span class="sum-num sel-qty">400</span> 件 / PR需 <span class="sum-num">500</span> · <span class="countdown-ok">德国仓可售45天从容，3批控仓储（批次3等7/20入库）</span></div>
         <div class="nt-actions">
           <button class="nt-btn primary">确认发货批次</button>
           <button class="nt-btn link">新增批次</button>
@@ -1083,7 +1083,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
             </tr>
           </tbody>
         </table>
-        <div class="batch-summary">已勾选 <span class="sum-num sel-qty">300</span> 件 / PR需 <span class="sum-num">300</span> / 待创建批次 <span class="sum-num">0</span> · <span class="countdown">⚠ 法国仓可售5天，今日确认7/11前到货，否则断货</span></div>
+        <div class="batch-summary">已勾选 <span class="sum-num sel-qty">300</span> 件 / PR需 <span class="sum-num">300</span> · <span class="countdown">⚠ 法国仓可售5天，今日确认7/11前到货，否则断货</span></div>
         <div class="nt-actions">
           <button class="nt-btn primary">确认发货批次</button>
           <button class="nt-btn link">新增批次</button>
@@ -1165,7 +1165,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
             </tr>
           </tbody>
         </table>
-        <div class="batch-summary">PR需 <span class="sum-num">200</span> / 待创建批次 <span class="sum-num">0</span> · <span class="countdown-ok">美国仓可售62天充足，本轮无需规划发货</span></div>
+        <div class="batch-summary">PR需 <span class="sum-num">200</span> · <span class="countdown-ok">美国仓可售62天充足，本轮无需规划发货</span></div>
         <div class="nt-actions">
           <button class="nt-btn link">新增批次</button>
         </div>
@@ -1379,8 +1379,9 @@ document.querySelectorAll('.nested-table').forEach(table => {
   table.querySelectorAll('.nt-ck .vxe-checkbox').forEach(ck => {
     ck.addEventListener('click', (e) => {
       e.stopPropagation();
-      // 暂缓行 / 已生成锁定：不可点
+      // 暂缓行 / 已生成锁定 / 发货批次(已完成)：不可点
       if (ck.closest('.tr-hold')) return;
+      if (ck.closest('.row-done')) return;
       if (currentTab === 'done') return;
       ck.classList.toggle('checked');
       updateSummary(table);
