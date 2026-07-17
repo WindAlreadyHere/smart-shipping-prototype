@@ -83,7 +83,7 @@ html, body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-
 .table-wrap::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 5px; }
 .table-wrap::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
 .table-wrap::-webkit-scrollbar-track { background: #f5f5f5; }
-table.data-table { width: 1920px; table-layout: fixed; border-collapse: collapse; font-size: 13px; }
+table.data-table { width: 2070px; table-layout: fixed; border-collapse: collapse; font-size: 13px; }
 table.data-table th { background: var(--bg-header); padding: 10px 12px; text-align: left; font-weight: 600; color: var(--text-regular); border-bottom: 1px solid var(--border-lighter); white-space: nowrap; }
 table.data-table td { padding: 10px 12px; border-bottom: 1px solid var(--border-lighter); color: var(--text-primary); vertical-align: top; text-align: left; }
 table.data-table tr.row-main:hover td { background: var(--primary-light); }
@@ -153,7 +153,7 @@ table.data-table tr.row-expand td { background: #FAFCFF; padding: 0; }
 /* 智能拆批列：嵌套表格按内容自适应，但限定在列宽内不溢出 */
 .nested-table { table-layout: auto; width: 100%; }
 /* 智能拆批列（第8列）：内容不溢出到操作列 */
-.data-table > tbody > tr > td:nth-child(8) { overflow: hidden; }
+.data-table > tbody > tr > td:nth-child(9) { overflow: hidden; }
 .nested-table .row-urgent td { background: #FFF8F8; }
 .nested-table .row-urgent:hover td { background: #FFEEEE; }
 /* 批次标签（序号列里的类型小标签） */
@@ -169,6 +169,10 @@ table.data-table tr.row-expand td { background: #FAFCFF; padding: 0; }
 .nested-table .nt-ck { width: 32px; text-align: center; }
 .nested-table .nt-ck .vxe-checkbox { width: 14px; height: 14px; }
 .nested-table .nt-ck .vxe-checkbox.checked { background: var(--primary); border-color: var(--primary); }
+/* 来源标签：智能(引擎拆批) / 手动(运营新增) */
+.src-tag { font-size: 11px; padding: 1px 6px; border-radius: 3px; white-space: nowrap; }
+.src-tag.smart { color: var(--tab-active); background: var(--primary-light); }
+.src-tag.manual { color: var(--warning); background: #fff7e8; border: 1px solid #ffd9a8; }
 .nested-table .nt-ck .vxe-checkbox.checked::after { left: 3px; top: 0px; width: 4px; height: 8px; border-width: 0 2px 2px 0; }
 .nested-table tr.tr-hold td { color: var(--text-secondary) !important; }
 .nested-table tr.tr-hold .nt-ck .vxe-checkbox { background: #f0f0f0; border-color: #dcdfe6; cursor: not-allowed; opacity: 0.5; }
@@ -782,6 +786,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
       <th style="width:180px; min-width:180px;">销售信息<div class="col-resizer"></div></th>
       <th style="width:160px; min-width:160px;">单箱尺寸信息(商品)<div class="col-resizer"></div></th>
       <th style="width:200px; min-width:200px;">发货方式<div class="col-resizer"></div></th>
+      <th style="width:150px; min-width:150px;">货物情况<div class="col-resizer"></div></th>
       <th style="width:640px; min-width:640px;">智能拆批<div class="col-resizer"></div></th>
       <th style="width:90px; min-width:90px;" class="th-fixed-op">操作</th>
     </tr>
@@ -833,13 +838,19 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
         <div class="field-line"><span class="field-label">计费重:</span> <span class="field-value">120 kg (抛率85%)</span></div>
         <div class="field-line"><span class="field-label">实际重/体积重/体积:</span> <span class="field-value muted">102kg / 141kg / 1.20m³</span></div>
       </div></td>
-      <!-- 智能拆批（信诚式嵌套子表格：复选框+可编辑数量+货源状态+底部按钮区） -->
+<td><div class="field-stack">
+        <div class="field-line"><span class="field-label">已入库:</span> <span class="field-value metric">100</span></div>
+        <div class="field-line"><span class="field-label">已创建批次:</span> <span class="field-value metric">100</span></div>
+        <div class="field-line key"><span class="field-label">未分配批次:</span> <span class="field-value">0</span></div>
+      </div></td>
+            <!-- 智能拆批（信诚式嵌套子表格：复选框+可编辑数量+货源状态+底部按钮区） -->
       <td>
         <table class="nested-table">
           <thead><tr>
             <th class="nt-ck"><span class="vxe-checkbox checked"></span></th>
             <th style="width:24px;">#</th>
             <th>批次</th>
+            <th>来源</th>
             <th>数量</th>
                         <th>运输</th>
             <th>截仓发货日</th>
@@ -850,6 +861,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
               <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
               <td>1</td>
               <td><span class="batch-type urgent">急</span><span class="batch-urgency urgent">今日必确认</span></td>
+              <td><span class="src-tag smart">智能</span></td>
               <td><input class="nt-input" value="40" /></td>
                             <td>快递<span class="ship-level up">↑升</span></td>
               <td>7/24（周四）</td>
@@ -859,6 +871,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
               <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
               <td>2</td>
               <td><span class="batch-type normal">正常</span><span class="batch-urgency normal">本周内</span></td>
+              <td><span class="src-tag smart">智能</span></td>
               <td><input class="nt-input" value="60" /></td>
                             <td>快船<span class="ship-level down">↓降</span></td>
               <td>7/24（周四）</td>
@@ -920,13 +933,19 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
         <div class="field-line"><span class="field-label">计费重:</span> <span class="field-value">240 kg (抛率30%)</span></div>
         <div class="field-line"><span class="field-label">实际重/体积重/体积:</span> <span class="field-value muted">185kg / 260kg / 1.75m³</span></div>
       </div></td>
-      <!-- 智能拆批（嵌套子表格：基于需求数500拆3批，部分入库，演示🟡待入库场景） -->
+<td><div class="field-stack">
+        <div class="field-line"><span class="field-label">已入库:</span> <span class="field-value metric">500</span></div>
+        <div class="field-line"><span class="field-label">已创建批次:</span> <span class="field-value metric">400</span></div>
+        <div class="field-line key"><span class="field-label">未分配批次:</span> <span class="field-value metric" style="color:var(--warning);">100</span></div>
+      </div></td>
+            <!-- 智能拆批（嵌套子表格：基于需求数500拆3批，部分入库，演示🟡待入库场景） -->
       <td>
         <table class="nested-table">
           <thead><tr>
             <th class="nt-ck"><span class="vxe-checkbox checked"></span></th>
             <th style="width:24px;">#</th>
             <th>批次</th>
+            <th>来源</th>
             <th>数量</th>
                         <th>运输</th>
             <th>截仓发货日</th>
@@ -937,6 +956,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
               <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
               <td>1</td>
               <td><span class="batch-type slow">缓</span><span class="batch-urgency slow">本月内</span></td>
+              <td><span class="src-tag smart">智能</span></td>
               <td><input class="nt-input" value="200" /></td>
                             <td>慢船</td>
               <td>7/24（周四）</td>
@@ -946,6 +966,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
               <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
               <td>2</td>
               <td><span class="batch-type slow">缓</span><span class="batch-urgency slow">本月内</span></td>
+              <td><span class="src-tag manual">手动</span></td>
               <td><input class="nt-input" value="100" /></td>
                             <td>慢船</td>
               <td>7/24（周四）</td>
@@ -955,6 +976,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
               <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
               <td>3</td>
               <td><span class="batch-type slow">缓</span><span class="batch-urgency slow">本月内</span></td>
+              <td><span class="src-tag smart">智能</span></td>
               <td><input class="nt-input" value="200" /></td>
                             <td>慢船</td>
               <td>7/24（周四）</td>
@@ -1016,13 +1038,19 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
         <div class="field-line"><span class="field-label">计费重:</span> <span class="field-value">210 kg (抛率60%)</span></div>
         <div class="field-line"><span class="field-label">实际重/体积重/体积:</span> <span class="field-value muted">168kg / 280kg / 1.50m³</span></div>
       </div></td>
-      <!-- 智能拆批（嵌套子表格：紧急拆2批，断货风险，货源全现货） -->
+<td><div class="field-stack">
+        <div class="field-line"><span class="field-label">已入库:</span> <span class="field-value metric">300</span></div>
+        <div class="field-line"><span class="field-label">已创建批次:</span> <span class="field-value metric">300</span></div>
+        <div class="field-line key"><span class="field-label">未分配批次:</span> <span class="field-value">0</span></div>
+      </div></td>
+            <!-- 智能拆批（嵌套子表格：紧急拆2批，断货风险，货源全现货） -->
       <td>
         <table class="nested-table">
           <thead><tr>
             <th class="nt-ck"><span class="vxe-checkbox checked"></span></th>
             <th style="width:24px;">#</th>
             <th>批次</th>
+            <th>来源</th>
             <th>数量</th>
                         <th>运输</th>
             <th>截仓发货日</th>
@@ -1033,6 +1061,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
               <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
               <td>1</td>
               <td><span class="batch-type urgent">急</span><span class="batch-urgency urgent">今日必确认</span></td>
+              <td><span class="src-tag smart">智能</span></td>
               <td><input class="nt-input" value="200" /></td>
                             <td>空运<span class="ship-level up">↑升</span></td>
               <td>7/24（周四）</td>
@@ -1042,6 +1071,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
               <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
               <td>2</td>
               <td><span class="batch-type normal">正常</span><span class="batch-urgency normal">本周内</span></td>
+              <td><span class="src-tag smart">智能</span></td>
               <td><input class="nt-input" value="100" /></td>
                             <td>快船</td>
               <td>7/24（周四）</td>
@@ -1102,13 +1132,19 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
         <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">橙联美国仓</span></div>
         <div class="field-line"><span class="field-label">计费重:</span> <span class="field-value muted">—（暂缓不发货）</span></div>
       </div></td>
-      <!-- 智能拆批（暂缓行：整行置灰，复选框禁选，仅提供新增批次=强制发货入口） -->
+<td><div class="field-stack">
+        <div class="field-line"><span class="field-label">已入库:</span> <span class="field-value muted">0</span></div>
+        <div class="field-line"><span class="field-label">已创建批次:</span> <span class="field-value muted">0</span></div>
+        <div class="field-line key"><span class="field-label">未分配批次:</span> <span class="field-value muted">0</span></div>
+      </div></td>
+            <!-- 智能拆批（暂缓行：整行置灰，复选框禁选，仅提供新增批次=强制发货入口） -->
       <td>
         <table class="nested-table">
           <thead><tr>
             <th class="nt-ck"><span class="vxe-checkbox"></span></th>
             <th style="width:24px;">#</th>
             <th>批次</th>
+            <th>来源</th>
             <th>数量</th>
                         <th>运输</th>
             <th>截仓发货日</th>
