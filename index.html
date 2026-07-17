@@ -1311,7 +1311,7 @@ let currentTab = 'pending';
 const _logBtn = '<button class="nt-btn link" data-act="log">日志</button>';
 const tabBtnConfig = {
   pending:  '<button class="nt-btn primary" data-act="confirm">确认发货批次</button><button class="nt-btn link" data-act="add">新增批次</button>',
-  review:   '<button class="nt-btn primary" data-act="approve">审核通过</button>',
+  review:   '<button class="nt-btn primary" data-act="approve">审核通过</button><button class="nt-btn danger" data-act="reject">驳回</button>',
   done:     '<span class="muted" style="font-size:12px;">已生成正式发货批次</span> <button class="nt-btn link" data-act="unapprove" style="margin-left:8px;">反审</button>'
 };
 const tabHoldConfig = {
@@ -1442,6 +1442,11 @@ document.addEventListener('click', (e) => {
   } else if (act === 'approve') {
     if (confirm(`审核通过 ${sku} 的发货批次？\n→ 批次状态转为「已生成」，生成正式发货批次`)) {
       alert('✓ 已生成正式发货批次');
+    }
+  } else if (act === 'reject') {
+    const reason = prompt(`驳回 ${sku} 的发货批次\n请填写驳回原因（将退回待确认，运营重新拆批）：`, '');
+    if (reason !== null) {
+      alert(reason.trim() ? `✓ 已驳回\n原因：${reason}\n→ 退回「待确认」，运营可重新拆批` : '✓ 已驳回\n→ 退回「待确认」，运营可重新拆批');
     }
   } else if (act === 'unapprove') {
     if (confirm(`反审 ${sku} 的已生成批次？\n→ 退回「待审核」，由运营重新审核`)) {
