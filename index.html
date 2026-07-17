@@ -169,7 +169,7 @@ table.data-table tr.row-expand td { background: #FAFCFF; padding: 0; }
 .nested-table .nt-ck { width: 32px; text-align: center; }
 .nested-table .nt-ck .vxe-checkbox { width: 14px; height: 14px; }
 .nested-table .nt-ck .vxe-checkbox.checked { background: var(--primary); border-color: var(--primary); }
-/* 来源标签：预发货批次(引擎拆批) / 发货批次(别处已生成) */
+/* 来源标签：建议(引擎拆批) / 实际(别处已生成的发货批次) */
 .src-tag { font-size: 11px; padding: 1px 6px; border-radius: 3px; white-space: nowrap; }
 .src-tag.smart { color: var(--tab-active); background: var(--primary-light); }
 .src-tag.manual { color: #86909c; background: #f7f8fa; border: 1px solid #e5e6eb; }
@@ -760,12 +760,11 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
       </div>
     </div>
 
-    <!-- Tab（对齐批次状态机4态：待确认/待审核/已生成/已驳回，按明细条数统计） -->
+    <!-- Tab（状态机3态：待确认/待审核/已生成，按明细条数统计） -->
     <div class="el-tabs">
       <div class="tab-item active" data-tab="pending">待确认 <span class="count">(42)</span></div>
       <div class="tab-item" data-tab="review">待审核 <span class="count">(18)</span></div>
       <div class="tab-item" data-tab="done">已生成 <span class="count">(312)</span></div>
-      <div class="tab-item" data-tab="rejected">已驳回 <span class="count">(5)</span></div>
     </div>
 
     <!-- 批量操作条 -->
@@ -865,7 +864,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
               <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
               <td>1</td>
               <td><span class="batch-type urgent">急</span><span class="batch-urgency urgent">今日必确认</span></td>
-              <td><span class="src-tag smart">预发货批次</span></td>
+              <td><span class="src-tag smart">建议</span></td>
               <td><input class="nt-input" value="40" /></td>
                             <td>快递<span class="ship-level up">↑升</span></td>
               <td>7/24（周四）</td>
@@ -875,7 +874,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
               <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
               <td>2</td>
               <td><span class="batch-type normal">正常</span><span class="batch-urgency normal">本周内</span></td>
-              <td><span class="src-tag smart">预发货批次</span></td>
+              <td><span class="src-tag smart">建议</span></td>
               <td><input class="nt-input" value="60" /></td>
                             <td>快船<span class="ship-level down">↓降</span></td>
               <td>7/24（周四）</td>
@@ -960,7 +959,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
               <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
               <td>1</td>
               <td><span class="batch-type slow">缓</span><span class="batch-urgency slow">本月内</span></td>
-              <td><span class="src-tag smart">预发货批次</span></td>
+              <td><span class="src-tag smart">建议</span></td>
               <td><input class="nt-input" value="200" /></td>
                             <td>慢船</td>
               <td>7/24（周四）</td>
@@ -970,7 +969,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
               <td class="nt-ck"><span class="vxe-checkbox"></span></td>
               <td>2</td>
               <td><span class="batch-type slow">缓</span><span class="batch-urgency slow">本月内</span></td>
-              <td><span class="src-tag manual">发货批次</span></td>
+              <td><span class="src-tag manual">实际</span></td>
               <td><input class="nt-input" value="100" disabled /></td>
                             <td>慢船</td>
               <td>7/24（周四）</td>
@@ -980,7 +979,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
               <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
               <td>3</td>
               <td><span class="batch-type slow">缓</span><span class="batch-urgency slow">本月内</span></td>
-              <td><span class="src-tag smart">预发货批次</span></td>
+              <td><span class="src-tag smart">建议</span></td>
               <td><input class="nt-input" value="200" /></td>
                             <td>慢船</td>
               <td>7/24（周四）</td>
@@ -1065,7 +1064,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
               <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
               <td>1</td>
               <td><span class="batch-type urgent">急</span><span class="batch-urgency urgent">今日必确认</span></td>
-              <td><span class="src-tag smart">预发货批次</span></td>
+              <td><span class="src-tag smart">建议</span></td>
               <td><input class="nt-input" value="200" /></td>
                             <td>空运<span class="ship-level up">↑升</span></td>
               <td>7/24（周四）</td>
@@ -1075,7 +1074,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
               <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
               <td>2</td>
               <td><span class="batch-type normal">正常</span><span class="batch-urgency normal">本周内</span></td>
-              <td><span class="src-tag smart">预发货批次</span></td>
+              <td><span class="src-tag smart">建议</span></td>
               <td><input class="nt-input" value="100" /></td>
                             <td>快船</td>
               <td>7/24（周四）</td>
@@ -1308,19 +1307,17 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
 // === 全局状态 ===
 let currentTab = 'pending';
 
-// === Tab 切换：按状态改变子表格底部按钮（对齐批次状态机4态，每行带日志） ===
+// === Tab 切换：按状态改变子表格底部按钮（状态机3态，每行带日志） ===
 const _logBtn = '<button class="nt-btn link" data-act="log">日志</button>';
 const tabBtnConfig = {
   pending:  '<button class="nt-btn primary" data-act="confirm">确认发货批次</button><button class="nt-btn link" data-act="add">新增批次</button>',
-  review:   '<button class="nt-btn primary" data-act="approve">审核通过</button><button class="nt-btn danger" data-act="reject">驳回</button>',
-  done:     '<span class="muted" style="font-size:12px;">已生成正式发货批次</span> <button class="nt-btn link" data-act="unapprove" style="margin-left:8px;">反审</button>',
-  rejected: '<button class="nt-btn primary" data-act="redo">重新调整</button>'
+  review:   '<button class="nt-btn primary" data-act="approve">审核通过</button>',
+  done:     '<span class="muted" style="font-size:12px;">已生成正式发货批次</span> <button class="nt-btn link" data-act="unapprove" style="margin-left:8px;">反审</button>'
 };
 const tabHoldConfig = {
   pending:  '<button class="nt-btn link">新增批次</button>' + _logBtn,
   review:   '<span class="muted" style="font-size:12px;">—</span>' + _logBtn,
-  done:     '<span class="muted" style="font-size:12px;">—</span>' + _logBtn,
-  rejected: '<button class="nt-btn link">新增批次</button>' + _logBtn
+  done:     '<span class="muted" style="font-size:12px;">—</span>' + _logBtn
 };
 
 document.querySelectorAll('.tab-item').forEach(tab => {
@@ -1446,17 +1443,10 @@ document.addEventListener('click', (e) => {
     if (confirm(`审核通过 ${sku} 的发货批次？\n→ 批次状态转为「已生成」，生成正式发货批次`)) {
       alert('✓ 已生成正式发货批次');
     }
-  } else if (act === 'reject') {
-    const reason = prompt(`驳回 ${sku} 的发货批次\n请填写驳回原因（将退回给计划人员重新调整）：`, '');
-    if (reason !== null) {
-      alert(reason.trim() ? `✓ 已驳回\n原因：${reason}\n→ 批次状态转为「已驳回」` : '✓ 已驳回（未填原因）\n→ 批次状态转为「已驳回」');
-    }
   } else if (act === 'unapprove') {
     if (confirm(`反审 ${sku} 的已生成批次？\n→ 退回「待审核」，由运营重新审核`)) {
       alert('✓ 已反审，退回待审核');
     }
-  } else if (act === 'redo') {
-    alert(`重新调整 ${sku}\n→ 批次状态退回「待确认」，计划人员可重新拆批`);
   } else if (act === 'log') {
     openLogModal(sku, prNo);
   }
