@@ -169,10 +169,14 @@ table.data-table tr.row-expand td { background: #FAFCFF; padding: 0; }
 .nested-table .nt-ck { width: 32px; text-align: center; }
 .nested-table .nt-ck .vxe-checkbox { width: 14px; height: 14px; }
 .nested-table .nt-ck .vxe-checkbox.checked { background: var(--primary); border-color: var(--primary); }
-/* 来源标签：智能(引擎拆批) / 手动(运营新增) */
+/* 来源标签：预发货批次(引擎拆批) / 发货批次(别处已生成) */
 .src-tag { font-size: 11px; padding: 1px 6px; border-radius: 3px; white-space: nowrap; }
 .src-tag.smart { color: var(--tab-active); background: var(--primary-light); }
-.src-tag.manual { color: var(--warning); background: #fff7e8; border: 1px solid #ffd9a8; }
+.src-tag.manual { color: #86909c; background: #f7f8fa; border: 1px solid #e5e6eb; }
+/* 发货批次行（已完成，不可操作）：整行弱化 */
+.nested-table tr.row-done td { background: #fafbfc; color: var(--text-secondary); }
+.nested-table tr.row-done td .nt-input { background: #f7f8fa; color: var(--text-secondary); border-color: transparent; }
+.nested-table tr.row-done .vxe-checkbox { opacity: 0.3; pointer-events: none; }
 .nested-table .nt-ck .vxe-checkbox.checked::after { left: 3px; top: 0px; width: 4px; height: 8px; border-width: 0 2px 2px 0; }
 .nested-table tr.tr-hold td { color: var(--text-secondary) !important; }
 .nested-table tr.tr-hold .nt-ck .vxe-checkbox { background: #f0f0f0; border-color: #dcdfe6; cursor: not-allowed; opacity: 0.5; }
@@ -861,7 +865,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
               <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
               <td>1</td>
               <td><span class="batch-type urgent">急</span><span class="batch-urgency urgent">今日必确认</span></td>
-              <td><span class="src-tag smart">智能</span></td>
+              <td><span class="src-tag smart">预发货批次</span></td>
               <td><input class="nt-input" value="40" /></td>
                             <td>快递<span class="ship-level up">↑升</span></td>
               <td>7/24（周四）</td>
@@ -871,7 +875,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
               <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
               <td>2</td>
               <td><span class="batch-type normal">正常</span><span class="batch-urgency normal">本周内</span></td>
-              <td><span class="src-tag smart">智能</span></td>
+              <td><span class="src-tag smart">预发货批次</span></td>
               <td><input class="nt-input" value="60" /></td>
                             <td>快船<span class="ship-level down">↓降</span></td>
               <td>7/24（周四）</td>
@@ -956,27 +960,27 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
               <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
               <td>1</td>
               <td><span class="batch-type slow">缓</span><span class="batch-urgency slow">本月内</span></td>
-              <td><span class="src-tag smart">智能</span></td>
+              <td><span class="src-tag smart">预发货批次</span></td>
               <td><input class="nt-input" value="200" /></td>
                             <td>慢船</td>
               <td>7/24（周四）</td>
                             <td><span class="tag tag-orange">待确认</span></td>
             </tr>
-            <tr>
-              <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
+            <tr class="row-done">
+              <td class="nt-ck"><span class="vxe-checkbox"></span></td>
               <td>2</td>
               <td><span class="batch-type slow">缓</span><span class="batch-urgency slow">本月内</span></td>
-              <td><span class="src-tag manual">手动</span></td>
-              <td><input class="nt-input" value="100" /></td>
+              <td><span class="src-tag manual">发货批次</span></td>
+              <td><input class="nt-input" value="100" disabled /></td>
                             <td>慢船</td>
               <td>7/24（周四）</td>
-                            <td><span class="tag tag-orange">待确认</span></td>
+                            <td><span class="tag" style="color:var(--success);background:#e8ffea;border:1px solid #c9f0d0;">已完成</span></td>
             </tr>
             <tr>
               <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
               <td>3</td>
               <td><span class="batch-type slow">缓</span><span class="batch-urgency slow">本月内</span></td>
-              <td><span class="src-tag smart">智能</span></td>
+              <td><span class="src-tag smart">预发货批次</span></td>
               <td><input class="nt-input" value="200" /></td>
                             <td>慢船</td>
               <td>7/24（周四）</td>
@@ -1061,7 +1065,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
               <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
               <td>1</td>
               <td><span class="batch-type urgent">急</span><span class="batch-urgency urgent">今日必确认</span></td>
-              <td><span class="src-tag smart">智能</span></td>
+              <td><span class="src-tag smart">预发货批次</span></td>
               <td><input class="nt-input" value="200" /></td>
                             <td>空运<span class="ship-level up">↑升</span></td>
               <td>7/24（周四）</td>
@@ -1071,7 +1075,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
               <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
               <td>2</td>
               <td><span class="batch-type normal">正常</span><span class="batch-urgency normal">本周内</span></td>
-              <td><span class="src-tag smart">智能</span></td>
+              <td><span class="src-tag smart">预发货批次</span></td>
               <td><input class="nt-input" value="100" /></td>
                             <td>快船</td>
               <td>7/24（周四）</td>
