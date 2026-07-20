@@ -905,7 +905,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
               <td><span class="src-tag smart">建议</span></td>
               <td><span class="batch-type urgent">急</span><span class="batch-urgency urgent">今日必确认</span></td>
               <td><input class="nt-input" value="40" /></td>
-              <td><select class="nt-input" style="width:70px;"><option selected>快递</option><option>空运</option><option>快船</option><option>卡航</option><option>卡航整柜</option><option>铁路</option><option>慢船</option><option>海运整柜</option></select><span class="ship-level up">↑升</span></td>
+              <td><select class="nt-input" style="width:70px;"><option selected>快递</option><option>空运</option><option>快船</option><option>卡航</option><option>卡航整柜</option><option>铁路</option><option>慢船</option><option>海运整柜</option></select></td>
               <td>7/24（周四）</td>
               <td><span class="tag tag-orange">待确认</span></td>
               <td class="nt-op"><button class="nt-btn danger sm" data-act="del-batch">删除</button></td>
@@ -1559,8 +1559,12 @@ document.querySelectorAll('.nested-table').forEach(table => {
     });
   });
   // 数量输入框变化时，若该行已勾选，重新统计
-  table.querySelectorAll('.nt-input').forEach(inp => {
+  table.querySelectorAll('input.nt-input').forEach(inp => {
     inp.addEventListener('input', () => updateSummary(table));
+  });
+  // 运输方式下拉变化时，刷新升降标识
+  table.querySelectorAll('select.nt-input').forEach(sel => {
+    sel.addEventListener('change', () => refreshTransportLevel(sel.closest('tr')));
   });
 });
 
@@ -1675,6 +1679,67 @@ document.addEventListener('click', (e) => {
     openLogModal(sku, prNo);
   }
 });
+
+// 运输方式速度排序（值越小越快，全局排序）
+const TRANSPORT_SPEED = {
+  '快递': 1, '空运': 2, '快船': 3, '卡航': 4, '铁路': 5, '慢船': 6, '卡航整柜': 7, '海运整柜': 8
+};
+
+// 计算运输升降标识：对比批次运输方式与默认运输方式
+// 返回 {level: 'up'|'down'|'default', label: '↑升'|'↓降'|'默认'}
+function getTransportLevel(batchTransport, defaultTransport) {
+  if (!batchTransport || !defaultTransport) return { level: 'default', label: '默认' };
+  const bt = TRANSPORT_SPEED[batchTransport];
+  const dt = TRANSPORT_SPEED[defaultTransport];
+  if (bt == null || dt == null) return { level: 'default', label: '默认' };
+  if (bt < dt) return { level: 'up', label: '↑升' };       // 比默认快→升
+  if (bt > dt) return { level: 'down', label: '↓降' };     // 比默认慢→降
+  return { level: 'default', label: '默认' };               // 等于→默认
+}
+
+// 获取某批次所属行的"默认运输方式"（从主表该行的采购申请信息列读取）
+function getDefaultTransport(tr) {
+  const row = tr.closest('tr.row-main');
+  if (!row) return '';
+  let defaultT = '';
+  row.querySelectorAll('.field-line').forEach(fl => {
+    if (fl.textContent.includes('默认运输方式')) {
+      const val = fl.querySelector('.field-value');
+      if (val) defaultT = val.textContent.trim();
+    }
+  });
+  return defaultT;
+}
+
+// 刷新某行批次的运输升降标识
+function refreshTransportLevel(tr) {
+  const sel = tr.querySelector('select.nt-input');
+  if (!sel) return;
+  const batchT = sel.value;
+  const defaultT = getDefaultTransport(tr);
+  const lv = getTransportLevel(batchT, defaultT);
+  // 找到或创建升降标识 span
+  let span = tr.querySelector('.ship-level');
+  if (lv.level === 'default') {
+    // 等于默认：不显示标识（或显示"默认"灰色文字）
+    if (span) span.remove();
+  } else {
+    if (!span) {
+      span = document.createElement('span');
+      sel.parentNode.insertBefore(span, sel.nextSibling);
+    }
+    span.className = 'ship-level ' + lv.level;
+    span.textContent = lv.label;
+  }
+}
+
+// 刷新所有批次的运输升降标识
+function refreshAllTransportLevels() {
+  document.querySelectorAll('.nested-table tbody tr').forEach(tr => {
+    if (tr.classList.contains('tr-hold')) return;
+    refreshTransportLevel(tr);
+  });
+}
 
 // 确认校验：按发货建议维度，本次确认数量 + 已审核/已生成 不能超过 PR需求数
 // 返回 {ok, msg, prNeed, used, thisQty, capacity}
@@ -1959,6 +2024,8 @@ function confirmAddBatch() {
   bindCheckboxEvents(newRow);
   // 重排序号
   renumberSeq(tbody);
+  // 刷新新批次的运输升降标识
+  refreshTransportLevel(newRow);
   // 更新统计
   const table = addBatchTargetRow.querySelector('.nested-table');
   updateSummary(table);
@@ -2449,6 +2516,7 @@ filterNestedRows();
 refreshEditable();
 refreshCheckboxLock();
 refreshBatchMenu();
+refreshAllTransportLevels();
 
 loadAnnotations();
 restoreHighlights();
