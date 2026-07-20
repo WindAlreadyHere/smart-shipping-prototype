@@ -1177,103 +1177,20 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
         <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">FTW1美东仓</span></div>
         <div class="field-line"><span class="field-label">计费重:</span> <span class="field-value muted">待计算</span></div>
       </div></td>
-      <!-- 关键数值：待计算时未分配显示占位 -->
+      <!-- 关键数值：待计算时未分配=总量（实际批次=0） -->
       <td><div class="field-stack">
         <div class="field-line"><span class="field-label">需求数量:</span> <span class="field-value metric">150</span></div>
-        <div class="field-line"><span class="field-label">需求未分配:</span> <span class="field-value muted">待计算</span></div>
+        <div class="field-line"><span class="field-label">需求未分配:</span> <span class="field-value metric">150</span></div>
         <div class="field-line"><span class="field-label">入库数量:</span> <span class="field-value metric">150</span></div>
-        <div class="field-line"><span class="field-label">入库未分配:</span> <span class="field-value muted">待计算</span></div>
+        <div class="field-line"><span class="field-label">入库未分配:</span> <span class="field-value metric">150</span></div>
       </div></td>
       <!-- 智能拆批：待计算占位 + 立即计算按钮 -->
       <td>
         <div class="pending-calc-box">
           <div class="pending-calc-icon">⏳</div>
           <div class="pending-calc-text">待智能拆批引擎计算</div>
-          <div class="pending-calc-hint">预计下次定时执行：明日0点</div>
+          <div class="pending-calc-hint">PO状态流转后系统自动计算</div>
           <button class="nt-btn primary" data-act="calc-now" onclick="calcNow(this)">立即计算</button>
-        </div>
-      </td>
-      <td class="td-op"><span class="muted" style="font-size:12px;">—</span></td>
-    </tr>
-
-    <tr class="row-main row-hold">
-      <td><span class="vxe-checkbox" style="opacity:0.4;"></span></td>
-      <!-- 商品信息 -->
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-value col-code">8143903</span></div>
-        <div class="field-line"><span class="muted">马自达MX-5防水车罩</span></div>
-        <div class="field-line"><span class="field-label">活跃度:</span> <span class="tag tag-clear">清库</span></div>
-        <div class="field-line"><span class="field-label">物流属性:</span> <span class="field-value">普货</span></div>
-        <div class="field-line"><span class="field-label">组合SKU:</span> <span class="field-value">否</span></div>
-        <div class="field-line"><span class="field-label">定制化:</span> <span class="field-value">否</span></div>
-      </div></td>
-      <!-- 采购申请信息 -->
-      <td><div class="field-stack">
-        <div class="field-line key"><span class="field-label">PR单号:</span> <span class="field-value col-code">PR202607020008</span></div>
-        <div class="field-line key"><span class="field-label">PR需求数:</span> <span class="field-value metric">200</span></div>
-        <div class="field-line"><span class="field-label">默认运输方式:</span> <span class="field-value">快船</span></div>
-        <div class="field-line"><span class="field-label">需求日期:</span> <span class="field-value">2026-07-02</span></div>
-      </div></td>
-      <!-- 采购单信息 -->
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">PO单号:</span> <span class="field-value muted">—</span></div>
-        <div class="field-line"><span class="field-label">备货方式:</span> <span class="field-value">普通发货</span></div>
-        <div class="field-line"><span class="field-label">状态:</span> <span class="tag tag-gray">未下PO</span></div>
-        <div class="field-line"><span class="field-label">入库数:</span> <span class="field-value muted">—</span></div>
-      </div></td>
-      <!-- 销售信息 -->
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">国家:</span> <span class="field-value">美国(US)</span></div>
-        <div class="field-line"><span class="field-label">运营人员:</span> <span class="field-value">ShirleyLiu</span></div>
-        <div class="field-line key"><span class="field-label">可售天数:</span> <span class="field-value metric">62天</span> <span class="ok-text">充足</span></div>
-        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">橙联美国仓</span></div>
-      </div></td>
-      <!-- 单箱尺寸信息(商品) -->
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">长×宽×高:</span> <span class="field-value">42×42×43 cm</span></div>
-        <div class="field-line"><span class="field-label">单箱数量:</span> <span class="field-value">16</span></div>
-        <div class="field-line"><span class="field-label">单箱重量:</span> <span class="field-value">8.00 kg</span></div>
-      </div></td>
-      <!-- 发货方式 -->
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">发货仓:</span> <span class="field-value">深圳-02仓</span></div>
-        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">橙联美国仓</span></div>
-        <div class="field-line"><span class="field-label">计费重:</span> <span class="field-value muted">—（暂缓不发货）</span></div>
-      </div></td>
-<td><div class="field-stack">
-        <div class="field-line"><span class="field-label">需求数量:</span> <span class="field-value muted">200</span></div>
-        <div class="field-line"><span class="field-label">需求未分配:</span> <span class="field-value muted">200</span></div>
-        <div class="field-line"><span class="field-label">入库数量:</span> <span class="field-value muted">0</span></div>
-        <div class="field-line"><span class="field-label">入库未分配:</span> <span class="field-value muted">0</span></div>
-      </div></td>
-            <!-- 智能拆批（暂缓行：整行置灰，复选框禁选，仅提供新增批次=强制发货入口） -->
-      <td>
-        <table class="nested-table">
-          <thead><tr>
-            <th class="nt-ck"><span class="vxe-checkbox"></span></th>
-            <th style="width:42px;">序号</th>
-            <th style="width:64px;">来源</th>
-            <th>批次</th>
-            <th>数量</th>
-                        <th>运输方式</th>
-            <th>截仓发货日</th>
-            <th>状态</th>
-            <th style="width:56px;">操作</th>
-          </tr></thead>
-          <tbody>
-            <tr class="tr-hold">
-              <td class="nt-ck"><span class="vxe-checkbox"></span></td>
-              <td class="nt-seq">—</td>
-              <td>—</td>
-              <td><span class="batch-type slow">暂缓</span><span class="batch-urgency slow">无需规划</span></td>
-              <td>200</td>
-              <td colspan="4" style="color:var(--text-secondary);">未下PO · 本轮无需规划发货</td>
-            </tr>
-          </tbody>
-        </table>
-        <div class="batch-summary">PR需 <span class="sum-num">200</span> · <span class="countdown-ok">美国仓可售62天充足，本轮无需规划发货</span></div>
-        <div class="nt-actions">
-          <button class="nt-btn link">新增批次</button>
         </div>
       </td>
       <td class="td-op"><span class="muted" style="font-size:12px;">—</span></td>
