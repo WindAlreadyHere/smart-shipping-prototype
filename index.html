@@ -76,6 +76,16 @@ html, body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-
 /* === 批量操作条 === */
 .batch-bar { background: var(--primary-light); border: 1px solid var(--primary); border-top: none; padding: 8px 16px; display: flex; align-items: center; gap: 12px; font-size: 13px; }
 .batch-bar .sel-count { color: var(--tab-active); font-weight: 500; }
+/* 批量操作下拉菜单 */
+.batch-dropdown { position: relative; display: inline-block; }
+.batch-menu { display: none; position: absolute; top: 100%; left: 0; margin-top: 4px; background: #fff; border: 1px solid var(--border-color); border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); min-width: 180px; padding: 4px 0; z-index: 100; }
+.batch-menu.show { display: block; }
+.batch-menu a { display: flex; justify-content: space-between; align-items: center; padding: 8px 14px; color: var(--text-primary); cursor: pointer; font-size: 13px; gap: 16px; }
+.batch-menu a:hover { background: var(--primary-light); color: var(--tab-active); }
+.batch-menu a.danger { color: var(--danger); }
+.batch-menu a.danger:hover { background: #fff1f0; }
+.batch-menu .batch-menu-hint { font-size: 11px; color: var(--text-secondary); font-weight: 400; }
+.batch-menu-sep { height: 1px; background: var(--border-lighter); margin: 4px 0; }
 
 /* === 表格（信诚式：单行分组表头 + 单元格内多字段纵向堆叠，非多级表头） === */
 .table-wrap { background: #fff; border: 1px solid var(--border-lighter); border-top: none; border-radius: 0 0 4px 4px; overflow-x: auto; }
@@ -773,8 +783,22 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
     <!-- 批量操作条 -->
     <div class="batch-bar">
       <span>已选 <span class="sel-count">3</span> 条明细</span>
-      <button class="op-btn sm">批量调整</button>
-      <button class="op-btn sm">美国配置比例</button>
+      <div class="batch-dropdown">
+        <button class="op-btn sm" onclick="toggleBatchMenu('menu-suggestion')">批量调整建议 ▾</button>
+        <div class="batch-menu" id="menu-suggestion">
+          <a onclick="batchAction('close-suggestion')">批量关闭</a>
+        </div>
+      </div>
+      <div class="batch-dropdown">
+        <button class="op-btn sm" onclick="toggleBatchMenu('menu-batch')">批量调整批次 ▾</button>
+        <div class="batch-menu" id="menu-batch">
+          <a onclick="batchAction('confirm')">批量确认<span class="batch-menu-hint">待确认→待审核</span></a>
+          <a onclick="batchAction('approve')">批量审核<span class="batch-menu-hint">待审核→已生成</span></a>
+          <a onclick="batchAction('reject')">批量驳回<span class="batch-menu-hint">退回待确认</span></a>
+          <div class="batch-menu-sep"></div>
+          <a class="danger" onclick="batchAction('delete')">批量删除<span class="batch-menu-hint">仅待确认</span></a>
+        </div>
+      </div>
       <button class="op-btn sm" onclick="alert('已对勾选明细重新计算发货建议\n→ 基于最新销量/库存/入库数据重新拆批')">重新计算</button>
       <span class="muted" style="margin-left:auto;">智能拆批每日定时0点执行 · 数据更新日：2026-07-20 · 更新成功45条发货建议，失败0条</span>
     </div>
@@ -889,10 +913,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
           </tbody>
         </table>
         <div class="batch-summary">已勾选 <span class="sum-num sel-qty">100</span> 件 / PR需 <span class="sum-num">100</span> · <span class="countdown">英国仓可售8天，今日确认7/10前到货最稳</span></div>
-        <div class="nt-actions">
-          <button class="nt-btn primary">确认发货批次</button>
-          <button class="nt-btn link">新增批次</button>
-        </div>
+        <div class="nt-actions"><button class="nt-btn link" data-act="add">新增批次</button></div>
       </td>
       <td class="td-op"><button class="nt-btn link" data-act="log">日志</button></td>
     </tr>
@@ -998,10 +1019,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
           </tbody>
         </table>
         <div class="batch-summary">已勾选 <span class="sum-num sel-qty">400</span> 件 / PR需 <span class="sum-num">500</span> · <span class="countdown-ok">德国仓可售45天从容，3批控仓储（批次3等7/20入库）</span></div>
-        <div class="nt-actions">
-          <button class="nt-btn primary">确认发货批次</button>
-          <button class="nt-btn link">新增批次</button>
-        </div>
+        <div class="nt-actions"><button class="nt-btn link" data-act="add">新增批次</button></div>
       </td>
       <td class="td-op"><button class="nt-btn link" data-act="log">日志</button></td>
     </tr>
@@ -1096,10 +1114,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
           </tbody>
         </table>
         <div class="batch-summary">已勾选 <span class="sum-num sel-qty">300</span> 件 / PR需 <span class="sum-num">300</span> · <span class="countdown">⚠ 法国仓可售5天，今日确认7/11前到货，否则断货</span></div>
-        <div class="nt-actions">
-          <button class="nt-btn primary">确认发货批次</button>
-          <button class="nt-btn link">新增批次</button>
-        </div>
+        <div class="nt-actions"><button class="nt-btn link" data-act="add">新增批次</button></div>
       </td>
       <td class="td-op"><button class="nt-btn link" data-act="log">日志</button></td>
     </tr>
@@ -1349,12 +1364,12 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
 // === 全局状态 ===
 let currentTab = 'pending';
 
-// === Tab 切换：按状态改变子表格底部按钮（状态机3态，每行带日志） ===
+// === Tab 切换：子表格底部按钮（批量操作已移至顶部批量操作栏） ===
 const _logBtn = '<button class="nt-btn link" data-act="log">日志</button>';
 const tabBtnConfig = {
-  pending:  '<button class="nt-btn primary" data-act="confirm">确认发货批次</button><button class="nt-btn link" data-act="add">新增批次</button>',
-  review:   '<button class="nt-btn primary" data-act="approve">审核通过</button><button class="nt-btn danger" data-act="reject">驳回</button>',
-  done:     '<span class="muted" style="font-size:12px;">已生成正式发货批次</span> <button class="nt-btn link" data-act="unapprove" style="margin-left:8px;">反审</button>'
+  pending:  '<button class="nt-btn link" data-act="add">新增批次</button>',
+  review:   '<span class="muted" style="font-size:12px;">批量操作请用顶部「批量调整批次」</span>',
+  done:     '<span class="muted" style="font-size:12px;">已生成正式发货批次</span>'
 };
 const tabHoldConfig = {
   pending:  '<button class="nt-btn link">新增批次</button>' + _logBtn,
@@ -1502,6 +1517,116 @@ document.addEventListener('click', (e) => {
 });
 
 // === 日志弹窗（两个Tab：操作记录/计算过程） ===
+// === 批量操作下拉菜单 ===
+function toggleBatchMenu(id) {
+  const menu = document.getElementById(id);
+  // 关闭其他菜单
+  document.querySelectorAll('.batch-menu').forEach(m => { if (m.id !== id) m.classList.remove('show'); });
+  menu.classList.toggle('show');
+}
+// 点外部关闭下拉
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.batch-dropdown')) {
+    document.querySelectorAll('.batch-menu').forEach(m => m.classList.remove('show'));
+  }
+});
+
+// 批量操作：作用于主表勾选行内、嵌套表格中被勾选的批次
+function batchAction(action) {
+  document.querySelectorAll('.batch-menu').forEach(m => m.classList.remove('show'));
+
+  // 收集所有被勾选的批次行（嵌套表格内）
+  const checkedBatches = [];
+  document.querySelectorAll('tr.row-main').forEach(row => {
+    const mainCk = row.querySelector('td:first-child .vxe-checkbox');
+    if (!mainCk || !mainCk.classList.contains('checked')) return; // 主表行必须勾选
+    row.querySelectorAll('.nested-table tbody tr').forEach(tr => {
+      const ck = tr.querySelector('.nt-ck .vxe-checkbox');
+      if (ck && ck.classList.contains('checked') && !tr.classList.contains('row-done') && !tr.classList.contains('tr-hold')) {
+        checkedBatches.push(tr);
+      }
+    });
+  });
+
+  if (action === 'close-suggestion') {
+    // 关闭发货建议：作用于主表勾选的行
+    const checkedRows = document.querySelectorAll('tr.row-main td:first-child .vxe-checkbox.checked');
+    if (checkedRows.length === 0) { alert('请先勾选要关闭的发货建议'); return; }
+    if (!confirm(`确认关闭 ${checkedRows.length} 条发货建议？\n→ 关闭后建议不再有效（可重新打开）`)) return;
+    checkedRows.forEach(ck => {
+      const row = ck.closest('tr.row-main');
+      row.style.opacity = '0.5';
+      row.querySelector('.nested-table')?.style.setProperty('pointer-events', 'none');
+    });
+    alert(`✓ 已关闭 ${checkedRows.length} 条发货建议`);
+    return;
+  }
+
+  // 批次级操作
+  if (checkedBatches.length === 0) { alert('请先勾选要操作的批次\n（需同时勾选主表行和嵌套表格内的批次）'); return; }
+
+  let successCount = 0, skipCount = 0;
+  const flowMap = {
+    confirm:  { from: '待确认', to: '待审核', label: '确认' },
+    approve:  { from: '待审核', to: '已生成', label: '审核通过' },
+    reject:   { from: '待审核', to: '待确认', label: '驳回' },
+    delete:   { from: '待确认', to: null, label: '删除' }
+  };
+  const flow = flowMap[action];
+  if (!flow) return;
+
+  if (action === 'delete') {
+    if (!confirm(`确认删除选中的批次？\n（仅待确认状态的批次会被删除，共 ${checkedBatches.length} 个选中）`)) return;
+  } else {
+    if (!confirm(`确认对 ${checkedBatches.length} 个批次执行「${flow.label}」？\n（${flow.from} → ${flow.to || '删除'}，状态不符的会跳过）`)) return;
+  }
+
+  // 记录需要重排序号的 tbody（去重）
+  const tbodySet = new Set();
+
+  checkedBatches.forEach(tr => {
+    const tag = tr.querySelector('.tag');
+    const curStatus = tag ? tag.textContent.trim() : '';
+    if (curStatus !== flow.from) { skipCount++; return; }
+
+    if (action === 'delete') {
+      tbodySet.add(tr.parentNode);
+      tr.remove();
+    } else {
+      // 更新状态标签
+      if (tag) {
+        tag.textContent = flow.to;
+        tag.className = 'tag ' + (flow.to === '已生成' ? '' : 'tag-orange');
+        if (flow.to === '已生成') {
+          tag.style.cssText = 'color:var(--success);background:#e8ffea;border:1px solid #c9f0d0;';
+        } else {
+          tag.removeAttribute('style');
+        }
+      }
+      // 驳回后可删（待确认状态显示删除按钮），确认/审核后隐藏删除按钮
+      const opCell = tr.querySelector('.nt-op');
+      if (opCell) {
+        if (flow.to === '待确认') {
+          opCell.innerHTML = '<button class="nt-btn danger sm" data-act="del-batch">删除</button>';
+        } else {
+          opCell.innerHTML = '<span class="muted" style="font-size:11px;">—</span>';
+        }
+      }
+    }
+    successCount++;
+  });
+
+  // 重排被删除批次的序号
+  tbodySet.forEach(tbody => renumberSeq(tbody));
+  // 更新所有嵌套表格统计
+  document.querySelectorAll('.nested-table').forEach(updateSummary);
+
+  const msg = action === 'delete'
+    ? `✓ 已删除 ${successCount} 个批次` + (skipCount > 0 ? `\n跳过 ${skipCount} 个（非待确认状态）` : '')
+    : `✓ ${successCount} 个批次 ${flow.from} → ${flow.to}` + (skipCount > 0 ? `\n跳过 ${skipCount} 个（非${flow.from}状态）` : '');
+  alert(msg);
+}
+
 // === 新增批次 ===
 let addBatchTargetRow = null;
 function openAddBatchModal(row, sku) {
