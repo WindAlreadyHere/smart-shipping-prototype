@@ -816,7 +816,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
       <th style="width:180px; min-width:180px;">销售信息<div class="col-resizer"></div></th>
       <th style="width:160px; min-width:160px;">单箱尺寸信息(商品)<div class="col-resizer"></div></th>
       <th style="width:200px; min-width:200px;">发货方式<div class="col-resizer"></div></th>
-      <th style="width:150px; min-width:150px;">货物情况<div class="col-resizer"></div></th>
+      <th style="width:150px; min-width:150px;">关键数值<div class="col-resizer"></div></th>
       <th style="width:640px; min-width:640px;">智能拆批<div class="col-resizer"></div></th>
       <th style="width:90px; min-width:90px;" class="th-fixed-op">操作</th>
     </tr>
@@ -869,8 +869,9 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
         <div class="field-line"><span class="field-label">实际重/体积重/体积:</span> <span class="field-value muted">102kg / 141kg / 1.20m³</span></div>
       </div></td>
 <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">已入库:</span> <span class="field-value metric">100</span></div>
-        <div class="field-line"><span class="field-label">PR未分配:</span> <span class="field-value metric">100</span></div>
+        <div class="field-line"><span class="field-label">需求数量:</span> <span class="field-value metric">100</span></div>
+        <div class="field-line"><span class="field-label">需求未分配:</span> <span class="field-value metric">100</span></div>
+        <div class="field-line"><span class="field-label">入库数量:</span> <span class="field-value metric">100</span></div>
         <div class="field-line"><span class="field-label">入库未分配:</span> <span class="field-value metric">100</span></div>
       </div></td>
             <!-- 智能拆批（信诚式嵌套子表格：复选框+可编辑数量+货源状态+底部按钮区） -->
@@ -964,8 +965,9 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
         <div class="field-line"><span class="field-label">实际重/体积重/体积:</span> <span class="field-value muted">185kg / 260kg / 1.75m³</span></div>
       </div></td>
 <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">已入库:</span> <span class="field-value metric">500</span></div>
-        <div class="field-line"><span class="field-label">PR未分配:</span> <span class="field-value metric">400</span></div>
+        <div class="field-line"><span class="field-label">需求数量:</span> <span class="field-value metric">500</span></div>
+        <div class="field-line"><span class="field-label">需求未分配:</span> <span class="field-value metric">400</span></div>
+        <div class="field-line"><span class="field-label">入库数量:</span> <span class="field-value metric">500</span></div>
         <div class="field-line"><span class="field-label">入库未分配:</span> <span class="field-value metric">400</span></div>
       </div></td>
             <!-- 智能拆批（嵌套子表格：基于需求数500拆3批，部分入库，演示🟡待入库场景） -->
@@ -1070,8 +1072,9 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
         <div class="field-line"><span class="field-label">实际重/体积重/体积:</span> <span class="field-value muted">168kg / 280kg / 1.50m³</span></div>
       </div></td>
 <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">已入库:</span> <span class="field-value metric">300</span></div>
-        <div class="field-line"><span class="field-label">PR未分配:</span> <span class="field-value metric">300</span></div>
+        <div class="field-line"><span class="field-label">需求数量:</span> <span class="field-value metric">300</span></div>
+        <div class="field-line"><span class="field-label">需求未分配:</span> <span class="field-value metric">300</span></div>
+        <div class="field-line"><span class="field-label">入库数量:</span> <span class="field-value metric">300</span></div>
         <div class="field-line"><span class="field-label">入库未分配:</span> <span class="field-value metric">300</span></div>
       </div></td>
             <!-- 智能拆批（嵌套子表格：紧急拆2批，断货风险，货源全现货） -->
@@ -1164,8 +1167,9 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
         <div class="field-line"><span class="field-label">计费重:</span> <span class="field-value muted">—（暂缓不发货）</span></div>
       </div></td>
 <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">已入库:</span> <span class="field-value muted">0</span></div>
-        <div class="field-line"><span class="field-label">PR未分配:</span> <span class="field-value muted">200</span></div>
+        <div class="field-line"><span class="field-label">需求数量:</span> <span class="field-value muted">200</span></div>
+        <div class="field-line"><span class="field-label">需求未分配:</span> <span class="field-value muted">200</span></div>
+        <div class="field-line"><span class="field-label">入库数量:</span> <span class="field-value muted">0</span></div>
         <div class="field-line"><span class="field-label">入库未分配:</span> <span class="field-value muted">0</span></div>
       </div></td>
             <!-- 智能拆批（暂缓行：整行置灰，复选框禁选，仅提供新增批次=强制发货入口） -->
