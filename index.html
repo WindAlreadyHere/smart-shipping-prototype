@@ -775,6 +775,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
         <div class="query-item"><label>运输方式</label>
           <select class="input select"><option>请选择</option><option>快递</option><option>空运</option><option>快船</option><option>卡航</option><option>卡航整柜</option><option>铁路</option><option>慢船</option><option>海运整柜</option></select>
         </div>
+        <div class="query-item"><label>供应商编号</label><input class="input" placeholder="请输入" /></div>
         <div class="query-actions">
           <button class="op-btn primary">查询</button>
           <button class="op-btn">重置</button>
@@ -904,7 +905,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
               <td><span class="src-tag smart">建议</span></td>
               <td><span class="batch-type urgent">急</span><span class="batch-urgency urgent">今日必确认</span></td>
               <td><input class="nt-input" value="40" /></td>
-              <td><select class="nt-input" style="width:70px;"><option selected>快递</option><option>空运</option><option>快船</option><option>卡航</option><option>卡航整柜</option><option>铁路</option><option>慢船</option><option>海运整柜</option></select></td>
+              <td><select class="nt-input" style="width:70px;"><option selected>快递</option><option>空运</option><option>快船</option><option>卡航</option><option>卡航整柜</option><option>铁路</option><option>慢船</option><option>海运整柜</option></select><span class="ship-level up">↑升</span></td>
               <td>7/24（周四）</td>
               <td><span class="tag tag-orange">待确认</span></td>
               <td class="nt-op"><button class="nt-btn danger sm" data-act="del-batch">删除</button></td>
@@ -1043,7 +1044,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
         <div class="field-line"><span class="muted">电动车充气泵</span></div>
         <div class="field-line"><span class="field-label">活跃度:</span> <span class="tag tag-rush">冲量</span></div>
         <div class="field-line"><span class="field-label">物流属性:</span> <span class="field-value">带电</span></div>
-        <div class="field-line"><span class="field-label">组合SKU:</span> <span class="field-value">否</span></div>
+        <div class="field-line"><span class="field-label">组合SKU:</span> <span class="field-value" style="color:var(--warning);">是（拆包组合）</span></div>
         <div class="field-line"><span class="field-label">定制化:</span> <span class="field-value">否</span></div>
       </div></td>
       <!-- 采购申请信息 -->
@@ -1374,7 +1375,7 @@ const tabHoldConfig = {
 const opColConfig = {
   pending: '<button class="nt-btn primary sm" data-act="confirm-batch">确认</button><button class="nt-btn danger sm" data-act="del-batch">删除</button>',
   review:  '<button class="nt-btn primary sm" data-act="approve-batch">审核</button><button class="nt-btn sm" data-act="reject-batch">驳回</button>',
-  done:    '<span class="muted" style="font-size:11px;">—</span>'
+  done:    '<button class="nt-btn sm" data-act="unapprove-batch">反审</button>'
 };
 // 批量调整批次菜单项（随Tab变化）
 const batchMenuConfig = {
@@ -1638,6 +1639,9 @@ document.addEventListener('click', (e) => {
     // 容量校验
     const chk = validateConfirmCapacity(row, thisQty);
     if (!chk.ok) { alert('操作失败，请调整：\n\n' + chk.msg); return; }
+    // 组合SKU校验提醒（不阻断）
+    const combo = checkComboSKU(row, thisQty);
+    if (combo.warn) { alert('⚠ 组合SKU提醒\n\n' + combo.msg); }
     if (!confirm(`确认此批次？\n→ 状态：待确认 → 待审核\n→ 本次 ${thisQty}，剩余可分配容量 ${chk.capacity}`)) return;
     flowBatchStatus(tr, '待审核');
   } else if (act === 'approve-batch') {
@@ -1655,6 +1659,18 @@ document.addEventListener('click', (e) => {
     if (confirm(`反审 ${sku} 的已生成批次？\n→ 退回「待审核」，由运营重新审核`)) {
       alert('✓ 已反审，退回待审核');
     }
+  } else if (act === 'unapprove-batch') {
+    // 单批次反审：校验下游头程发货单状态
+    const tr = btn.closest('tr');
+    if (!tr) return;
+    // 模拟头程单状态校验：若该批次已出库则禁止反审
+    const shipped = tr.dataset.shipped === '1' || tr.classList.contains('row-done');
+    if (shipped) {
+      alert('❌ 批次已出库，不可反审\n\n该批次关联的头程发货单已发货，反审会破坏下游数据。');
+      return;
+    }
+    if (!confirm(`反审此批次？\n→ 状态：已生成 → 待审核\n→ 退回后由运营重新审核`)) return;
+    flowBatchStatus(tr, '待审核');
   } else if (act === 'log') {
     openLogModal(sku, prNo);
   }
@@ -1688,6 +1704,21 @@ function validateConfirmCapacity(row, thisQty) {
   return {
     ok, prNeed, used, thisQty, capacity,
     msg: ok ? '' : `数量超限：本次 ${thisQty} + 已占用 ${used}（待审核+已生成）= ${thisQty+used}，超过 PR需求 ${prNeed}（剩余可分配 ${capacity}）\n请调整数量后重试`
+  };
+}
+
+// 组合SKU校验（拆包组合确认时提醒，不阻断）
+// 简化逻辑：如果该行"组合SKU"=是（拆包组合），确认时提醒检查配套子SKU数量
+function checkComboSKU(row, thisQty) {
+  if (!row) return { warn: false };
+  const comboLine = Array.from(row.querySelectorAll('.field-line')).find(fl => fl.textContent.includes('组合SKU'));
+  if (!comboLine) return { warn: false };
+  const isCombo = comboLine.textContent.includes('是') && !comboLine.textContent.includes('开发组合');
+  if (!isCombo) return { warn: false };
+  const sku = row.querySelector('.col-code')?.textContent || '该SKU';
+  return {
+    warn: true,
+    msg: `组合SKU提醒：${sku} 是拆包组合，确认 ${thisQty} 件后，请检查配套子SKU的发货数量是否匹配（BOM换算）。\n此提醒不阻断确认。`
   };
 }
 
