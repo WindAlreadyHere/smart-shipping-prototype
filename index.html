@@ -922,7 +922,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
             </tr>
           </tbody>
         </table>
-        <div class="batch-summary">已勾选 <span class="sum-num sel-qty">100</span> 件 / PR需 <span class="sum-num">100</span> · <span class="countdown">英国仓可售8天，今日确认7/10前到货最稳</span></div>
+        <div class="batch-summary">已勾选 <span class="sum-num sel-qty">100</span> 件 / PR需 <span class="sum-num">100</span></div>
         <div class="nt-actions"><button class="nt-btn link" data-act="add">新增批次</button></div>
       </td>
       <td class="td-op"><button class="nt-btn link" data-act="log">日志</button></td>
@@ -1029,7 +1029,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
             </tr>
           </tbody>
         </table>
-        <div class="batch-summary">已勾选 <span class="sum-num sel-qty">400</span> 件 / PR需 <span class="sum-num">500</span> · <span class="countdown-ok">德国仓可售45天从容，3批控仓储（批次3等7/20入库）</span></div>
+        <div class="batch-summary">已勾选 <span class="sum-num sel-qty">400</span> 件 / PR需 <span class="sum-num">500</span></div>
         <div class="nt-actions"><button class="nt-btn link" data-act="add">新增批次</button></div>
       </td>
       <td class="td-op"><button class="nt-btn link" data-act="log">日志</button></td>
@@ -1125,7 +1125,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
             </tr>
           </tbody>
         </table>
-        <div class="batch-summary">已勾选 <span class="sum-num sel-qty">300</span> 件 / PR需 <span class="sum-num">300</span> · <span class="countdown">⚠ 法国仓可售5天，今日确认7/11前到货，否则断货</span></div>
+        <div class="batch-summary">已勾选 <span class="sum-num sel-qty">300</span> 件 / PR需 <span class="sum-num">300</span></div>
         <div class="nt-actions"><button class="nt-btn link" data-act="add">新增批次</button></div>
       </td>
       <td class="td-op"><button class="nt-btn link" data-act="log">日志</button></td>
@@ -1420,6 +1420,35 @@ function refreshEditable() {
   });
 }
 
+// 按Tab锁定复选框：只有对应状态的批次能勾选
+// 待确认Tab→只有"待确认"可勾；待审核Tab→只有"待审核"可勾；已生成Tab→全部锁定
+const tabToStatus = { pending: '待确认', review: '待审核', done: null };
+function refreshCheckboxLock() {
+  const allowedStatus = tabToStatus[currentTab];
+  document.querySelectorAll('.nested-table tbody tr').forEach(tr => {
+    if (tr.classList.contains('row-done') || tr.classList.contains('tr-hold')) return;
+    const ck = tr.querySelector('.nt-ck .vxe-checkbox');
+    if (!ck) return;
+    const tag = tr.querySelector('.tag');
+    const status = tag ? tag.textContent.trim() : '';
+    if (allowedStatus === null) {
+      // 已生成Tab：全部锁定
+      ck.classList.remove('checked');
+      ck.style.opacity = '0.4';
+      ck.style.pointerEvents = 'none';
+    } else if (status === allowedStatus) {
+      // 对应状态：可勾选
+      ck.style.opacity = '';
+      ck.style.pointerEvents = '';
+    } else {
+      // 非对应状态：锁定，取消勾选
+      ck.classList.remove('checked');
+      ck.style.opacity = '0.4';
+      ck.style.pointerEvents = 'none';
+    }
+  });
+}
+
 function refreshBatchMenu() {
   const menu = document.getElementById('menu-batch');
   if (!menu) return;
@@ -1453,6 +1482,8 @@ document.querySelectorAll('.tab-item').forEach(tab => {
     filterNestedRows();
     // 控制可编辑性（仅待确认可编辑）
     refreshEditable();
+    // 按Tab锁定复选框（只有对应状态的批次可勾选）
+    refreshCheckboxLock();
     // 更新批量菜单
     refreshBatchMenu();
     // 已生成批次时：所有复选框禁选 + 清空选中
@@ -1676,6 +1707,11 @@ function flowBatchStatus(tr, newStatus) {
   // 操作列按钮随新状态更新（用当前 Tab 配置）
   const opCell = tr.querySelector('.nt-op');
   if (opCell) opCell.innerHTML = opColConfig[currentTab] || '<span class="muted">—</span>';
+  // 状态变了，重新锁定复选框（被操作的批次可能不再属于当前Tab可勾选状态）
+  refreshCheckboxLock();
+  // 重算统计
+  const table = tr.closest('.nested-table');
+  if (table) updateSummary(table);
 }
 
 // === 日志弹窗（两个Tab：操作记录/计算过程） ===
@@ -2380,6 +2416,7 @@ document.querySelectorAll('.nt-actions').forEach((act, idx) => {
 refreshOpColumns();
 filterNestedRows();
 refreshEditable();
+refreshCheckboxLock();
 refreshBatchMenu();
 
 loadAnnotations();
