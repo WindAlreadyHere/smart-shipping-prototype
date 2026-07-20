@@ -1397,6 +1397,35 @@ function refreshOpColumns() {
   });
 }
 
+// 状态→Tab 映射（用于过滤）
+const statusToTab = { '待确认': 'pending', '待审核': 'review', '已生成': 'done' };
+
+// 按Tab过滤嵌套表格行：待确认显示全部，其他只显示对应状态
+function filterNestedRows() {
+  document.querySelectorAll('.nested-table tbody tr').forEach(tr => {
+    if (tr.classList.contains('tr-hold')) { tr.style.display = ''; return; }
+    if (currentTab === 'pending') {
+      tr.style.display = '';  // 待确认显示全部
+    } else {
+      const tag = tr.querySelector('.tag');
+      const status = tag ? tag.textContent.trim() : '';
+      tr.style.display = (statusToTab[status] === currentTab) ? '' : 'none';
+    }
+  });
+}
+
+// 按Tab控制可编辑性：只有待确认Tab可编辑数量和运输方式
+function refreshEditable() {
+  const editable = (currentTab === 'pending');
+  document.querySelectorAll('.nested-table tbody tr').forEach(tr => {
+    if (tr.classList.contains('row-done') || tr.classList.contains('tr-hold')) return;
+    const inp = tr.querySelector('.nt-input[type="number"], input.nt-input:not([type])');
+    const sel = tr.querySelector('select.nt-input');
+    if (inp) inp.disabled = !editable;
+    if (sel) sel.disabled = !editable;
+  });
+}
+
 function refreshBatchMenu() {
   const menu = document.getElementById('menu-batch');
   if (!menu) return;
@@ -1405,9 +1434,14 @@ function refreshBatchMenu() {
     menu.innerHTML = '<div style="padding:12px 14px;color:var(--text-secondary);font-size:12px;">当前状态无可用批量操作</div>';
     return;
   }
-  menu.innerHTML = items.map(it =>
+  let html = items.map(it =>
     `<a onclick="batchAction('${it.act}')">${it.label}<span class="batch-menu-hint">${it.hint}</span></a>`
-  ).join('') + '<div class="batch-menu-sep"></div><a class="danger" onclick="batchAction(\'delete\')">批量删除<span class="batch-menu-hint">仅待确认</span></a>';
+  ).join('');
+  // 批量删除只在待确认Tab显示
+  if (currentTab === 'pending') {
+    html += '<div class="batch-menu-sep"></div><a class="danger" onclick="batchAction(\'delete\')">批量删除<span class="batch-menu-hint">仅待确认</span></a>';
+  }
+  menu.innerHTML = html;
 }
 
 document.querySelectorAll('.tab-item').forEach(tab => {
@@ -1421,6 +1455,10 @@ document.querySelectorAll('.tab-item').forEach(tab => {
     });
     // 更新操作列按钮
     refreshOpColumns();
+    // 过滤嵌套表格行（待确认全部，其他只显示对应状态）
+    filterNestedRows();
+    // 控制可编辑性（仅待确认可编辑）
+    refreshEditable();
     // 更新批量菜单
     refreshBatchMenu();
     // 已生成批次时：所有复选框禁选 + 清空选中
@@ -1567,10 +1605,15 @@ document.addEventListener('click', (e) => {
   } else if (act === 'del-batch') {
     deleteBatch(btn, sku);
   } else if (act === 'confirm-batch') {
-    // 单批次确认（二次确认 + 实时状态流转）
+    // 单批次确认（校验 + 二次确认 + 状态流转）
     const tr = btn.closest('tr');
     if (!tr) return;
-    if (!confirm(`确认此批次？\n→ 状态：待确认 → 待审核`)) return;
+    const inp = tr.querySelector('.nt-input');
+    const thisQty = inp ? (parseInt(inp.value) || 0) : 0;
+    // 容量校验
+    const chk = validateConfirmCapacity(row, thisQty);
+    if (!chk.ok) { alert('操作失败，请调整：\n\n' + chk.msg); return; }
+    if (!confirm(`确认此批次？\n→ 状态：待确认 → 待审核\n→ 本次 ${thisQty}，剩余可分配容量 ${chk.capacity}`)) return;
     flowBatchStatus(tr, '待审核');
   } else if (act === 'approve-batch') {
     const tr = btn.closest('tr');
@@ -1591,6 +1634,37 @@ document.addEventListener('click', (e) => {
     openLogModal(sku, prNo);
   }
 });
+
+// 确认校验：按发货建议维度，本次确认数量 + 已审核/已生成 不能超过 PR需求数
+// 返回 {ok, msg, prNeed, used, thisQty, capacity}
+function validateConfirmCapacity(row, thisQty) {
+  if (!row) return { ok: false, msg: '找不到发货建议行' };
+  // 找 PR需求数
+  let prNeed = 0;
+  row.querySelectorAll('.field-line').forEach(fl => {
+    if (fl.textContent.includes('PR需求数')) {
+      const m = fl.textContent.match(/(\d+)/);
+      if (m) prNeed = parseInt(m[1]);
+    }
+  });
+  // 统计该行所有批次的 已生成 + 待审核 数量（不含本次待确认的）
+  let used = 0;
+  row.querySelectorAll('.nested-table tbody tr').forEach(tr => {
+    if (tr.classList.contains('tr-hold') || tr.classList.contains('row-done')) return;
+    const tag = tr.querySelector('.tag');
+    const status = tag ? tag.textContent.trim() : '';
+    if (status === '已生成' || status === '待审核') {
+      const inp = tr.querySelector('.nt-input');
+      if (inp) used += parseInt(inp.value) || 0;
+    }
+  });
+  const capacity = prNeed - used;
+  const ok = thisQty <= capacity;
+  return {
+    ok, prNeed, used, thisQty, capacity,
+    msg: ok ? '' : `数量超限：本次 ${thisQty} + 已占用 ${used}（待审核+已生成）= ${thisQty+used}，超过 PR需求 ${prNeed}（剩余可分配 ${capacity}）\n请调整数量后重试`
+  };
+}
 
 // 单批次状态流转：更新标签 + 操作列按钮
 function flowBatchStatus(tr, newStatus) {
@@ -1669,6 +1743,35 @@ function batchAction(action) {
 
   if (action === 'delete') {
     if (!confirm(`确认删除选中的批次？\n（仅待确认状态的批次会被删除，共 ${checkedBatches.length} 个选中）`)) return;
+  } else if (action === 'confirm') {
+    // 批量确认：按发货建议维度校验容量
+    // 把选中的批次按所属 row 分组，累加本次数量
+    const rowMap = new Map();  // row -> { thisQty, batches }
+    checkedBatches.forEach(tr => {
+      const tag = tr.querySelector('.tag');
+      if (!tag || tag.textContent.trim() !== '待确认') return;
+      const row = tr.closest('tr.row-main');
+      if (!row) return;
+      const inp = tr.querySelector('.nt-input');
+      const qty = inp ? (parseInt(inp.value) || 0) : 0;
+      if (!rowMap.has(row)) rowMap.set(row, { thisQty: 0, batches: [] });
+      const entry = rowMap.get(row);
+      entry.thisQty += qty;
+      entry.batches.push(tr);
+    });
+    let failures = [];
+    rowMap.forEach((entry, row) => {
+      const chk = validateConfirmCapacity(row, entry.thisQty);
+      if (!chk.ok) {
+        const sku = row.querySelector('.col-code')?.textContent || '?';
+        failures.push(`${sku}：${chk.msg}`);
+      }
+    });
+    if (failures.length > 0) {
+      alert('操作失败，以下发货建议数量超限，请调整：\n\n' + failures.join('\n\n'));
+      return;
+    }
+    if (!confirm(`确认对 ${checkedBatches.length} 个批次执行「${flow.label}」？\n（${flow.from} → ${flow.to}，已通过容量校验）`)) return;
   } else {
     if (!confirm(`确认对 ${checkedBatches.length} 个批次执行「${flow.label}」？\n（${flow.from} → ${flow.to || '删除'}，状态不符的会跳过）`)) return;
   }
@@ -1756,7 +1859,7 @@ function confirmAddBatch() {
     <td><select class="nt-input" style="width:70px;">${optHtml}</select></td>
     <td>—</td>
     <td><span class="tag tag-orange">待确认</span></td>
-    <td class="nt-op"><button class="nt-btn danger sm" data-act="del-batch">删除</button></td>
+    <td class="nt-op">${opColConfig.pending}</td>
   `;
   // 找插入点：最后一个建议行之后
   const rows = Array.from(tbody.querySelectorAll('tr'));
@@ -2260,6 +2363,8 @@ document.querySelectorAll('.nt-actions').forEach((act, idx) => {
   act.innerHTML = (idx === 3) ? tabHoldConfig[currentTab] : tabBtnConfig[currentTab];
 });
 refreshOpColumns();
+filterNestedRows();
+refreshEditable();
 refreshBatchMenu();
 
 loadAnnotations();
