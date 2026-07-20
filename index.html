@@ -1364,7 +1364,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
 // === 全局状态 ===
 let currentTab = 'pending';
 
-// === Tab 切换：子表格底部按钮（批量操作已移至顶部批量操作栏） ===
+// === Tab 切换：子表格底部按钮 + 操作列按钮 + 批量菜单（都随Tab联动） ===
 const _logBtn = '<button class="nt-btn link" data-act="log">日志</button>';
 const tabBtnConfig = {
   pending:  '<button class="nt-btn link" data-act="add">新增批次</button>',
@@ -1376,36 +1376,71 @@ const tabHoldConfig = {
   review:   '<span class="muted" style="font-size:12px;">—</span>' + _logBtn,
   done:     '<span class="muted" style="font-size:12px;">—</span>' + _logBtn
 };
+// 操作列按钮配置（随Tab变化；row-done/tr-hold 行固定显示"—"）
+const opColConfig = {
+  pending: '<button class="nt-btn primary sm" data-act="confirm-batch">确认</button><button class="nt-btn danger sm" data-act="del-batch">删除</button>',
+  review:  '<button class="nt-btn primary sm" data-act="approve-batch">审核</button><button class="nt-btn sm" data-act="reject-batch">驳回</button>',
+  done:    '<span class="muted" style="font-size:11px;">—</span>'
+};
+// 批量调整批次菜单项（随Tab变化）
+const batchMenuConfig = {
+  pending: [{act:'confirm', label:'批量确认', hint:'待确认→待审核'}],
+  review:  [{act:'approve', label:'批量审核', hint:'待审核→已生成'}, {act:'reject', label:'批量驳回', hint:'退回待确认'}],
+  done:    []
+};
+
+function refreshOpColumns() {
+  document.querySelectorAll('.nested-table tbody tr').forEach(tr => {
+    if (tr.classList.contains('row-done') || tr.classList.contains('tr-hold')) return;
+    const opCell = tr.querySelector('.nt-op');
+    if (opCell) opCell.innerHTML = opColConfig[currentTab] || '<span class="muted">—</span>';
+  });
+}
+
+function refreshBatchMenu() {
+  const menu = document.getElementById('menu-batch');
+  if (!menu) return;
+  const items = batchMenuConfig[currentTab] || [];
+  if (items.length === 0) {
+    menu.innerHTML = '<div style="padding:12px 14px;color:var(--text-secondary);font-size:12px;">当前状态无可用批量操作</div>';
+    return;
+  }
+  menu.innerHTML = items.map(it =>
+    `<a onclick="batchAction('${it.act}')">${it.label}<span class="batch-menu-hint">${it.hint}</span></a>`
+  ).join('') + '<div class="batch-menu-sep"></div><a class="danger" onclick="batchAction(\'delete\')">批量删除<span class="batch-menu-hint">仅待确认</span></a>';
+}
 
 document.querySelectorAll('.tab-item').forEach(tab => {
   tab.addEventListener('click', () => {
     document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
     tab.classList.add('active');
     currentTab = tab.dataset.tab;
-    // 更新按钮区
+    // 更新底部按钮区
     document.querySelectorAll('.nt-actions').forEach((act, idx) => {
       act.innerHTML = (idx === 3) ? tabHoldConfig[currentTab] : tabBtnConfig[currentTab];
     });
-    // 已生成批次时：所有复选框禁选 + 清空选中（子表格+主表+表头）
+    // 更新操作列按钮
+    refreshOpColumns();
+    // 更新批量菜单
+    refreshBatchMenu();
+    // 已生成批次时：所有复选框禁选 + 清空选中
     const lockAll = (currentTab === 'done');
     document.querySelectorAll('.nt-ck .vxe-checkbox').forEach(ck => {
       if (lockAll) {
         ck.classList.remove('checked');
         ck.style.opacity = '0.4';
         ck.style.pointerEvents = 'none';
-      } else if (!ck.closest('.tr-hold')) {
+      } else if (!ck.closest('.tr-hold') && !ck.closest('.row-done')) {
         ck.style.opacity = '';
         ck.style.pointerEvents = '';
       }
     });
-    // 主表复选框和表头全选
     document.querySelectorAll('tbody > tr.row-main > td:first-child .vxe-checkbox').forEach(ck => {
       if (lockAll) { ck.classList.remove('checked'); ck.style.opacity = '0.4'; ck.style.pointerEvents = 'none'; }
       else if (!ck.closest('.row-hold')) { ck.style.opacity = ''; ck.style.pointerEvents = ''; }
     });
-    if (headerCk) {
-      if (lockAll) { headerCk.classList.remove('checked'); }
-    }
+    const headerCk = document.querySelector('thead th:first-child .vxe-checkbox');
+    if (headerCk && lockAll) { headerCk.classList.remove('checked'); }
     if (lockAll) updateAllSummary();
     updateMainSelected();
   });
@@ -1433,11 +1468,29 @@ document.querySelectorAll('.nested-table').forEach(table => {
   table.querySelectorAll('.nt-ck .vxe-checkbox').forEach(ck => {
     ck.addEventListener('click', (e) => {
       e.stopPropagation();
-      // 暂缓行 / 已生成锁定 / 发货批次(已完成)：不可点
+      // 暂缓行 / 发货批次(已完成)：不可点
       if (ck.closest('.tr-hold')) return;
       if (ck.closest('.row-done')) return;
       if (currentTab === 'done') return;
-      ck.classList.toggle('checked');
+      // 判断是表头还是行内
+      const isInThead = ck.closest('thead');
+      if (isInThead) {
+        // 表头全选：联动所有可勾选的行
+        const willCheck = !ck.classList.contains('checked');
+        ck.classList.toggle('checked');
+        table.querySelectorAll('tbody tr').forEach(tr => {
+          if (tr.classList.contains('tr-hold') || tr.classList.contains('row-done')) return;
+          const rowCk = tr.querySelector('.nt-ck .vxe-checkbox');
+          if (rowCk) {
+            if (willCheck) rowCk.classList.add('checked');
+            else rowCk.classList.remove('checked');
+          }
+        });
+      } else {
+        ck.classList.toggle('checked');
+        // 同步表头状态（全选/半选）
+        syncNestedHeader(table);
+      }
       updateSummary(table);
     });
   });
@@ -1446,6 +1499,23 @@ document.querySelectorAll('.nested-table').forEach(table => {
     inp.addEventListener('input', () => updateSummary(table));
   });
 });
+
+// 同步嵌套表头 checkbox 状态（全选/取消全选）
+function syncNestedHeader(table) {
+  const headerCk = table.querySelector('thead .nt-ck .vxe-checkbox');
+  if (!headerCk) return;
+  const rows = table.querySelectorAll('tbody tr');
+  let checkable = 0, checked = 0;
+  rows.forEach(tr => {
+    if (tr.classList.contains('tr-hold') || tr.classList.contains('row-done')) return;
+    checkable++;
+    const ck = tr.querySelector('.nt-ck .vxe-checkbox');
+    if (ck && ck.classList.contains('checked')) checked++;
+  });
+  if (checkable === 0) return;
+  if (checked === checkable) headerCk.classList.add('checked');
+  else headerCk.classList.remove('checked');
+}
 
 // === 主表复选框：切换选中 + 顶部"已选N条"联动 ===
 function updateMainSelected() {
@@ -1492,21 +1562,27 @@ document.addEventListener('click', (e) => {
   const sku = row ? (row.querySelector('.col-code')?.textContent || '该明细') : '该明细';
   const prNo = row ? (row.querySelector('.field-line.key .col-code')?.textContent || '') : '';
 
-  if (act === 'confirm') {
-    alert(`已确认 ${sku} 的勾选批次\n→ 批次状态转为「待审核」，等待运营审核`);
-  } else if (act === 'add') {
+  if (act === 'add') {
     openAddBatchModal(row, sku);
   } else if (act === 'del-batch') {
     deleteBatch(btn, sku);
-  } else if (act === 'approve') {
-    if (confirm(`审核通过 ${sku} 的发货批次？\n→ 批次状态转为「已生成」，生成正式发货批次`)) {
-      alert('✓ 已生成正式发货批次');
-    }
-  } else if (act === 'reject') {
-    const reason = prompt(`驳回 ${sku} 的发货批次\n请填写驳回原因（将退回待确认，运营重新拆批）：`, '');
-    if (reason !== null) {
-      alert(reason.trim() ? `✓ 已驳回\n原因：${reason}\n→ 退回「待确认」，运营可重新拆批` : '✓ 已驳回\n→ 退回「待确认」，运营可重新拆批');
-    }
+  } else if (act === 'confirm-batch') {
+    // 单批次确认（二次确认 + 实时状态流转）
+    const tr = btn.closest('tr');
+    if (!tr) return;
+    if (!confirm(`确认此批次？\n→ 状态：待确认 → 待审核`)) return;
+    flowBatchStatus(tr, '待审核');
+  } else if (act === 'approve-batch') {
+    const tr = btn.closest('tr');
+    if (!tr) return;
+    if (!confirm(`审核通过此批次？\n→ 状态：待审核 → 已生成（变成正式发货批次）`)) return;
+    flowBatchStatus(tr, '已生成');
+  } else if (act === 'reject-batch') {
+    const tr = btn.closest('tr');
+    if (!tr) return;
+    const reason = prompt(`驳回此批次\n请填写驳回原因（退回待确认，运营重新拆批）：`, '');
+    if (reason === null) return;
+    flowBatchStatus(tr, '待确认');
   } else if (act === 'unapprove') {
     if (confirm(`反审 ${sku} 的已生成批次？\n→ 退回「待审核」，由运营重新审核`)) {
       alert('✓ 已反审，退回待审核');
@@ -1515,6 +1591,24 @@ document.addEventListener('click', (e) => {
     openLogModal(sku, prNo);
   }
 });
+
+// 单批次状态流转：更新标签 + 操作列按钮
+function flowBatchStatus(tr, newStatus) {
+  const tag = tr.querySelector('.tag');
+  if (tag) {
+    tag.textContent = newStatus;
+    if (newStatus === '已生成') {
+      tag.className = 'tag';
+      tag.style.cssText = 'color:var(--success);background:#e8ffea;border:1px solid #c9f0d0;';
+    } else {
+      tag.className = 'tag tag-orange';
+      tag.removeAttribute('style');
+    }
+  }
+  // 操作列按钮随新状态更新（用当前 Tab 配置）
+  const opCell = tr.querySelector('.nt-op');
+  if (opCell) opCell.innerHTML = opColConfig[currentTab] || '<span class="muted">—</span>';
+}
 
 // === 日志弹窗（两个Tab：操作记录/计算过程） ===
 // === 批量操作下拉菜单 ===
@@ -1535,11 +1629,9 @@ document.addEventListener('click', (e) => {
 function batchAction(action) {
   document.querySelectorAll('.batch-menu').forEach(m => m.classList.remove('show'));
 
-  // 收集所有被勾选的批次行（嵌套表格内）
+  // 收集所有被勾选的批次行（嵌套表格内，不需要主表勾选）
   const checkedBatches = [];
   document.querySelectorAll('tr.row-main').forEach(row => {
-    const mainCk = row.querySelector('td:first-child .vxe-checkbox');
-    if (!mainCk || !mainCk.classList.contains('checked')) return; // 主表行必须勾选
     row.querySelectorAll('.nested-table tbody tr').forEach(tr => {
       const ck = tr.querySelector('.nt-ck .vxe-checkbox');
       if (ck && ck.classList.contains('checked') && !tr.classList.contains('row-done') && !tr.classList.contains('tr-hold')) {
@@ -1563,7 +1655,7 @@ function batchAction(action) {
   }
 
   // 批次级操作
-  if (checkedBatches.length === 0) { alert('请先勾选要操作的批次\n（需同时勾选主表行和嵌套表格内的批次）'); return; }
+  if (checkedBatches.length === 0) { alert('请先在嵌套表格中勾选要操作的批次'); return; }
 
   let successCount = 0, skipCount = 0;
   const flowMap = {
@@ -2167,6 +2259,8 @@ document.addEventListener('mousedown', function(e) { if (!e.target.closest('#too
 document.querySelectorAll('.nt-actions').forEach((act, idx) => {
   act.innerHTML = (idx === 3) ? tabHoldConfig[currentTab] : tabBtnConfig[currentTab];
 });
+refreshOpColumns();
+refreshBatchMenu();
 
 loadAnnotations();
 restoreHighlights();
