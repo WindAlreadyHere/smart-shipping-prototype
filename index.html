@@ -167,6 +167,9 @@ table.data-table tr.row-expand td { background: #FAFCFF; padding: 0; }
 
 /* 子表格复选框列（暂缓批次禁选） */
 .nested-table .nt-ck { width: 32px; text-align: center; }
+.nested-table .nt-seq { width: 42px; text-align: center; color: var(--text-secondary); font-size: 12px; }
+.nested-table .nt-op { width: 56px; text-align: center; }
+.nested-table .nt-btn.sm { height: 22px; padding: 0 8px; font-size: 11px; }
 .nested-table .nt-ck .vxe-checkbox { width: 14px; height: 14px; }
 .nested-table .nt-ck .vxe-checkbox.checked { background: var(--primary); border-color: var(--primary); }
 /* 来源标签：建议(引擎拆批) / 实际(别处已生成的发货批次) */
@@ -851,34 +854,37 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
         <table class="nested-table">
           <thead><tr>
             <th class="nt-ck"><span class="vxe-checkbox checked"></span></th>
-            <th style="width:24px;">#</th>
+            <th style="width:42px;">序号</th>
+            <th style="width:64px;">来源</th>
             <th>批次</th>
-            <th>来源</th>
             <th>数量</th>
-                        <th>运输</th>
+                        <th>运输方式</th>
             <th>截仓发货日</th>
             <th>状态</th>
+            <th style="width:56px;">操作</th>
           </tr></thead>
           <tbody>
             <tr>
               <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
-              <td>1</td>
-              <td><span class="batch-type urgent">急</span><span class="batch-urgency urgent">今日必确认</span></td>
+              <td class="nt-seq">1</td>
               <td><span class="src-tag smart">建议</span></td>
+              <td><span class="batch-type urgent">急</span><span class="batch-urgency urgent">今日必确认</span></td>
               <td><input class="nt-input" value="40" /></td>
-                            <td>快递<span class="ship-level up">↑升</span></td>
+              <td><select class="nt-input" style="width:70px;"><option selected>快递</option><option>空运</option><option>快船</option><option>卡航</option><option>卡航整柜</option><option>铁路</option><option>慢船</option><option>海运整柜</option></select></td>
               <td>7/24（周四）</td>
               <td><span class="tag tag-orange">待确认</span></td>
+              <td class="nt-op"><button class="nt-btn danger sm" data-act="del-batch">删除</button></td>
             </tr>
             <tr>
               <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
-              <td>2</td>
-              <td><span class="batch-type normal">正常</span><span class="batch-urgency normal">本周内</span></td>
+              <td class="nt-seq">2</td>
               <td><span class="src-tag smart">建议</span></td>
+              <td><span class="batch-type normal">正常</span><span class="batch-urgency normal">本周内</span></td>
               <td><input class="nt-input" value="60" /></td>
-                            <td>快船<span class="ship-level down">↓降</span></td>
+              <td><select class="nt-input" style="width:70px;"><option>快递</option><option>空运</option><option selected>快船</option><option>卡航</option><option>卡航整柜</option><option>铁路</option><option>慢船</option><option>海运整柜</option></select></td>
               <td>7/24（周四）</td>
               <td><span class="tag tag-orange">待确认</span></td>
+              <td class="nt-op"><button class="nt-btn danger sm" data-act="del-batch">删除</button></td>
             </tr>
           </tbody>
         </table>
@@ -946,44 +952,48 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
         <table class="nested-table">
           <thead><tr>
             <th class="nt-ck"><span class="vxe-checkbox checked"></span></th>
-            <th style="width:24px;">#</th>
+            <th style="width:42px;">序号</th>
+            <th style="width:64px;">来源</th>
             <th>批次</th>
-            <th>来源</th>
             <th>数量</th>
-                        <th>运输</th>
+                        <th>运输方式</th>
             <th>截仓发货日</th>
             <th>状态</th>
+            <th style="width:56px;">操作</th>
           </tr></thead>
           <tbody>
             <tr>
               <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
-              <td>1</td>
-              <td><span class="batch-type slow">缓</span><span class="batch-urgency slow">本月内</span></td>
+              <td class="nt-seq">1</td>
               <td><span class="src-tag smart">建议</span></td>
-              <td><input class="nt-input" value="200" /></td>
-                            <td>慢船</td>
-              <td>7/24（周四）</td>
-                            <td><span class="tag tag-orange">待确认</span></td>
-            </tr>
-            <tr class="row-done">
-              <td class="nt-ck"><span class="vxe-checkbox"></span></td>
-              <td>2</td>
               <td><span class="batch-type slow">缓</span><span class="batch-urgency slow">本月内</span></td>
-              <td><span class="src-tag manual">实际</span></td>
-              <td><input class="nt-input" value="100" disabled /></td>
-                            <td>慢船</td>
+              <td><input class="nt-input" value="200" /></td>
+              <td><select class="nt-input" style="width:70px;"><option>快递</option><option>空运</option><option>快船</option><option>卡航</option><option>卡航整柜</option><option>铁路</option><option selected>慢船</option><option>海运整柜</option></select></td>
               <td>7/24（周四）</td>
-                            <td><span class="tag" style="color:var(--success);background:#e8ffea;border:1px solid #c9f0d0;">已完成</span></td>
+              <td><span class="tag tag-orange">待确认</span></td>
+              <td class="nt-op"><button class="nt-btn danger sm" data-act="del-batch">删除</button></td>
             </tr>
             <tr>
               <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
-              <td>3</td>
-              <td><span class="batch-type slow">缓</span><span class="batch-urgency slow">本月内</span></td>
+              <td class="nt-seq">2</td>
               <td><span class="src-tag smart">建议</span></td>
+              <td><span class="batch-type slow">缓</span><span class="batch-urgency slow">本月内</span></td>
               <td><input class="nt-input" value="200" /></td>
-                            <td>慢船</td>
+              <td><select class="nt-input" style="width:70px;"><option>快递</option><option>空运</option><option>快船</option><option>卡航</option><option>卡航整柜</option><option>铁路</option><option selected>慢船</option><option>海运整柜</option></select></td>
               <td>7/24（周四）</td>
-                            <td><span class="tag tag-orange">待确认</span></td>
+              <td><span class="tag tag-orange">待确认</span></td>
+              <td class="nt-op"><button class="nt-btn danger sm" data-act="del-batch">删除</button></td>
+            </tr>
+            <tr class="row-done">
+              <td class="nt-ck"><span class="vxe-checkbox"></span></td>
+              <td class="nt-seq">3</td>
+              <td><span class="src-tag manual">实际</span></td>
+              <td><span class="batch-type slow">缓</span><span class="batch-urgency slow">本月内</span></td>
+              <td><input class="nt-input" value="100" disabled /></td>
+              <td><select class="nt-input" style="width:70px;" disabled><option>快递</option><option>空运</option><option>快船</option><option>卡航</option><option>卡航整柜</option><option>铁路</option><option selected>慢船</option><option>海运整柜</option></select></td>
+              <td>7/24（周四）</td>
+              <td><span class="tag" style="color:var(--success);background:#e8ffea;border:1px solid #c9f0d0;">已完成</span></td>
+              <td class="nt-op"><span class="muted" style="font-size:11px;">—</span></td>
             </tr>
           </tbody>
         </table>
@@ -1051,34 +1061,37 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
         <table class="nested-table">
           <thead><tr>
             <th class="nt-ck"><span class="vxe-checkbox checked"></span></th>
-            <th style="width:24px;">#</th>
+            <th style="width:42px;">序号</th>
+            <th style="width:64px;">来源</th>
             <th>批次</th>
-            <th>来源</th>
             <th>数量</th>
-                        <th>运输</th>
+                        <th>运输方式</th>
             <th>截仓发货日</th>
             <th>状态</th>
+            <th style="width:56px;">操作</th>
           </tr></thead>
           <tbody>
             <tr>
               <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
-              <td>1</td>
-              <td><span class="batch-type urgent">急</span><span class="batch-urgency urgent">今日必确认</span></td>
+              <td class="nt-seq">1</td>
               <td><span class="src-tag smart">建议</span></td>
+              <td><span class="batch-type urgent">急</span><span class="batch-urgency urgent">今日必确认</span></td>
               <td><input class="nt-input" value="200" /></td>
-                            <td>空运<span class="ship-level up">↑升</span></td>
+              <td><select class="nt-input" style="width:70px;"><option>快递</option><option selected>空运</option><option>快船</option><option>卡航</option><option>卡航整柜</option><option>铁路</option><option>慢船</option><option>海运整柜</option></select></td>
               <td>7/24（周四）</td>
-                            <td><span class="tag tag-orange">待确认</span></td>
+              <td><span class="tag tag-orange">待确认</span></td>
+              <td class="nt-op"><button class="nt-btn danger sm" data-act="del-batch">删除</button></td>
             </tr>
             <tr>
               <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
-              <td>2</td>
-              <td><span class="batch-type normal">正常</span><span class="batch-urgency normal">本周内</span></td>
+              <td class="nt-seq">2</td>
               <td><span class="src-tag smart">建议</span></td>
+              <td><span class="batch-type normal">正常</span><span class="batch-urgency normal">本周内</span></td>
               <td><input class="nt-input" value="100" /></td>
-                            <td>快船</td>
+              <td><select class="nt-input" style="width:70px;"><option>快递</option><option>空运</option><option selected>快船</option><option>卡航</option><option>卡航整柜</option><option>铁路</option><option>慢船</option><option>海运整柜</option></select></td>
               <td>7/24（周四）</td>
-                            <td><span class="tag tag-orange">待确认</span></td>
+              <td><span class="tag tag-orange">待确认</span></td>
+              <td class="nt-op"><button class="nt-btn danger sm" data-act="del-batch">删除</button></td>
             </tr>
           </tbody>
         </table>
@@ -1145,22 +1158,23 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
         <table class="nested-table">
           <thead><tr>
             <th class="nt-ck"><span class="vxe-checkbox"></span></th>
-            <th style="width:24px;">#</th>
+            <th style="width:42px;">序号</th>
+            <th style="width:64px;">来源</th>
             <th>批次</th>
-            <th>来源</th>
             <th>数量</th>
-                        <th>运输</th>
+                        <th>运输方式</th>
             <th>截仓发货日</th>
             <th>状态</th>
+            <th style="width:56px;">操作</th>
           </tr></thead>
           <tbody>
             <tr class="tr-hold">
               <td class="nt-ck"><span class="vxe-checkbox"></span></td>
+              <td class="nt-seq">—</td>
               <td>—</td>
               <td><span class="batch-type slow">暂缓</span><span class="batch-urgency slow">无需规划</span></td>
               <td>200</td>
-              <td><span class="src-purchase">待采购</span></td>
-              <td colspan="3" style="color:var(--text-secondary);">未下PO</td>
+              <td colspan="4" style="color:var(--text-secondary);">未下PO · 本轮无需规划发货</td>
             </tr>
           </tbody>
         </table>
@@ -1293,6 +1307,34 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
 <script type="application/json" id="spec-embedded-data">[]</script>
 <!-- 内嵌的评论数据（发布快照，开发打开即看到 PM 的评审标注） -->
 <script type="application/json" id="comments-embedded-data">[]</script>
+
+<!-- 新增批次弹窗 -->
+<div class="spec-modal-mask" id="addBatchModalMask">
+  <div class="spec-modal" style="width:400px;">
+    <div class="spec-modal-header">
+      <h3>新增预发货批次</h3>
+      <button class="spec-modal-close" onclick="closeAddBatchModal()">×</button>
+    </div>
+    <div class="spec-modal-body">
+      <div class="spec-form-row">
+        <label>发货数量 <span style="color:#f53f3f;">*</span></label>
+        <input type="number" id="addBatchQty" placeholder="请输入发货数量" min="1" style="width:100%;height:36px;padding:0 10px;border:1px solid #d9d9d9;border-radius:4px;">
+      </div>
+      <div class="spec-form-row">
+        <label>运输方式 <span style="color:#f53f3f;">*</span></label>
+        <select id="addBatchTransport" style="width:100%;height:36px;padding:0 10px;border:1px solid #d9d9d9;border-radius:4px;background:#fff;">
+          <option value="">请选择</option>
+          <option>快递</option><option>空运</option><option>快船</option><option>卡航</option>
+          <option>卡航整柜</option><option>铁路</option><option>慢船</option><option>海运整柜</option>
+        </select>
+      </div>
+    </div>
+    <div class="spec-modal-foot">
+      <button class="btn-cancel" onclick="closeAddBatchModal()">取消</button>
+      <button class="btn-primary" onclick="confirmAddBatch()">确认新增</button>
+    </div>
+  </div>
+</div>
 
 <!-- AI 识别进度遮罩 -->
 <div class="spec-ai-loading" id="specAiLoading">
@@ -1438,7 +1480,9 @@ document.addEventListener('click', (e) => {
   if (act === 'confirm') {
     alert(`已确认 ${sku} 的勾选批次\n→ 批次状态转为「待审核」，等待运营审核`);
   } else if (act === 'add') {
-    alert(`新增批次\n→ 为 ${sku} 手动添加一个发货批次（如强制发货场景）`);
+    openAddBatchModal(row, sku);
+  } else if (act === 'del-batch') {
+    deleteBatch(btn, sku);
   } else if (act === 'approve') {
     if (confirm(`审核通过 ${sku} 的发货批次？\n→ 批次状态转为「已生成」，生成正式发货批次`)) {
       alert('✓ 已生成正式发货批次');
@@ -1458,6 +1502,119 @@ document.addEventListener('click', (e) => {
 });
 
 // === 日志弹窗（两个Tab：操作记录/计算过程） ===
+// === 新增批次 ===
+let addBatchTargetRow = null;
+function openAddBatchModal(row, sku) {
+  // 仅待确认 Tab 可新增
+  if (currentTab !== 'pending') { alert('仅在「待确认」状态下可新增批次'); return; }
+  addBatchTargetRow = row;
+  document.getElementById('addBatchQty').value = '';
+  document.getElementById('addBatchTransport').value = '';
+  document.getElementById('addBatchModalMask').classList.add('show');
+}
+function closeAddBatchModal() {
+  document.getElementById('addBatchModalMask').classList.remove('show');
+  addBatchTargetRow = null;
+}
+function confirmAddBatch() {
+  const qty = document.getElementById('addBatchQty').value.trim();
+  const transport = document.getElementById('addBatchTransport').value;
+  if (!qty || parseInt(qty) <= 0) { alert('请输入有效的发货数量'); return; }
+  if (!transport) { alert('请选择运输方式'); return; }
+  if (!addBatchTargetRow) { alert('找不到目标行'); return; }
+  // 找到嵌套表格的 tbody
+  const tbody = addBatchTargetRow.querySelector('.nested-table tbody');
+  if (!tbody) { alert('找不到批次表格'); return; }
+  // 构造运输方式下拉
+  const opts = ['快递','空运','快船','卡航','卡航整柜','铁路','慢船','海运整柜'];
+  const optHtml = opts.map(o => `<option ${o===transport?'selected':''}>${o}</option>`).join('');
+  // 新行插在最后一个"建议"批次后、第一个"实际"批次前
+  const newRow = document.createElement('tr');
+  newRow.innerHTML = `
+    <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
+    <td class="nt-seq"></td>
+    <td><span class="src-tag smart">建议</span></td>
+    <td><span class="batch-type normal">正常</span><span class="batch-urgency normal">本周内</span></td>
+    <td><input class="nt-input" value="${qty}" /></td>
+    <td><select class="nt-input" style="width:70px;">${optHtml}</select></td>
+    <td>—</td>
+    <td><span class="tag tag-orange">待确认</span></td>
+    <td class="nt-op"><button class="nt-btn danger sm" data-act="del-batch">删除</button></td>
+  `;
+  // 找插入点：最后一个建议行之后
+  const rows = Array.from(tbody.querySelectorAll('tr'));
+  let insertBefore = null;
+  for (const r of rows) {
+    const src = r.querySelector('.src-tag');
+    if (src && src.classList.contains('manual')) { insertBefore = r; break; }
+  }
+  if (insertBefore) {
+    tbody.insertBefore(newRow, insertBefore);
+  } else {
+    tbody.appendChild(newRow);
+  }
+  // 给新行绑定勾选事件
+  bindCheckboxEvents(newRow);
+  // 重排序号
+  renumberSeq(tbody);
+  // 更新统计
+  const table = addBatchTargetRow.querySelector('.nested-table');
+  updateSummary(table);
+  closeAddBatchModal();
+  const sku = addBatchTargetRow.querySelector('.col-code')?.textContent || '该明细';
+  alert(`✓ 已新增预发货批次\n数量：${qty} · 运输：${transport}\n状态：待确认 · 截仓发货日：空（待填写）`);
+}
+
+// === 删除批次 ===
+function deleteBatch(btn, sku) {
+  const tr = btn.closest('tr');
+  if (!tr) return;
+  // 确认状态必须是待确认
+  const status = tr.querySelector('.tag')?.textContent || '';
+  if (status !== '待确认') { alert('仅待确认状态的批次可删除'); return; }
+  if (!confirm(`确认删除此批次？\n（${sku} 的一个预发货批次）`)) return;
+  const tbody = tr.parentNode;
+  const table = tr.closest('.nested-table');
+  tr.remove();
+  renumberSeq(tbody);
+  updateSummary(table);
+  alert('✓ 已删除');
+}
+
+// === 序号重排 ===
+function renumberSeq(tbody) {
+  const rows = tbody.querySelectorAll('tr');
+  let seq = 1;
+  rows.forEach(r => {
+    const seqCell = r.querySelector('.nt-seq');
+    if (seqCell && !seqCell.classList.contains('tr-hold')) {
+      seqCell.textContent = seq++;
+    }
+  });
+}
+
+// === 给新行绑定勾选事件 ===
+function bindCheckboxEvents(tr) {
+  const ck = tr.querySelector('.nt-ck .vxe-checkbox');
+  const inp = tr.querySelector('.nt-input');
+  if (ck) {
+    ck.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (ck.closest('.tr-hold') || ck.closest('.row-done')) return;
+      if (currentTab === 'done') return;
+      ck.classList.toggle('checked');
+      const table = ck.closest('.nested-table');
+      if (table) updateSummary(table);
+    });
+  }
+  if (inp) {
+    inp.addEventListener('input', () => {
+      const table = inp.closest('.nested-table');
+      if (table) updateSummary(table);
+    });
+  }
+}
+
 function openLogModal(sku, prNo) {
   document.getElementById('logModalTitle').textContent = '发货明细日志' + (prNo ? '（' + prNo + '）' : '');
   // 操作记录
