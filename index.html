@@ -796,6 +796,8 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
       <div class="batch-dropdown">
         <button class="op-btn sm" onclick="toggleBatchMenu('menu-suggestion')">批量调整建议 ▾</button>
         <div class="batch-menu" id="menu-suggestion">
+          <a onclick="adjustToStocked()">调整为已入库数量<span class="batch-menu-hint">建议数→入库数</span></a>
+          <div class="batch-menu-sep"></div>
           <a onclick="batchAction('close-suggestion')">批量关闭</a>
         </div>
       </div>
@@ -809,6 +811,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
           <a class="danger" onclick="batchAction('delete')">批量删除<span class="batch-menu-hint">仅待确认</span></a>
         </div>
       </div>
+      <button class="op-btn sm" onclick="exportDiff()">导出差异</button>
       <button class="op-btn sm" onclick="alert('已对勾选明细重新计算发货建议\n→ 基于最新销量/库存/入库数据重新拆批')">重新计算</button>
       <span class="muted" style="margin-left:auto;">智能拆批每日定时0点执行 · 数据更新日：2026-07-20 · 更新成功45条发货建议，失败0条</span>
     </div>
@@ -1805,6 +1808,85 @@ function flowBatchStatus(tr, newStatus) {
 
 // === 日志弹窗（两个Tab：操作记录/计算过程） ===
 // === 批量操作下拉菜单 ===
+
+// 调整为已入库数量：把勾选行的建议数量改为入库数量（仅差异行）
+function adjustToStocked() {
+  document.querySelectorAll('.batch-menu').forEach(m => m.classList.remove('show'));
+  // 收集勾选的主表行
+  const checkedRows = [];
+  document.querySelectorAll('tr.row-main').forEach(row => {
+    const ck = row.querySelector('td:first-child .vxe-checkbox');
+    if (!ck || !ck.classList.contains('checked')) return;
+    if (row.classList.contains('row-hold') || row.classList.contains('row-pending-calc')) return;
+    // 找需求数量和入库数量
+    let needQty = 0, stockQty = 0;
+    row.querySelectorAll('.field-line').forEach(fl => {
+      if (fl.textContent.includes('需求数量')) { const m = fl.textContent.match(/(\d+)/); if (m) needQty = parseInt(m[1]); }
+      if (fl.textContent.includes('入库数量')) { const m = fl.textContent.match(/(\d+)/); if (m) stockQty = parseInt(m[1]); }
+    });
+    if (needQty !== stockQty) {
+      const sku = row.querySelector('.col-code')?.textContent || '?';
+      checkedRows.push({ row, sku, needQty, stockQty });
+    }
+  });
+  if (checkedRows.length === 0) {
+    alert('勾选的明细中，没有"建议数量 ≠ 入库数量"的差异行。');
+    return;
+  }
+  // 二次确认：显示变更明细
+  const detail = checkedRows.map(r => `${r.sku}：${r.needQty} → ${r.stockQty}`).join('\n');
+  if (!confirm(`确认将以下 ${checkedRows.length} 条明细的建议数量调整为已入库数量？\n\n${detail}\n\n此操作将修改建议数量，请确认差异原因已核实。`)) return;
+  // 执行修改
+  let count = 0;
+  checkedRows.forEach(r => {
+    r.row.querySelectorAll('.field-line').forEach(fl => {
+      if (fl.textContent.includes('需求数量')) {
+        const val = fl.querySelector('.field-value');
+        if (val) { val.textContent = r.stockQty; count++; }
+      }
+    });
+  });
+  alert(`✓ 已调整 ${checkedRows.length} 条明细的建议数量为已入库数量`);
+}
+
+// 导出差异：导出当前页面所有"建议数量≠入库数量"的记录
+function exportDiff() {
+  const rows = [];
+  document.querySelectorAll('tr.row-main').forEach(row => {
+    if (row.classList.contains('row-hold') || row.classList.contains('row-pending-calc')) return;
+    let needQty = 0, stockQty = 0, sku = '', prNo = '', op = '', country = '';
+    row.querySelectorAll('.field-line').forEach(fl => {
+      const txt = fl.textContent;
+      if (txt.includes('需求数量')) { const m = txt.match(/(\d+)/); if (m) needQty = parseInt(m[1]); }
+      if (txt.includes('入库数量')) { const m = txt.match(/(\d+)/); if (m) stockQty = parseInt(m[1]); }
+    });
+    const codeEl = row.querySelector('.col-code');
+    if (codeEl) sku = codeEl.textContent.trim();
+    row.querySelectorAll('.field-line').forEach(fl => {
+      if (fl.textContent.includes('PR单号')) { const c = fl.querySelector('.col-code'); if (c) prNo = c.textContent.trim(); }
+      if (fl.textContent.includes('运营人员')) { const v = fl.querySelector('.field-value'); if (v) op = v.textContent.trim(); }
+      if (fl.textContent.includes('国家')) { const v = fl.querySelector('.field-value'); if (v) country = v.textContent.trim(); }
+    });
+    if (needQty !== stockQty) {
+      rows.push({ sku, prNo, country, op, needQty, stockQty, diff: needQty - stockQty });
+    }
+  });
+  if (rows.length === 0) {
+    alert('当前页面没有"建议数量 ≠ 入库数量"的差异记录。');
+    return;
+  }
+  // 生成 CSV
+  const header = 'SKU,PR单号,国家,运营人员,建议数量,入库数量,差异(建议-入库)\n';
+  const csv = header + rows.map(r => `${r.sku},${r.prNo},${r.country},${r.op},${r.needQty},${r.stockQty},${r.diff}`).join('\n');
+  const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = '建议与入库差异_' + new Date().toISOString().slice(0,10).replace(/-/g,'') + '.csv';
+  a.click();
+  alert(`已导出 ${rows.length} 条差异记录（CSV），请交给计划人员找采购核实。`);
+}
+
+function toggleBatchMenu(id) {
 function toggleBatchMenu(id) {
   const menu = document.getElementById(id);
   // 关闭其他菜单
