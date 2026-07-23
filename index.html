@@ -786,8 +786,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
 
     <!-- Tab（状态机3态：待确认/待审核/已生成，按明细条数统计） -->
     <div class="el-tabs">
-      <div class="tab-item active" data-tab="all">全部 <span class="count">(372)</span></div>
-      <div class="tab-item" data-tab="pending">待确认 <span class="count">(42)</span></div>
+      <div class="tab-item active" data-tab="pending">待确认 <span class="count">(42)</span></div>
       <div class="tab-item" data-tab="review">待审核 <span class="count">(18)</span></div>
       <div class="tab-item" data-tab="done">已完成 <span class="count">(312)</span></div>
     </div>
@@ -1441,32 +1440,28 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
 
 <script>
 // === 全局状态 ===
-let currentTab = 'all';
+let currentTab = 'pending';
 
 // === Tab 切换：子表格底部按钮 + 操作列按钮 + 批量菜单（都随Tab联动） ===
 const _logBtn = '<button class="nt-btn link" data-act="log">日志</button>';
 const tabBtnConfig = {
-  all:      '<span class="muted" style="font-size:12px;">请切换到具体状态Tab操作</span>',
   pending:  '<button class="nt-btn link" data-act="add">新增批次</button>',
   review:   '<span class="muted" style="font-size:12px;">批量操作请用顶部「批量调整批次」</span>',
   done:     '<span class="muted" style="font-size:12px;">已完成/已关闭</span>'
 };
 const tabHoldConfig = {
-  all:      '<span class="muted" style="font-size:12px;">—</span>',
   pending:  '<button class="nt-btn link">新增批次</button>' + _logBtn,
   review:   '<span class="muted" style="font-size:12px;">—</span>' + _logBtn,
   done:     '<span class="muted" style="font-size:12px;">—</span>' + _logBtn
 };
 // 操作列按钮配置（随Tab变化；row-done/tr-hold 行固定显示"—"）
 const opColConfig = {
-  all:     '<span class="muted" style="font-size:11px;">—</span>',
   pending: '<button class="nt-btn primary sm" data-act="confirm-batch">确认</button><button class="nt-btn danger sm" data-act="del-batch">删除</button>',
   review:  '<button class="nt-btn primary sm" data-act="approve-batch">审核</button><button class="nt-btn sm" data-act="reject-batch">驳回</button>',
   done:    '<button class="nt-btn sm" data-act="unapprove-batch">反审</button>'
 };
 // 批量调整批次菜单项（随Tab变化）
 const batchMenuConfig = {
-  all:     [],
   pending: [{act:'confirm', label:'批量确认', hint:'待确认→待审核'}],
   review:  [{act:'approve', label:'批量审核', hint:'待审核→已生成'}, {act:'reject', label:'批量驳回', hint:'退回待确认'}],
   done:    []
@@ -1476,7 +1471,17 @@ function refreshOpColumns() {
   document.querySelectorAll('.nested-table tbody tr').forEach(tr => {
     if (tr.classList.contains('row-done') || tr.classList.contains('tr-hold') || tr.classList.contains('row-closed')) return;
     const opCell = tr.querySelector('.nt-op');
-    if (opCell) opCell.innerHTML = opColConfig[currentTab] || '<span class="muted">—</span>';
+    if (!opCell) return;
+    // 待确认Tab展示全部批次，但操作按钮只对当前Tab对应的批次状态显示
+    const tag = tr.querySelector('.tag');
+    const batchStatus = tag ? tag.textContent.trim() : '';
+    const allowedBatchStatus = tabToStatus[currentTab];
+    if (allowedBatchStatus && batchStatus !== allowedBatchStatus) {
+      // 批次状态不匹配当前Tab → 显示"—"（可见但无操作按钮）
+      opCell.innerHTML = '<span class="muted" style="font-size:11px;">—</span>';
+    } else {
+      opCell.innerHTML = opColConfig[currentTab] || '<span class="muted">—</span>';
+    }
   });
 }
 
@@ -1484,15 +1489,13 @@ function refreshOpColumns() {
 // 按Tab过滤嵌套表格行：待确认显示全部，其他只显示对应状态
 // Tab → 可见的发货建议状态
 const tabToSuggestionStatus = {
-  all: null,  // 全部：不过滤
   pending: ['待计算', '待完成'],  // 待确认Tab：待计算+待完成
   review: ['待完成'],             // 待审核Tab：待完成
   done: ['已完成', '已关闭']      // 已完成Tab：已完成+已关闭
 };
 // Tab → 嵌套表格只显示的批次状态
 const tabToBatchStatus = {
-  all: null,       // 全部：显示所有批次
-  pending: ['待确认'],  // 待确认Tab：只显示待确认批次
+  pending: null,       // 待确认Tab：显示全部批次（全盘考虑）
   review: ['待审核'],   // 待审核Tab：只显示待审核批次
   done: ['已生成']      // 已完成Tab：只显示已生成批次
 };
@@ -1525,11 +1528,15 @@ function filterNestedRows() {
   });
 }
 
-// 按Tab控制可编辑性：只有待确认Tab可编辑数量和运输方式
+// 按Tab控制可编辑性：只有对应Tab的批次状态可编辑
 function refreshEditable() {
-  const editable = (currentTab === 'pending');
+  const allowedBatchStatus = tabToStatus[currentTab];
   document.querySelectorAll('.nested-table tbody tr').forEach(tr => {
     if (tr.classList.contains('row-done') || tr.classList.contains('tr-hold') || tr.classList.contains('row-closed')) return;
+    const tag = tr.querySelector('.tag');
+    const batchStatus = tag ? tag.textContent.trim() : '';
+    // 可编辑 = 批次状态匹配当前Tab（待确认Tab下只有待确认批次可编辑）
+    const editable = allowedBatchStatus && batchStatus === allowedBatchStatus;
     const inp = tr.querySelector('.nt-input[type="number"], input.nt-input:not([type])');
     const sel = tr.querySelector('select.nt-input');
     if (inp) inp.disabled = !editable;
@@ -1539,7 +1546,7 @@ function refreshEditable() {
 
 // 按Tab锁定复选框：只有对应状态的批次能勾选
 // 待确认Tab→只有"待确认"可勾；待审核Tab→只有"待审核"可勾；已生成Tab→全部锁定
-const tabToStatus = { all: null, pending: '待确认', review: '待审核', done: null };
+const tabToStatus = { pending: '待确认', review: '待审核', done: null };
 function refreshCheckboxLock() {
   const allowedStatus = tabToStatus[currentTab];
   document.querySelectorAll('.nested-table tbody tr').forEach(tr => {
@@ -1604,7 +1611,7 @@ document.querySelectorAll('.tab-item').forEach(tab => {
     // 更新批量菜单
     refreshBatchMenu();
     // 已生成批次时：所有复选框禁选 + 清空选中
-    const lockAll = (currentTab === 'done' || currentTab === 'all');
+    const lockAll = (currentTab === 'done');
     document.querySelectorAll('.nt-ck .vxe-checkbox').forEach(ck => {
       if (lockAll) {
         ck.classList.remove('checked');
