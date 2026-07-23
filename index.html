@@ -137,6 +137,7 @@ table.data-table tr.row-expand td { background: #FAFCFF; padding: 0; }
 .tag-red { background: #FEF0F0; color: var(--danger); border: 1px solid #FDE2E2; }
 .tag-orange { background: #FDF6EC; color: var(--warning); border: 1px solid #FAECD8; }
 .tag-grey { background: #F4F4F5; color: var(--text-secondary); border: 1px solid #E6E7E9; }   /* 待计算-灰 */
+.tag-closed { background: #F4F4F5; color: var(--text-secondary); border: 1px solid #E6E7E9; }  /* 已关闭-灰 */
 /* 待计算占位区 */
 .pending-calc-box { text-align: center; padding: 24px 12px; background: #fafbfc; border: 1px dashed var(--border-color); border-radius: 6px; }
 .pending-calc-box .pending-calc-icon { font-size: 28px; margin-bottom: 6px; opacity: 0.6; }
@@ -1128,6 +1129,92 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
       <td class="td-op"><button class="nt-btn link" data-act="log">日志</button></td>
     </tr>
 
+    <!-- 已关闭示例行：PR需求500，实际买480发480，PR完结 → 发货建议已关闭 -->
+    <tr class="row-main row-closed">
+      <td><span class="vxe-checkbox" style="opacity:0.4;pointer-events:none;"></span></td>
+      <!-- 商品信息 -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-value col-code">4471882</span></div>
+        <div class="field-line"><span class="muted">便携式车载吸尘器</span></div>
+        <div class="field-line"><span class="field-label">活跃度:</span> <span class="tag" style="color:var(--text-secondary);background:#F4F4F5;border:1px solid #E6E7E9;">正常</span></div>
+        <div class="field-line"><span class="field-label">物流属性:</span> <span class="field-value">普货</span></div>
+        <div class="field-line"><span class="field-label">组合SKU:</span> <span class="field-value">否</span></div>
+        <div class="field-line"><span class="field-label">定制化:</span> <span class="field-value">否</span></div>
+      </div></td>
+      <!-- 采购申请信息 -->
+      <td><div class="field-stack">
+        <div class="field-line key"><span class="field-label">PR单号:</span> <span class="field-value col-code">PR202607010005</span></div>
+        <div class="field-line key"><span class="field-label">PR需求数:</span> <span class="field-value metric">500</span></div>
+        <div class="field-line"><span class="field-label">默认运输方式:</span> <span class="field-value">快船</span></div>
+        <div class="field-line"><span class="field-label">需求日期:</span> <span class="field-value">2026-07-01</span></div>
+      </div></td>
+      <!-- 采购单信息 -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">PO单号:</span> <span class="field-value col-code">PO202607010009</span></div>
+        <div class="field-line"><span class="field-label">备货方式:</span> <span class="field-value">普通发货</span></div>
+        <div class="field-line key"><span class="field-label">PO下单数:</span> <span class="field-value metric">480</span></div>
+        <div class="field-line"><span class="field-label">入库数:</span> <span class="field-value metric">480</span></div>
+      </div></td>
+      <!-- 销售信息 -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">国家:</span> <span class="field-value">美国(US)</span></div>
+        <div class="field-line"><span class="field-label">运营人员:</span> <span class="field-value">TomWang</span></div>
+        <div class="field-line key"><span class="field-label">可售天数:</span> <span class="field-value metric">38天</span></div>
+        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">ONT8美西仓</span></div>
+      </div></td>
+      <!-- 单箱尺寸信息(商品) -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">长×宽×高:</span> <span class="field-value">35×28×20 cm</span></div>
+        <div class="field-line"><span class="field-label">单箱数量:</span> <span class="field-value">20</span></div>
+        <div class="field-line"><span class="field-label">单箱重量:</span> <span class="field-value">4.50 kg</span></div>
+      </div></td>
+      <!-- 发货方式 -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">发货仓:</span> <span class="field-value">深圳-02仓</span></div>
+        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">ONT8美西仓</span></div>
+        <div class="field-line"><span class="field-label">计费重:</span> <span class="field-value muted">—</span></div>
+      </div></td>
+      <!-- 关键数值 -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">需求数量:</span> <span class="field-value muted">500</span></div>
+        <div class="field-line"><span class="field-label">需求未分配:</span> <span class="field-value muted">0</span></div>
+        <div class="field-line"><span class="field-label">入库数量:</span> <span class="field-value muted">480</span></div>
+        <div class="field-line"><span class="field-label">入库未分配:</span> <span class="field-value muted">0</span></div>
+      </div></td>
+      <!-- 智能拆批：已关闭，展示一条已生成的发货批次 -->
+      <td>
+        <table class="nested-table">
+          <thead><tr>
+            <th class="nt-ck"><span class="vxe-checkbox" style="opacity:0.4;pointer-events:none;"></span></th>
+            <th style="width:42px;">序号</th>
+            <th style="width:64px;">来源</th>
+            <th>数量</th>
+            <th>运输方式</th>
+            <th>截仓发货日</th>
+            <th>状态</th>
+            <th style="width:56px;">操作</th>
+          </tr></thead>
+          <tbody>
+            <tr class="row-done">
+              <td class="nt-ck"><span class="vxe-checkbox"></span></td>
+              <td class="nt-seq">1</td>
+              <td><span class="src-tag manual">实际</span></td>
+              <td><input class="nt-input" value="480" disabled /></td>
+              <td><select class="nt-input" style="width:70px;" disabled><option>快递</option><option>空运</option><option selected>快船</option><option>卡航</option><option>卡航整柜</option><option>铁路</option><option>慢船</option><option>海运整柜</option></select></td>
+              <td>7/18（周四）</td>
+              <td><span class="tag" style="color:var(--success);background:#e8ffea;border:1px solid #c9f0d0;">已生成</span></td>
+              <td class="nt-op"><span class="muted" style="font-size:11px;">—</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="batch-summary" style="color:var(--text-secondary);">
+          <span class="tag-closed" style="font-size:11px;margin-right:4px;">已关闭</span>
+          PR需求500，实际采购入库480并已发货，PR已完结，发货建议关闭
+        </div>
+      </td>
+      <td class="td-op"><span class="muted" style="font-size:12px;">—</span></td>
+    </tr>
+
     <!-- 待计算示例行：上游数据已进来，引擎还没拆批 -->
     <tr class="row-main row-pending-calc">
       <td><span class="vxe-checkbox" style="opacity:0.4;pointer-events:none;"></span></td>
@@ -1382,7 +1469,7 @@ const batchMenuConfig = {
 
 function refreshOpColumns() {
   document.querySelectorAll('.nested-table tbody tr').forEach(tr => {
-    if (tr.classList.contains('row-done') || tr.classList.contains('tr-hold')) return;
+    if (tr.classList.contains('row-done') || tr.classList.contains('tr-hold') || tr.classList.contains('row-closed')) return;
     const opCell = tr.querySelector('.nt-op');
     if (opCell) opCell.innerHTML = opColConfig[currentTab] || '<span class="muted">—</span>';
   });
@@ -1409,7 +1496,7 @@ function filterNestedRows() {
 function refreshEditable() {
   const editable = (currentTab === 'pending');
   document.querySelectorAll('.nested-table tbody tr').forEach(tr => {
-    if (tr.classList.contains('row-done') || tr.classList.contains('tr-hold')) return;
+    if (tr.classList.contains('row-done') || tr.classList.contains('tr-hold') || tr.classList.contains('row-closed')) return;
     const inp = tr.querySelector('.nt-input[type="number"], input.nt-input:not([type])');
     const sel = tr.querySelector('select.nt-input');
     if (inp) inp.disabled = !editable;
@@ -1423,7 +1510,7 @@ const tabToStatus = { pending: '待确认', review: '待审核', done: null };
 function refreshCheckboxLock() {
   const allowedStatus = tabToStatus[currentTab];
   document.querySelectorAll('.nested-table tbody tr').forEach(tr => {
-    if (tr.classList.contains('row-done') || tr.classList.contains('tr-hold')) return;
+    if (tr.classList.contains('row-done') || tr.classList.contains('tr-hold') || tr.classList.contains('row-closed')) return;
     const ck = tr.querySelector('.nt-ck .vxe-checkbox');
     if (!ck) return;
     const tag = tr.querySelector('.tag');
@@ -1817,7 +1904,7 @@ function adjustToStocked() {
   document.querySelectorAll('tr.row-main').forEach(row => {
     const ck = row.querySelector('td:first-child .vxe-checkbox');
     if (!ck || !ck.classList.contains('checked')) return;
-    if (row.classList.contains('row-hold') || row.classList.contains('row-pending-calc')) return;
+    if (row.classList.contains('row-hold') || row.classList.contains('row-pending-calc') || row.classList.contains('row-closed')) return;
     // 找需求数量和入库数量
     let needQty = 0, stockQty = 0;
     row.querySelectorAll('.field-line').forEach(fl => {
@@ -1853,7 +1940,7 @@ function adjustToStocked() {
 function exportAll() {
   const rows = [];
   document.querySelectorAll('tr.row-main').forEach(row => {
-    if (row.classList.contains('row-hold') || row.classList.contains('row-pending-calc')) return;
+    if (row.classList.contains('row-hold') || row.classList.contains('row-pending-calc') || row.classList.contains('row-closed')) return;
     let sku = '', prNo = '', country = '', op = '', needQty = 0, stockQty = 0;
     const codeEl = row.querySelector('.col-code');
     if (codeEl) sku = codeEl.textContent.trim();
@@ -1881,7 +1968,7 @@ function exportAll() {
 function exportDiff() {
   const rows = [];
   document.querySelectorAll('tr.row-main').forEach(row => {
-    if (row.classList.contains('row-hold') || row.classList.contains('row-pending-calc')) return;
+    if (row.classList.contains('row-hold') || row.classList.contains('row-pending-calc') || row.classList.contains('row-closed')) return;
     let needQty = 0, stockQty = 0, sku = '', prNo = '', op = '', country = '';
     row.querySelectorAll('.field-line').forEach(fl => {
       const txt = fl.textContent;
