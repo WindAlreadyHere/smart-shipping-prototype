@@ -814,6 +814,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
       <button class="op-btn sm" onclick="exportDiff()">导出差异</button>
       <button class="op-btn sm" onclick="alert('已对勾选明细重新计算发货建议\n→ 基于最新销量/库存/入库数据重新拆批')">重新计算</button>
       <span class="muted" style="margin-left:auto;">智能拆批每日定时0点执行 · 数据更新日：2026-07-20 · 更新成功45条发货建议，失败0条</span>
+      <button class="op-btn sm" onclick="exportAll()">导出</button>
     </div>
 
     <!-- 数据表格（vxe-grid 结构） -->
@@ -1847,6 +1848,34 @@ function adjustToStocked() {
     });
   });
   alert(`✓ 已调整 ${checkedRows.length} 条明细的建议数量为已入库数量`);
+}
+
+// 导出全部：导出当前页面所有发货建议
+function exportAll() {
+  const rows = [];
+  document.querySelectorAll('tr.row-main').forEach(row => {
+    if (row.classList.contains('row-hold') || row.classList.contains('row-pending-calc')) return;
+    let sku = '', prNo = '', country = '', op = '', needQty = 0, stockQty = 0;
+    const codeEl = row.querySelector('.col-code');
+    if (codeEl) sku = codeEl.textContent.trim();
+    row.querySelectorAll('.field-line').forEach(fl => {
+      const txt = fl.textContent;
+      if (txt.includes('PR单号')) { const c = fl.querySelector('.col-code'); if (c) prNo = c.textContent.trim(); }
+      if (txt.includes('需求数量')) { const m = txt.match(/(\d+)/); if (m) needQty = parseInt(m[1]); }
+      if (txt.includes('入库数量')) { const m = txt.match(/(\d+)/); if (m) stockQty = parseInt(m[1]); }
+      if (txt.includes('国家')) { const v = fl.querySelector('.field-value'); if (v) country = v.textContent.trim(); }
+      if (txt.includes('运营人员')) { const v = fl.querySelector('.field-value'); if (v) op = v.textContent.trim(); }
+    });
+    rows.push([sku, prNo, country, op, needQty, stockQty].join(','));
+  });
+  if (rows.length === 0) { alert('当前页面无可导出的数据。'); return; }
+  const header = 'SKU,PR单号,国家,运营人员,建议数量,入库数量';
+  const csv = header + '\n' + rows.join('\n');
+  const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = '发货建议列表_' + new Date().toISOString().slice(0,10).replace(/-/g,'') + '.csv';
+  a.click();
 }
 
 // 导出差异：导出当前页面所有"建议数量≠入库数量"的记录
