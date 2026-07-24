@@ -197,6 +197,11 @@ tr.row-pending-calc:hover td { background: #fafbfc; }
 .src-tag { font-size: 11px; padding: 1px 6px; border-radius: 3px; white-space: nowrap; }
 .src-tag.smart { color: var(--tab-active); background: var(--primary-light); }
 .src-tag.manual { color: #86909c; background: #f7f8fa; border: 1px solid #e5e6eb; }
+/* 确认情况标签 */
+.confirm-status { font-size: 11px; padding: 1px 6px; border-radius: 3px; white-space: nowrap; }
+.confirm-status.overdue { color: var(--danger); background: #fef0f0; border: 1px solid #fde2e2; }
+.confirm-status.urgent { color: var(--warning); background: #fdf6ec; border: 1px solid #faecd8; }
+.confirm-status.normal { color: var(--text-secondary); background: #f4f4f5; border: 1px solid #e6e7e9; }
 /* 发货批次行（已完成，不可操作）：整行弱化 */
 .nested-table tr.row-done td { background: #fafbfc; color: var(--text-secondary); }
 .nested-table tr.row-done td .nt-input { background: #f7f8fa; color: var(--text-secondary); border-color: transparent; }
@@ -900,6 +905,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
                         <th>运输方式</th>
             <th>截仓发货日</th>
             <th>状态</th>
+            <th style="width:72px;">确认情况</th>
             <th style="width:56px;">操作</th>
           </tr></thead>
           <tbody>
@@ -994,6 +1000,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
                         <th>运输方式</th>
             <th>截仓发货日</th>
             <th>状态</th>
+            <th style="width:72px;">确认情况</th>
             <th style="width:56px;">操作</th>
           </tr></thead>
           <tbody>
@@ -1098,6 +1105,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
                         <th>运输方式</th>
             <th>截仓发货日</th>
             <th>状态</th>
+            <th style="width:72px;">确认情况</th>
             <th style="width:56px;">操作</th>
           </tr></thead>
           <tbody>
@@ -1192,6 +1200,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
             <th>运输方式</th>
             <th>截仓发货日</th>
             <th>状态</th>
+            <th style="width:72px;">确认情况</th>
             <th style="width:56px;">操作</th>
           </tr></thead>
           <tbody>
@@ -1608,6 +1617,8 @@ document.querySelectorAll('.tab-item').forEach(tab => {
     refreshEditable();
     // 按Tab锁定复选框（只有对应状态的批次可勾选）
     refreshCheckboxLock();
+    // 刷新确认情况
+    refreshConfirmStatus();
     // 更新批量菜单
     refreshBatchMenu();
     // 已生成批次时：所有复选框禁选 + 清空选中
@@ -1832,6 +1843,73 @@ function getDefaultTransport(tr) {
     }
   });
   return defaultT;
+}
+
+// 确认情况计算：根据截仓发货日 + 提前准备天数，判断超期/需确认/无需确认
+function getAdvanceDays(row) {
+  if (!row) return 7;
+  // 判断备货方式和备库类型
+  let isFactory = false, isFBA = false;
+  row.querySelectorAll('.field-line').forEach(fl => {
+    const txt = fl.textContent;
+    if (txt.includes('备货方式') && txt.includes('工厂直发')) isFactory = true;
+  });
+  // 备库类型从页面级Tab判断（FBA发货建议 vs 海外仓发货建议）
+  const fbaTab = document.querySelector('.page-tab-item[data-page="fba"]');
+  if (fbaTab && fbaTab.classList.contains('active')) isFBA = true;
+  const ovsTab = document.querySelector('.page-tab-item[data-page="overseas"]');
+  if (ovsTab && ovsTab.classList.contains('active')) isFBA = false;
+  if (isFactory) return 14;
+  if (isFBA) return 14;
+  return 7;
+}
+
+function calcConfirmStatus(tr, row) {
+  const cutoffCell = tr.children[Array.from(tr.children).findIndex(td => td.classList.contains('nt-op')) - 2];
+  // 找截仓发货日单元格（在运输方式后面）
+  const cells = Array.from(tr.children);
+  let cutoffText = '';
+  for (let i = 0; i < cells.length; i++) {
+    const txt = cells[i].textContent.trim();
+    // 截仓发货日格式：7/24（周四）或 —
+    if (/^\d{1,2}\/\d{1,2}/.test(txt)) { cutoffText = txt; break; }
+  }
+  if (!cutoffText || cutoffText === '—') return { label: '—', cls: 'normal' };
+  // 解析日期（如 7/24（周四））
+  const m = cutoffText.match(/(\d{1,2})\/(\d{1,2})/);
+  if (!m) return { label: '—', cls: 'normal' };
+  const now = new Date();
+  const year = now.getFullYear();
+  const cutoff = new Date(year, parseInt(m[1])-1, parseInt(m[2]));
+  if (cutoff < now) cutoff.setFullYear(year+1); // 跨年处理
+  const advance = getAdvanceDays(row);
+  const confirmDate = new Date(cutoff);
+  confirmDate.setDate(confirmDate.getDate() - advance);
+  if (now >= cutoff) return { label: '超期确认', cls: 'overdue' };
+  if (now >= confirmDate) return { label: '需确认', cls: 'urgent' };
+  return { label: '无需确认', cls: 'normal' };
+}
+
+function refreshConfirmStatus() {
+  document.querySelectorAll('tr.row-main').forEach(row => {
+    if (row.classList.contains('row-closed') || row.classList.contains('row-pending-calc')) return;
+    row.querySelectorAll('.nested-table tbody tr').forEach(tr => {
+      if (tr.classList.contains('tr-hold') || tr.classList.contains('row-done')) return;
+      // 找或创建确认情况单元格（在操作列前）
+      const cells = Array.from(tr.children);
+      const opIdx = cells.findIndex(td => td.classList.contains('nt-op'));
+      if (opIdx === -1) return;
+      let csCell = cells[opIdx - 1];
+      if (!csCell || !csCell.classList.contains('nt-confirm')) {
+        // 创建确认情况td
+        csCell = document.createElement('td');
+        csCell.className = 'nt-confirm';
+        tr.insertBefore(csCell, cells[opIdx]);
+      }
+      const cs = calcConfirmStatus(tr, row);
+      csCell.innerHTML = '<span class="confirm-status ' + cs.cls + '">' + cs.label + '</span>';
+    });
+  });
 }
 
 // 刷新某行批次的运输升降标识
@@ -2745,6 +2823,7 @@ refreshEditable();
 refreshCheckboxLock();
 refreshBatchMenu();
 refreshAllTransportLevels();
+refreshConfirmStatus();
 
 loadAnnotations();
 restoreHighlights();
