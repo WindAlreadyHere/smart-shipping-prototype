@@ -1890,7 +1890,6 @@ function calcConfirmStatus(tr, row) {
   const advance = getAdvanceDays(row);
   const confirmDate = new Date(cutoff);
   confirmDate.setDate(confirmDate.getDate() - advance);
-  if (now >= cutoff) return { label: '超期确认', cls: 'overdue' };
   if (now >= confirmDate) return { label: '需确认', cls: 'urgent' };
   return { label: '无需确认', cls: 'normal' };
 }
