@@ -2296,6 +2296,12 @@ function confirmAddBatch() {
   if (!qty || parseInt(qty) <= 0) { alert('请输入有效的发货数量'); return; }
   if (!transport) { alert('请选择运输方式'); return; }
   if (!addBatchTargetRow) { alert('找不到目标行'); return; }
+  // 容量校验：新增数量 + 已占用（待审核+已生成）不能超过 PR需求数
+  const chk = validateConfirmCapacity(addBatchTargetRow, parseInt(qty));
+  if (!chk.ok) {
+    alert('新增失败，数量超限：\n\n' + chk.msg + '\n\n请调整数量后重试。');
+    return;
+  }
   // 找到嵌套表格的 tbody
   const tbody = addBatchTargetRow.querySelector('.nested-table tbody');
   if (!tbody) { alert('找不到批次表格'); return; }
@@ -2337,7 +2343,7 @@ function confirmAddBatch() {
   updateSummary(table);
   closeAddBatchModal();
   const sku = addBatchTargetRow.querySelector('.col-code')?.textContent || '该明细';
-  alert(`✓ 已新增预发货批次\n数量：${qty} · 运输：${transport}\n状态：待确认 · 截仓发货日：空（待填写）`);
+  alert(`✓ 已新增预发货批次\n数量：${qty} · 运输：${transport}\n状态：待确认 · 截仓发货日：空（待填写）\n剩余可分配容量：${chk.capacity - parseInt(qty)} 件`);
 }
 
 // === 删除批次 ===
