@@ -2219,7 +2219,7 @@ function openComboConfirm(tr, row, bomData, currentQty, currentTransport) {
   });
 
   // 构建子SKU列表（含当前行和关联行）
-  const allMembers = [{ sku: currentSku, qty: currentQty, transport: currentTransport, cutoff, status: '待确认', tr, row }];
+  const allMembers = [{ sku: currentSku, qty: currentQty, transport: currentTransport, cutoff, status: '待确认', tr, row, isCurrent: true }];
   linkedRows.forEach(l => allMembers.push({ sku: l.sku, qty: l.qty, transport: l.transport, cutoff: l.cutoff, status: l.status, tr: l.tr, row: l.row }));
   const hasLinked = linkedRows.length > 0;
 
@@ -2241,14 +2241,20 @@ function openComboConfirm(tr, row, bomData, currentQty, currentTransport) {
 
   const TRANSPORT_OPTS = ['快递','空运','快船','卡航','卡航整柜','铁路','慢船','海运整柜'];
 
-  // 构建弹窗：主SKU行（可编辑）+ 子SKU行（只读）
+  // 构建弹窗：主SKU编辑区 + SKU列表（含关系列）
   const mainQty = currentQty;
   const mainTransport = currentTransport;
   const mainOpts = TRANSPORT_OPTS.map(o => `<option ${o===mainTransport?'selected':''}>${o}</option>`).join('');
   const membersHtml = allMembers.map((m, i) => {
     const cap = capacities[i];
+    // 关系判定：当前/兄弟（拆包组合）或 主料/辅料（定制SKU）
+    let relation = '';
+    let relationColor = 'var(--text-secondary)';
+    if (m.isCurrent) { relation = '当前'; relationColor = 'var(--purple)'; }
+    else { relation = '兄弟'; relationColor = 'var(--text-secondary)'; }
     return '<tr>' +
       '<td><b>' + m.sku + '</b><br><span style="color:var(--text-secondary);font-size:11px;">' + bomData.members.find(mm => mm.sku === m.sku)?.name + '</span></td>' +
+      '<td><span style="font-size:11px;padding:1px 6px;border-radius:3px;color:'+relationColor+';background:#f7f8fa;">'+relation+'</span></td>' +
       '<td class="combo-sub-qty" data-idx="'+i+'">'+m.qty+'</td>' +
       '<td class="combo-sub-transport" data-idx="'+i+'">'+m.transport+'</td>' +
       '<td>'+m.cutoff+'</td>' +
@@ -2268,14 +2274,14 @@ function openComboConfirm(tr, row, bomData, currentQty, currentTransport) {
     '<div style="font-size:12px;color:var(--text-secondary);">主SKU：<b style="color:var(--text-primary);">'+bomData.mainSku+'</b>（'+bomData.mainName+'）= '+bomData.bom+'</div>' +
     '</div>' +
     '<div style="margin-bottom:12px;padding:12px;background:#f9f0ff;border:1px solid #d3adf7;border-radius:4px;">' +
-    '<div style="font-size:12px;color:var(--text-secondary);margin-bottom:6px;">主SKU维度（修改后同步到子SKU）：</div>' +
+    '<div style="font-size:12px;color:var(--text-secondary);margin-bottom:6px;">关联修改（主SKU维度）：</div>' +
     '<div style="display:flex;gap:16px;align-items:center;">' +
     '<label style="font-size:13px;">数量：<input type="number" id="comboMainQty" value="'+mainQty+'" min="0" style="width:70px;height:28px;padding:0 6px;border:1px solid #d9d9d9;border-radius:3px;text-align:center;"></label>' +
     '<label style="font-size:13px;">运输方式：<select id="comboMainTransport" style="width:80px;height:28px;border:1px solid #d9d9d9;border-radius:3px;">'+mainOpts+'</select></label>' +
     '<span style="font-size:11px;color:var(--text-secondary);">最小可发货量：'+minCapacity+'</span>' +
     '</div></div>' +
     '<table class="combo-table"><thead><tr>' +
-    '<th>子SKU</th><th>数量（只读同步）</th><th>运输方式（只读同步）</th><th>截仓发货日</th><th>状态</th><th>容量</th>' +
+    '<th>SKU</th><th>关系</th><th>数量</th><th>运输方式</th><th>截仓发货日</th><th>状态</th><th>容量</th>' +
     '</tr></thead><tbody>' + membersHtml + '</tbody></table>' +
     statusHtml +
     (hasLinked
