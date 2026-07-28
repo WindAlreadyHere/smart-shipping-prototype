@@ -201,6 +201,25 @@ tr.row-pending-calc:hover td { background: #fafbfc; }
 .confirm-status { font-size: 12px; white-space: nowrap; }
 .confirm-status.urgent { color: var(--warning); font-weight: 500; }
 .confirm-status.normal { color: var(--text-secondary); }
+/* 拆包组合SKU：入口标签 */
+.combo-tag { display: inline-flex; align-items: center; gap: 2px; font-size: 11px; padding: 1px 6px; border-radius: 3px; white-space: nowrap; cursor: pointer; color: var(--purple); background: #f9f0ff; border: 1px solid #d3adf7; margin-left: 4px; transition: all 0.15s; }
+.combo-tag:hover { background: #efdbff; }
+.combo-tag .combo-arrow { display: inline-block; transition: transform 0.15s; font-size: 9px; }
+.combo-tag.expanded .combo-arrow { transform: rotate(180deg); }
+/* 拆包组合SKU：折叠区 */
+.combo-row > td { padding: 0 !important; border-bottom: 1px solid var(--border-lighter); }
+.combo-panel { margin: 8px 12px; padding: 14px 16px; background: #faf5ff; border: 1px solid #e8d5ff; border-radius: 6px; }
+.combo-panel-title { font-size: 13px; font-weight: 600; color: var(--purple); margin-bottom: 4px; display: flex; align-items: center; gap: 4px; }
+.combo-panel-bom { font-size: 12px; color: var(--text-secondary); margin-bottom: 12px; line-height: 1.6; }
+.combo-panel-bom b { color: var(--text-primary); }
+.combo-table { width: 100%; border-collapse: collapse; margin-bottom: 12px; background: #fff; border-radius: 4px; overflow: hidden; }
+.combo-table th { background: #f9f0ff; padding: 8px 12px; text-align: left; font-size: 11px; font-weight: 500; color: var(--text-secondary); border-bottom: 1px solid #e8d5ff; }
+.combo-table td { padding: 8px 12px; font-size: 12px; color: var(--text-primary); border-bottom: 1px solid var(--border-lighter); }
+.combo-table tr:last-child td { border-bottom: none; }
+.combo-table .diff { color: var(--danger); font-weight: 500; }
+.combo-status { font-size: 12px; padding: 4px 0; }
+.combo-status.ok { color: var(--success); }
+.combo-status.warn { color: var(--warning); }
 /* 发货批次行（已完成，不可操作）：整行弱化 */
 .nested-table tr.row-done td { background: #fafbfc; color: var(--text-secondary); }
 .nested-table tr.row-done td .nt-input { background: #f7f8fa; color: var(--text-secondary); border-color: transparent; }
@@ -1529,6 +1548,7 @@ function filterNestedRows() {
     if (row.style.display !== 'none') {
       row.querySelectorAll('.nested-table tbody tr').forEach(tr => {
         if (tr.classList.contains('tr-hold')) { tr.style.display = ''; return; }
+        if (tr.classList.contains('combo-row')) return; // 组合折叠区不受Tab过滤影响
         if (visibleBatchStatuses === null) {
           tr.style.display = '';  // 全部Tab显示所有批次
         } else {
@@ -1623,6 +1643,8 @@ document.querySelectorAll('.tab-item').forEach(tab => {
     refreshCheckboxLock();
     // 刷新确认情况
     refreshConfirmStatus();
+    // 刷新组合SKU入口
+    refreshComboTags();
     // 更新批量菜单
     refreshBatchMenu();
     // 已生成批次时：所有复选框禁选 + 清空选中
@@ -1941,6 +1963,105 @@ function refreshTransportLevel(tr) {
     span.className = 'ship-level ' + lv.level;
     span.textContent = lv.label;
   }
+}
+
+// === 拆包组合SKU关联展示 ===
+// 模拟BOM数据：主SKU → 子SKU列表
+const comboBOMData = {
+  '5560890': {
+    mainSku: '5560890-Main', mainName: '车载充气泵套装',
+    bom: '1×5560890-A（充气泵主机）+ 1×5560890-B（充气管配件）',
+    members: [
+      { sku: '5560890-A', name: '充气泵主机', qty: 200, transport: '空运', cutoff: '7/24（周四）', status: '待确认' },
+      { sku: '5560890-B', name: '充气管配件', qty: 200, transport: '空运', cutoff: '7/24（周四）', status: '待确认' }
+    ]
+  }
+};
+
+// 检查某行是否是拆包组合
+function isComboRow(row) {
+  if (!row) return false;
+  const comboLine = Array.from(row.querySelectorAll('.field-line')).find(fl => fl.textContent.includes('组合SKU'));
+  return comboLine && comboLine.textContent.includes('是') && comboLine.textContent.includes('拆包组合');
+}
+
+// 渲染组合入口标签 + 折叠区
+function refreshComboTags() {
+  document.querySelectorAll('tr.row-main').forEach(row => {
+    if (row.classList.contains('row-closed') || row.classList.contains('row-pending-calc')) return;
+    const isCombo = isComboRow(row);
+    const skuCode = row.querySelector('.col-code')?.textContent.trim() || '';
+    const bomData = comboBOMData[skuCode];
+    row.querySelectorAll('.nested-table tbody tr').forEach(tr => {
+      if (tr.classList.contains('tr-hold') || tr.classList.contains('row-done') || tr.classList.contains('combo-row')) return;
+      // 找来源列的 td
+      const srcTd = tr.querySelector('.src-tag')?.parentElement;
+      if (!srcTd) return;
+      // 检查是否已有组合标签
+      if (srcTd.querySelector('.combo-tag')) {
+        if (!isCombo) srcTd.querySelector('.combo-tag').remove();
+        return;
+      }
+      if (!isCombo || !bomData) return;
+      // 加组合入口标签
+      const tag = document.createElement('span');
+      tag.className = 'combo-tag';
+      tag.innerHTML = '组合<span class="combo-arrow">▾</span>';
+      tag.onclick = function(e) { e.stopPropagation(); toggleComboRow(tr, row, tag); };
+      srcTd.appendChild(tag);
+    });
+  });
+}
+
+// 展开/收起组合折叠区
+function toggleComboRow(tr, row, tag) {
+  // 找已有的 combo-row
+  let comboRow = tr.nextElementSibling;
+  if (comboRow && comboRow.classList.contains('combo-row')) {
+    // toggle 显示
+    const isHidden = comboRow.style.display === 'none';
+    comboRow.style.display = isHidden ? '' : 'none';
+    tag.classList.toggle('expanded', isHidden);
+    return;
+  }
+  // 创建 combo-row
+  const skuCode = row.querySelector('.col-code')?.textContent.trim() || '';
+  const bomData = comboBOMData[skuCode];
+  if (!bomData) return;
+  // 计算配齐状态
+  const qtys = bomData.members.map(m => m.qty);
+  const transports = bomData.members.map(m => m.transport);
+  const qtyMatched = qtys.every(q => q === qtys[0]);
+  const transportMatched = transports.every(t => t === transports[0]);
+  const allMatched = qtyMatched && transportMatched;
+  // 构建 HTML
+  const membersHtml = bomData.members.map(m => {
+    const qtyDiff = m.qty !== qtys[0];
+    const transportDiff = m.transport !== transports[0];
+    return '<tr>' +
+      '<td><b>' + m.sku + '</b><br><span style="color:var(--text-secondary);font-size:11px;">' + m.name + '</span></td>' +
+      '<td class="' + (qtyDiff ? 'diff' : '') + '">' + m.qty + (qtyDiff ? ' ←差异' : '') + '</td>' +
+      '<td class="' + (transportDiff ? 'diff' : '') + '">' + m.transport + (transportDiff ? ' ←差异' : '') + '</td>' +
+      '<td>' + m.cutoff + '</td>' +
+      '<td>' + m.status + '</td>' +
+      '<td>' + (qtyDiff || transportDiff ? '<span style="color:var(--warning);">⚠差异</span>' : '<span style="color:var(--success);">✓一致</span>') + '</td>' +
+      '</tr>';
+  }).join('');
+  const statusHtml = allMatched
+    ? '<div class="combo-status ok">✓ 已配齐（数量一致 + 运输方式一致）</div>'
+    : '<div class="combo-status warn">⚠ 存在差异（' + (!qtyMatched ? '数量不一致' : '') + (!qtyMatched && !transportMatched ? ' + ' : '') + (!transportMatched ? '运输方式不一致' : '') + '），请检查并调整</div>';
+  comboRow = document.createElement('tr');
+  comboRow.className = 'combo-row';
+  comboRow.innerHTML = '<td colspan="20"><div class="combo-panel">' +
+    '<div class="combo-panel-title">拆包组合关联</div>' +
+    '<div class="combo-panel-bom">主SKU：<b>' + bomData.mainSku + '</b>（' + bomData.mainName + '）= ' + bomData.bom + '</div>' +
+    '<table class="combo-table"><thead><tr>' +
+    '<th>子SKU</th><th>建议量</th><th>运输方式</th><th>截仓发货日</th><th>建议状态</th><th>配齐</th>' +
+    '</tr></thead><tbody>' + membersHtml + '</tbody></table>' +
+    statusHtml +
+    '</div></td>';
+  tr.parentNode.insertBefore(comboRow, tr.nextSibling);
+  tag.classList.add('expanded');
 }
 
 // 刷新所有批次的运输升降标识
@@ -2839,6 +2960,7 @@ refreshCheckboxLock();
 refreshBatchMenu();
 refreshAllTransportLevels();
 refreshConfirmStatus();
+refreshComboTags();
 
 loadAnnotations();
 restoreHighlights();
