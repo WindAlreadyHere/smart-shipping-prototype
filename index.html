@@ -1462,6 +1462,18 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
   </div>
 </div>
 
+<!-- 拆包组合确认弹窗 -->
+<div class="spec-modal-mask" id="comboConfirmMask">
+  <div class="spec-modal" style="width:640px;">
+    <div class="spec-modal-header">
+      <h3>拆包组合确认</h3>
+      <button class="spec-modal-close" onclick="closeComboConfirm()">×</button>
+    </div>
+    <div class="spec-modal-body" id="comboConfirmBody"></div>
+    <div class="spec-modal-foot" id="comboConfirmFoot"></div>
+  </div>
+</div>
+
 <!-- AI 识别进度遮罩 -->
 <div class="spec-ai-loading" id="specAiLoading">
   <div class="sal-box">
@@ -1644,8 +1656,6 @@ document.querySelectorAll('.tab-item').forEach(tab => {
     refreshCheckboxLock();
     // 刷新确认情况
     refreshConfirmStatus();
-    // 刷新组合SKU入口
-    refreshComboTags();
     // 更新批量菜单
     refreshBatchMenu();
     // 已生成批次时：所有复选框禁选 + 清空选中
@@ -1796,17 +1806,25 @@ document.addEventListener('click', (e) => {
   } else if (act === 'del-batch') {
     deleteBatch(btn, sku);
   } else if (act === 'confirm-batch') {
-    // 单批次确认（校验 + 二次确认 + 状态流转）
+    // 单批次确认（校验 + 组合检测 + 弹窗/普通确认）
     const tr = btn.closest('tr');
     if (!tr) return;
-    const inp = tr.querySelector('.nt-input');
+    const inp = tr.querySelector('input.nt-input');
+    const sel = tr.querySelector('select.nt-input');
     const thisQty = inp ? (parseInt(inp.value) || 0) : 0;
     // 容量校验
     const chk = validateConfirmCapacity(row, thisQty);
     if (!chk.ok) { alert('操作失败，请调整：\n\n' + chk.msg); return; }
-    // 组合SKU校验提醒（不阻断）
-    const combo = checkComboSKU(row, thisQty);
-    if (combo.warn) { alert('⚠ 组合SKU提醒\n\n' + combo.msg); }
+    // 检测是否拆包组合
+    if (isComboRow(row)) {
+      const skuCode = row.querySelector('.col-code')?.textContent.trim() || '';
+      const bomData = comboBOMData[skuCode];
+      if (bomData) {
+        openComboConfirm(tr, row, bomData, thisQty, sel ? sel.value : '');
+        return; // 弹窗接管，不走普通确认
+      }
+    }
+    // 普通确认（非组合）
     if (!confirm(`确认此批次？\n→ 状态：待确认 → 待审核\n→ 本次 ${thisQty}，剩余可分配容量 ${chk.capacity}`)) return;
     flowBatchStatus(tr, '待审核');
   } else if (act === 'approve-batch') {
@@ -2063,6 +2081,164 @@ function toggleComboRow(tr, row, tag) {
     '</div></td>';
   tr.parentNode.insertBefore(comboRow, tr.nextSibling);
   tag.classList.add('expanded');
+}
+
+// === 拆包组合确认弹窗 ===
+let comboConfirmContext = null; // { tr, row, bomData, members }
+
+function openComboConfirm(tr, row, bomData, currentQty, currentTransport) {
+  // 找关联批次：在页面上搜索其他行，匹配 主SKU(同BOM组)+国家+截仓日+运输方式
+  const currentCountry = row.querySelector('.field-line')?.parentElement?.textContent || '';
+  let country = '';
+  row.querySelectorAll('.field-line').forEach(fl => {
+    if (fl.textContent.includes('国家')) { const v = fl.querySelector('.field-value'); if (v) country = v.textContent.trim(); }
+  });
+  // 截仓日从当前批次行获取
+  let cutoff = '';
+  const cells = Array.from(tr.children);
+  for (const c of cells) {
+    if (/^\d{1,2}\/\d{1,2}/.test(c.textContent.trim())) { cutoff = c.textContent.trim(); break; }
+  }
+  // 搜索页面上的关联行（其他子SKU的发货建议，同国家+同截仓日+同运输方式）
+  const linkedRows = [];
+  document.querySelectorAll('tr.row-main').forEach(otherRow => {
+    if (otherRow === row) return;
+    if (otherRow.classList.contains('row-closed') || otherRow.classList.contains('row-pending-calc')) return;
+    if (!isComboRow(otherRow)) return;
+    // 检查是否同一BOM组（检查其他行的SKU是否在bomData.members里）
+    const otherSku = otherRow.querySelector('.col-code')?.textContent.trim() || '';
+    const isMember = bomData.members.some(m => m.sku === otherSku || otherSku === m.sku.split('-')[0]);
+    if (!isMember) return;
+    // 检查国家
+    let otherCountry = '';
+    otherRow.querySelectorAll('.field-line').forEach(fl => {
+      if (fl.textContent.includes('国家')) { const v = fl.querySelector('.field-value'); if (v) otherCountry = v.textContent.trim(); }
+    });
+    if (otherCountry !== country) return;
+    // 找该行里截仓日+运输方式匹配的批次
+    otherRow.querySelectorAll('.nested-table tbody tr').forEach(otherTr => {
+      if (otherTr.classList.contains('combo-row') || otherTr.classList.contains('row-done')) return;
+      let otherCutoff = '';
+      const otherCells = Array.from(otherTr.children);
+      for (const c of otherCells) {
+        if (/^\d{1,2}\/\d{1,2}/.test(c.textContent.trim())) { otherCutoff = c.textContent.trim(); break; }
+      }
+      const otherSel = otherTr.querySelector('select.nt-input');
+      const otherTransport = otherSel ? otherSel.value : '';
+      const otherQtyInp = otherTr.querySelector('input.nt-input');
+      const otherQty = otherQtyInp ? parseInt(otherQtyInp.value) : 0;
+      const otherStatus = otherTr.querySelector('.tag')?.textContent.trim() || '';
+      if (otherCutoff === cutoff && otherTransport === currentTransport) {
+        linkedRows.push({ tr: otherTr, row: otherRow, sku: otherSku, qty: otherQty, transport: otherTransport, cutoff: otherCutoff, status: otherStatus });
+      }
+    });
+  });
+
+  // 构建弹窗内容
+  const currentSku = row.querySelector('.col-code')?.textContent.trim() || '';
+  // 构建成员表格（当前行可编辑，关联行只读）
+  const allMembers = [{ sku: currentSku, qty: currentQty, transport: currentTransport, cutoff, status: '待确认', isCurrent: true, tr, row }];
+  linkedRows.forEach(l => allMembers.push({ sku: l.sku, qty: l.qty, transport: l.transport, cutoff: l.cutoff, status: l.status, isCurrent: false, tr: l.tr, row: l.row }));
+
+  const TRANSPORT_OPTS = ['快递','空运','快船','卡航','卡航整柜','铁路','慢船','海运整柜'];
+  const membersHtml = allMembers.map((m, i) => {
+    const opts = TRANSPORT_OPTS.map(o => `<option ${o===m.transport?'selected':''}>${o}</option>`).join('');
+    return '<tr>' +
+      '<td><b>' + m.sku + '</b>' + (m.isCurrent ? ' <span style="color:var(--purple);font-size:10px;">（当前）</span>' : '') + '</td>' +
+      '<td><input type="number" class="combo-qty" data-idx="'+i+'" value="'+m.qty+'" style="width:60px;height:26px;padding:0 4px;border:1px solid #d9d9d9;border-radius:3px;text-align:center;" '+(m.isCurrent?'':'disabled')+'></td>' +
+      '<td><select class="combo-transport" data-idx="'+i+'" style="width:70px;height:26px;border:1px solid #d9d9d9;border-radius:3px;" '+(m.isCurrent?'':'disabled')+'>'+opts+'</select></td>' +
+      '<td>'+m.cutoff+'</td>' +
+      '<td>'+m.status+'</td>' +
+      '</tr>';
+  }).join('');
+
+  // 配齐状态
+  const qtys = allMembers.map(m => m.qty);
+  const transports = allMembers.map(m => m.transport);
+  const qtyMatched = qtys.every(q => q === qtys[0]);
+  const transportMatched = transports.every(t => t === transports[0]);
+  const allMatched = qtyMatched && transportMatched;
+  const statusHtml = allMatched
+    ? '<div class="combo-status ok">✓ 已配齐（数量一致 + 运输方式一致）</div>'
+    : '<div class="combo-status warn">⚠ 存在差异，修改主SKU数量/运输后将同步到子SKU</div>';
+
+  document.getElementById('comboConfirmBody').innerHTML =
+    '<div style="margin-bottom:12px;">' +
+    '<div style="font-size:13px;font-weight:600;color:var(--purple);margin-bottom:4px;">拆包组合关联</div>' +
+    '<div style="font-size:12px;color:var(--text-secondary);">主SKU：<b style="color:var(--text-primary);">'+bomData.mainSku+'</b>（'+bomData.mainName+'）= '+bomData.bom+'</div>' +
+    '</div>' +
+    '<table class="combo-table"><thead><tr>' +
+    '<th>子SKU</th><th>数量</th><th>运输方式</th><th>截仓发货日</th><th>状态</th>' +
+    '</tr></thead><tbody>' + membersHtml + '</tbody></table>' +
+    statusHtml +
+    '<div style="font-size:11px;color:var(--text-secondary);margin-top:8px;">关联匹配：主SKU + 国家 + 截仓日 + 运输方式 严格匹配，共找到 '+allMembers.length+' 条</div>';
+
+  // 按钮
+  const footHtml = '<button class="btn-cancel" onclick="closeComboConfirm()">取消</button>' +
+    '<button class="btn-cancel" onclick="comboConfirmOnly()" style="border-color:var(--primary);color:var(--primary);">仅确认本条</button>' +
+    (linkedRows.length > 0 ? '<button class="btn-primary" onclick="comboConfirmAll()">同时确认（'+allMembers.length+'条）</button>' : '<button class="btn-primary" disabled style="opacity:0.5;">无关联批次可同时确认</button>');
+  document.getElementById('comboConfirmFoot').innerHTML = footHtml;
+
+  // 保存上下文
+  comboConfirmContext = { allMembers, bomData };
+  // 主SKU编辑→同步子SKU
+  document.querySelectorAll('.combo-qty[data-idx="0"]').forEach(inp => {
+    inp.addEventListener('input', function() {
+      const val = parseInt(this.value) || 0;
+      document.querySelectorAll('.combo-qty').forEach((other, j) => { if (j > 0) other.value = val; });
+    });
+  });
+  document.querySelectorAll('.combo-transport[data-idx="0"]').forEach(sel => {
+    sel.addEventListener('change', function() {
+      const val = this.value;
+      document.querySelectorAll('.combo-transport').forEach((other, j) => { if (j > 0) other.value = val; });
+    });
+  });
+
+  document.getElementById('comboConfirmMask').classList.add('show');
+}
+
+function closeComboConfirm() {
+  document.getElementById('comboConfirmMask').classList.remove('show');
+  comboConfirmContext = null;
+}
+
+// 仅确认本条
+function comboConfirmOnly() {
+  if (!comboConfirmContext) return;
+  const m = comboConfirmContext.allMembers[0]; // 当前行
+  const newQty = parseInt(document.querySelector('.combo-qty[data-idx="0"]')?.value || m.qty);
+  const newTransport = document.querySelector('.combo-transport[data-idx="0"]')?.value || m.transport;
+  // 更新数量和运输方式
+  const inp = m.tr.querySelector('input.nt-input');
+  const sel = m.tr.querySelector('select.nt-input');
+  if (inp) inp.value = newQty;
+  if (sel) sel.value = newTransport;
+  flowBatchStatus(m.tr, '待审核');
+  refreshTransportLevel(m.tr);
+  closeComboConfirm();
+  showToast('已确认本条批次');
+}
+
+// 同时确认所有关联批次
+function comboConfirmAll() {
+  if (!comboConfirmContext) return;
+  const members = comboConfirmContext.allMembers;
+  const newQty = parseInt(document.querySelector('.combo-qty[data-idx="0"]')?.value || members[0].qty);
+  const newTransport = document.querySelector('.combo-transport[data-idx="0"]')?.value || members[0].transport;
+  let count = 0;
+  members.forEach(m => {
+    // 更新数量和运输方式
+    const inp = m.tr.querySelector('input.nt-input');
+    const sel = m.tr.querySelector('select.nt-input');
+    if (inp) inp.value = newQty;
+    if (sel) sel.value = newTransport;
+    flowBatchStatus(m.tr, '待审核');
+    refreshTransportLevel(m.tr);
+    count++;
+  });
+  closeComboConfirm();
+  showToast('已同时确认 '+count+' 条关联批次');
 }
 
 // 刷新所有批次的运输升降标识
@@ -2961,7 +3137,6 @@ refreshCheckboxLock();
 refreshBatchMenu();
 refreshAllTransportLevels();
 refreshConfirmStatus();
-refreshComboTags();
 
 loadAnnotations();
 restoreHighlights();
