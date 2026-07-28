@@ -821,7 +821,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
       <div class="batch-dropdown">
         <button class="op-btn sm" onclick="toggleBatchMenu('menu-suggestion')">批量调整建议 ▾</button>
         <div class="batch-menu" id="menu-suggestion">
-          <a onclick="adjustToStocked()">调整为已入库数量<span class="batch-menu-hint">建议数→入库数</span></a>
+          <a onclick="adjustToStocked()">调整建议量<span class="batch-menu-hint">入库不足时裁剪</span></a>
           <div class="batch-menu-sep"></div>
           <a onclick="batchAction('close-suggestion')">批量关闭</a>
         </div>
@@ -2445,7 +2445,7 @@ function flowBatchStatus(tr, newStatus) {
 // === 日志弹窗（两个Tab：操作记录/计算过程） ===
 // === 批量操作下拉菜单 ===
 
-// 调整为已入库数量：把勾选行的建议数量改为入库数量（仅差异行）
+// 调整建议量（入库不足时）：把勾选行的建议数量按截仓日优先级裁剪到入库可发货量
 function adjustToStocked() {
   document.querySelectorAll('.batch-menu').forEach(m => m.classList.remove('show'));
   // 收集勾选的主表行
@@ -2471,7 +2471,7 @@ function adjustToStocked() {
   }
   // 二次确认：显示变更明细
   const detail = checkedRows.map(r => `${r.sku}：${r.needQty} → ${r.stockQty}`).join('\n');
-  if (!confirm(`确认将以下 ${checkedRows.length} 条明细的建议数量调整为已入库数量？\n\n${detail}\n\n此操作将修改建议数量，请确认差异原因已核实。`)) return;
+  if (!confirm(`确认对以下 ${checkedRows.length} 条明细调整建议量？\n（入库不足，按截仓日优先级裁剪）\n\n${detail}\n\n此操作将修改建议数量，请确认差异原因已核实。`)) return;
   // 执行修改
   let count = 0;
   checkedRows.forEach(r => {
