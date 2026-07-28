@@ -197,7 +197,7 @@ tr.row-pending-calc:hover td { background: #fafbfc; }
 .src-tag { font-size: 11px; padding: 1px 6px; border-radius: 3px; white-space: nowrap; }
 .src-tag.smart { color: var(--tab-active); background: var(--primary-light); }
 .src-tag.manual { color: #86909c; background: #f7f8fa; border: 1px solid #e5e6eb; }
-/* 确认情况标签 */
+/* 优先程度标签 */
 .confirm-status { font-size: 12px; white-space: nowrap; }
 .confirm-status.urgent { color: var(--warning); font-weight: 500; }
 .confirm-status.normal { color: var(--text-secondary); }
@@ -923,7 +923,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
             
             <th>数量</th>
                         <th>运输方式</th>
-            <th style="width:72px;">确认情况</th>
+            <th style="width:72px;">优先程度</th>
             <th>截仓发货日</th>
             <th>状态</th>
             <th style="width:56px;">操作</th>
@@ -1019,7 +1019,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
             
             <th>数量</th>
                         <th>运输方式</th>
-            <th style="width:72px;">确认情况</th>
+            <th style="width:72px;">优先程度</th>
             <th>截仓发货日</th>
             <th>状态</th>
             <th style="width:56px;">操作</th>
@@ -1125,7 +1125,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
             
             <th>数量</th>
                         <th>运输方式</th>
-            <th style="width:72px;">确认情况</th>
+            <th style="width:72px;">优先程度</th>
             <th>截仓发货日</th>
             <th>状态</th>
             <th style="width:56px;">操作</th>
@@ -1221,7 +1221,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
             <th style="width:64px;">来源</th>
             <th>数量</th>
             <th>运输方式</th>
-            <th style="width:72px;">确认情况</th>
+            <th style="width:72px;">优先程度</th>
             <th>截仓发货日</th>
             <th>状态</th>
             <th style="width:56px;">操作</th>
@@ -1307,7 +1307,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
             <th style="width:64px;">来源</th>
             <th>数量</th>
             <th>运输方式</th>
-            <th style="width:72px;">确认情况</th>
+            <th style="width:72px;">优先程度</th>
             <th>截仓发货日</th>
             <th>状态</th>
             <th style="width:56px;">操作</th>
@@ -1740,7 +1740,7 @@ document.querySelectorAll('.tab-item').forEach(tab => {
     refreshEditable();
     // 按Tab锁定复选框（只有对应状态的批次可勾选）
     refreshCheckboxLock();
-    // 刷新确认情况
+    // 刷新优先程度
     refreshConfirmStatus();
     // 更新批量菜单
     refreshBatchMenu();
@@ -1976,7 +1976,7 @@ function getDefaultTransport(tr) {
   return defaultT;
 }
 
-// 确认情况计算：根据截仓发货日 + 提前准备天数，判断超期/需确认/无需确认
+// 优先程度计算：根据截仓发货日 + 提前准备天数，判断超期/需确认/无需确认
 function getAdvanceDays(row) {
   if (!row) return 7;
   // 判断备货方式和备库类型
@@ -2016,8 +2016,8 @@ function calcConfirmStatus(tr, row) {
   const advance = getAdvanceDays(row);
   const confirmDate = new Date(cutoff);
   confirmDate.setDate(confirmDate.getDate() - advance);
-  if (now >= confirmDate) return { label: '需确认', cls: 'urgent' };
-  return { label: '无需确认', cls: 'normal' };
+  if (now >= confirmDate) return { label: '优先处理', cls: 'urgent' };
+  return { label: '无需处理', cls: 'normal' };
 }
 
 function refreshConfirmStatus() {
@@ -2025,7 +2025,7 @@ function refreshConfirmStatus() {
     if (row.classList.contains('row-closed') || row.classList.contains('row-pending-calc')) return;
     row.querySelectorAll('.nested-table tbody tr').forEach(tr => {
       if (tr.classList.contains('tr-hold') || tr.classList.contains('row-done')) return;
-      // 找或创建确认情况单元格（插在截仓发货日单元格前）
+      // 找或创建优先程度单元格（插在截仓发货日单元格前）
       const cells = Array.from(tr.children);
       // 找截仓发货日单元格（文本含 数字/数字 格式的）
       let cutoffIdx = -1;
@@ -2034,7 +2034,7 @@ function refreshConfirmStatus() {
         if (/^\d{1,2}\/\d{1,2}/.test(txt) || txt === '—') { cutoffIdx = i; break; }
       }
       if (cutoffIdx === -1) return;
-      // 检查确认情况单元格是否已存在（在截仓日前一个位置）
+      // 检查优先程度单元格是否已存在（在截仓日前一个位置）
       let csCell = cells[cutoffIdx - 1];
       if (!csCell || !csCell.classList.contains('nt-confirm')) {
         // 创建并插在截仓日前
