@@ -1159,12 +1159,12 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
       <td class="td-op"><button class="nt-btn link" data-act="log">日志</button></td>
     </tr>
 
-    <!-- 兄弟SKU示例行：5560890-B（充气管配件），5560890的拆包组合搭档 -->
+    <!-- 兄弟SKU示例行：5560891（充气管配件），5560890的拆包组合搭档，主SKU=5560899 -->
     <tr class="row-main" data-suggestion-status="待完成">
       <td><span class="vxe-checkbox checked"></span></td>
       <!-- 商品信息 -->
       <td><div class="field-stack">
-        <div class="field-line"><span class="field-value col-code">5560890-B</span></div>
+        <div class="field-line"><span class="field-value col-code">5560891</span></div>
         <div class="field-line"><span class="muted">充气管配件</span></div>
         <div class="field-line"><span class="field-label">活跃度:</span> <span class="tag tag-rush">冲量</span></div>
         <div class="field-line"><span class="field-label">物流属性:</span> <span class="field-value">普货</span></div>
@@ -2074,19 +2074,19 @@ function refreshTransportLevel(tr) {
 // 模拟BOM数据：主SKU → 子SKU列表
 const comboBOMData = {
   '5560890': {
-    mainSku: '5560890-Main', mainName: '车载充气泵套装',
-    bom: '1×5560890-A（充气泵主机）+ 1×5560890-B（充气管配件）',
+    mainSku: '5560899', mainName: '车载充气泵套装',
+    bom: '1×5560890（充气泵主机）+ 1×5560891（充气管配件）',
     members: [
-      { sku: '5560890', name: '充气泵主机', qty: 200, transport: '空运', cutoff: '7/24（周四）', status: '待确认' },
-      { sku: '5560890-B', name: '充气管配件', qty: 200, transport: '空运', cutoff: '7/24（周四）', status: '待确认' }
+      { sku: '5560890', name: '充气泵主机' },
+      { sku: '5560891', name: '充气管配件' }
     ]
   },
-  '5560890-B': {
-    mainSku: '5560890-Main', mainName: '车载充气泵套装',
-    bom: '1×5560890-A（充气泵主机）+ 1×5560890-B（充气管配件）',
+  '5560891': {
+    mainSku: '5560899', mainName: '车载充气泵套装',
+    bom: '1×5560890（充气泵主机）+ 1×5560891（充气管配件）',
     members: [
-      { sku: '5560890', name: '充气泵主机', qty: 200, transport: '空运', cutoff: '7/24（周四）', status: '待确认' },
-      { sku: '5560890-B', name: '充气管配件', qty: 200, transport: '空运', cutoff: '7/24（周四）', status: '待确认' }
+      { sku: '5560890', name: '充气泵主机' },
+      { sku: '5560891', name: '充气管配件' }
     ]
   }
 };
@@ -2181,46 +2181,36 @@ function toggleComboRow(tr, row, tag) {
 let comboConfirmContext = null; // { tr, row, bomData, members }
 
 function openComboConfirm(tr, row, bomData, currentQty, currentTransport) {
-  // 找关联批次：在页面上搜索其他行，匹配 主SKU(同BOM组)+国家+截仓日+运输方式
-  const currentCountry = row.querySelector('.field-line')?.parentElement?.textContent || '';
+  const currentSku = row.querySelector('.col-code')?.textContent.trim() || '';
   let country = '';
   row.querySelectorAll('.field-line').forEach(fl => {
     if (fl.textContent.includes('国家')) { const v = fl.querySelector('.field-value'); if (v) country = v.textContent.trim(); }
   });
-  // 截仓日从当前批次行获取
   let cutoff = '';
   const cells = Array.from(tr.children);
   for (const c of cells) {
     if (/^\d{1,2}\/\d{1,2}/.test(c.textContent.trim())) { cutoff = c.textContent.trim(); break; }
   }
-  // 搜索页面上的关联行（其他子SKU的发货建议，同国家+同截仓日+同运输方式）
+  // 搜索关联行：同BOM组+同国家+同截仓日+同运输方式
   const linkedRows = [];
   document.querySelectorAll('tr.row-main').forEach(otherRow => {
     if (otherRow === row) return;
     if (otherRow.classList.contains('row-closed') || otherRow.classList.contains('row-pending-calc')) return;
     if (!isComboRow(otherRow)) return;
-    // 检查是否同一BOM组（检查其他行的SKU是否在bomData.members里）
     const otherSku = otherRow.querySelector('.col-code')?.textContent.trim() || '';
-    const isMember = bomData.members.some(m => m.sku === otherSku || otherSku === m.sku.split('-')[0]);
-    if (!isMember) return;
-    // 检查国家
+    if (!bomData.members.some(m => m.sku === otherSku)) return;
     let otherCountry = '';
     otherRow.querySelectorAll('.field-line').forEach(fl => {
       if (fl.textContent.includes('国家')) { const v = fl.querySelector('.field-value'); if (v) otherCountry = v.textContent.trim(); }
     });
     if (otherCountry !== country) return;
-    // 找该行里截仓日+运输方式匹配的批次
     otherRow.querySelectorAll('.nested-table tbody tr').forEach(otherTr => {
       if (otherTr.classList.contains('combo-row') || otherTr.classList.contains('row-done')) return;
       let otherCutoff = '';
-      const otherCells = Array.from(otherTr.children);
-      for (const c of otherCells) {
-        if (/^\d{1,2}\/\d{1,2}/.test(c.textContent.trim())) { otherCutoff = c.textContent.trim(); break; }
-      }
+      Array.from(otherTr.children).forEach(c => { if (/^\d{1,2}\/\d{1,2}/.test(c.textContent.trim())) otherCutoff = c.textContent.trim(); });
       const otherSel = otherTr.querySelector('select.nt-input');
       const otherTransport = otherSel ? otherSel.value : '';
-      const otherQtyInp = otherTr.querySelector('input.nt-input');
-      const otherQty = otherQtyInp ? parseInt(otherQtyInp.value) : 0;
+      const otherQty = parseInt(otherTr.querySelector('input.nt-input')?.value || 0);
       const otherStatus = otherTr.querySelector('.tag')?.textContent.trim() || '';
       if (otherCutoff === cutoff && otherTransport === currentTransport) {
         linkedRows.push({ tr: otherTr, row: otherRow, sku: otherSku, qty: otherQty, transport: otherTransport, cutoff: otherCutoff, status: otherStatus });
@@ -2228,52 +2218,70 @@ function openComboConfirm(tr, row, bomData, currentQty, currentTransport) {
     });
   });
 
-  // 构建弹窗内容
-  const currentSku = row.querySelector('.col-code')?.textContent.trim() || '';
-  // 构建成员表格（当前行可编辑，关联行只读）
-  const allMembers = [{ sku: currentSku, qty: currentQty, transport: currentTransport, cutoff, status: '待确认', isCurrent: true, tr, row }];
-  linkedRows.forEach(l => allMembers.push({ sku: l.sku, qty: l.qty, transport: l.transport, cutoff: l.cutoff, status: l.status, isCurrent: false, tr: l.tr, row: l.row }));
+  // 构建子SKU列表（含当前行和关联行）
+  const allMembers = [{ sku: currentSku, qty: currentQty, transport: currentTransport, cutoff, status: '待确认', tr, row }];
+  linkedRows.forEach(l => allMembers.push({ sku: l.sku, qty: l.qty, transport: l.transport, cutoff: l.cutoff, status: l.status, tr: l.tr, row: l.row }));
+  const hasLinked = linkedRows.length > 0;
+
+  // 计算各子SKU的最小可发货量（= 该子SKU的可分配容量 = PR需 - 待审核 - 已生成）
+  function getMemberCapacity(memberRow) {
+    let prNeed = 0, used = 0;
+    memberRow.querySelectorAll('.field-line').forEach(fl => {
+      if (fl.textContent.includes('PR需求数')) { const m = fl.textContent.match(/(\d+)/); if (m) prNeed = parseInt(m[1]); }
+    });
+    memberRow.querySelectorAll('.nested-table tbody tr').forEach(t => {
+      if (t.classList.contains('combo-row') || t.classList.contains('row-done')) return;
+      const status = t.querySelector('.tag')?.textContent.trim() || '';
+      if (status === '已生成' || status === '待审核') { used += parseInt(t.querySelector('input.nt-input')?.value || 0); }
+    });
+    return prNeed - used;
+  }
+  const capacities = allMembers.map(m => getMemberCapacity(m.row));
+  const minCapacity = Math.min(...capacities); // 最小可发货量 = 两个子SKU可分配容量的最小值
 
   const TRANSPORT_OPTS = ['快递','空运','快船','卡航','卡航整柜','铁路','慢船','海运整柜'];
+
+  // 构建弹窗：主SKU行（可编辑）+ 子SKU行（只读）
+  const mainQty = currentQty;
+  const mainTransport = currentTransport;
+  const mainOpts = TRANSPORT_OPTS.map(o => `<option ${o===mainTransport?'selected':''}>${o}</option>`).join('');
   const membersHtml = allMembers.map((m, i) => {
-    const opts = TRANSPORT_OPTS.map(o => `<option ${o===m.transport?'selected':''}>${o}</option>`).join('');
+    const cap = capacities[i];
     return '<tr>' +
-      '<td><b>' + m.sku + '</b>' + (m.isCurrent ? ' <span style="color:var(--purple);font-size:10px;">（当前）</span>' : '') + '</td>' +
-      '<td><input type="number" class="combo-qty" data-idx="'+i+'" value="'+m.qty+'" style="width:60px;height:26px;padding:0 4px;border:1px solid #d9d9d9;border-radius:3px;text-align:center;" '+(m.isCurrent?'':'disabled')+'></td>' +
-      '<td><select class="combo-transport" data-idx="'+i+'" style="width:70px;height:26px;border:1px solid #d9d9d9;border-radius:3px;" '+(m.isCurrent?'':'disabled')+'>'+opts+'</select></td>' +
+      '<td><b>' + m.sku + '</b><br><span style="color:var(--text-secondary);font-size:11px;">' + bomData.members.find(mm => mm.sku === m.sku)?.name + '</span></td>' +
+      '<td class="combo-sub-qty" data-idx="'+i+'">'+m.qty+'</td>' +
+      '<td class="combo-sub-transport" data-idx="'+i+'">'+m.transport+'</td>' +
       '<td>'+m.cutoff+'</td>' +
       '<td>'+m.status+'</td>' +
+      '<td style="color:var(--text-secondary);font-size:11px;">可分配 '+cap+'</td>' +
       '</tr>';
   }).join('');
 
-  // 配齐状态（仅有关联批次时才计算和展示）
-  const hasLinked = linkedRows.length > 0;
   let statusHtml = '';
   if (hasLinked) {
-    const qtys = allMembers.map(m => m.qty);
-    const transports = allMembers.map(m => m.transport);
-    const qtyMatched = qtys.every(q => q === qtys[0]);
-    const transportMatched = transports.every(t => t === transports[0]);
-    const allMatched = qtyMatched && transportMatched;
-    statusHtml = allMatched
-      ? '<div class="combo-status ok">✓ 已配齐（数量一致 + 运输方式一致）</div>'
-      : '<div class="combo-status warn">⚠ 存在差异，修改主SKU数量/运输后将同步到子SKU</div>';
+    statusHtml = '<div class="combo-status ok">✓ 已配齐（BOM 1:1，数量同步）</div>';
   }
 
   document.getElementById('comboConfirmBody').innerHTML =
     '<div style="margin-bottom:12px;">' +
-    '<div style="font-size:13px;font-weight:600;color:var(--purple);margin-bottom:4px;">拆包组合关联</div>' +
+    '<div style="font-size:13px;font-weight:600;color:var(--purple);margin-bottom:4px;">拆包组合确认</div>' +
     '<div style="font-size:12px;color:var(--text-secondary);">主SKU：<b style="color:var(--text-primary);">'+bomData.mainSku+'</b>（'+bomData.mainName+'）= '+bomData.bom+'</div>' +
     '</div>' +
+    '<div style="margin-bottom:12px;padding:12px;background:#f9f0ff;border:1px solid #d3adf7;border-radius:4px;">' +
+    '<div style="font-size:12px;color:var(--text-secondary);margin-bottom:6px;">主SKU维度（修改后同步到子SKU）：</div>' +
+    '<div style="display:flex;gap:16px;align-items:center;">' +
+    '<label style="font-size:13px;">数量：<input type="number" id="comboMainQty" value="'+mainQty+'" min="0" style="width:70px;height:28px;padding:0 6px;border:1px solid #d9d9d9;border-radius:3px;text-align:center;"></label>' +
+    '<label style="font-size:13px;">运输方式：<select id="comboMainTransport" style="width:80px;height:28px;border:1px solid #d9d9d9;border-radius:3px;">'+mainOpts+'</select></label>' +
+    '<span style="font-size:11px;color:var(--text-secondary);">最小可发货量：'+minCapacity+'</span>' +
+    '</div></div>' +
     '<table class="combo-table"><thead><tr>' +
-    '<th>子SKU</th><th>数量</th><th>运输方式</th><th>截仓发货日</th><th>状态</th>' +
+    '<th>子SKU</th><th>数量（只读同步）</th><th>运输方式（只读同步）</th><th>截仓发货日</th><th>状态</th><th>容量</th>' +
     '</tr></thead><tbody>' + membersHtml + '</tbody></table>' +
     statusHtml +
     (hasLinked
-      ? '<div style="font-size:11px;color:var(--text-secondary);margin-top:8px;">关联匹配：主SKU + 国家 + 截仓日 + 运输方式 严格匹配，共找到 '+allMembers.length+' 条</div>'
-      : '<div style="font-size:11px;color:var(--text-secondary);margin-top:8px;">未找到匹配的兄弟SKU批次（主SKU + 国家 + 截仓日 + 运输方式 不一致或不存在）</div>');
+      ? '<div style="font-size:11px;color:var(--text-secondary);margin-top:8px;">关联匹配：主SKU + 国家 + 截仓日 + 运输方式，共 '+allMembers.length+' 条</div>'
+      : '<div style="font-size:11px;color:var(--text-secondary);margin-top:8px;">未找到匹配的兄弟SKU批次</div>');
 
-  // 按钮：无关联时只显示"取消"+"仅确认本条"
   let footHtml = '<button class="btn-cancel" onclick="closeComboConfirm()">取消</button>' +
     '<button class="btn-primary" onclick="comboConfirmOnly()">仅确认本条</button>';
   if (hasLinked) {
@@ -2283,20 +2291,23 @@ function openComboConfirm(tr, row, bomData, currentQty, currentTransport) {
   }
   document.getElementById('comboConfirmFoot').innerHTML = footHtml;
 
-  // 保存上下文
-  comboConfirmContext = { allMembers, bomData };
-  // 主SKU编辑→同步子SKU
-  document.querySelectorAll('.combo-qty[data-idx="0"]').forEach(inp => {
-    inp.addEventListener('input', function() {
-      const val = parseInt(this.value) || 0;
-      document.querySelectorAll('.combo-qty').forEach((other, j) => { if (j > 0) other.value = val; });
-    });
+  comboConfirmContext = { allMembers, bomData, minCapacity };
+  // 主SKU数量/运输变化 → 同步子SKU + 校验最小发货量
+  document.getElementById('comboMainQty').addEventListener('input', function() {
+    const val = parseInt(this.value) || 0;
+    document.querySelectorAll('.combo-sub-qty').forEach(td => { td.textContent = val; });
+    // 校验最小可发货量
+    if (val > minCapacity) {
+      this.style.borderColor = 'var(--danger)';
+      document.getElementById('comboConfirmFoot').innerHTML = '<button class="btn-cancel" onclick="closeComboConfirm()">取消</button><span style="color:var(--danger);font-size:12px;align-self:center;">数量 '+val+' 超过最小可发货量 '+minCapacity+'，请调整</span>';
+    } else {
+      this.style.borderColor = '#d9d9d9';
+      document.getElementById('comboConfirmFoot').innerHTML = footHtml;
+    }
   });
-  document.querySelectorAll('.combo-transport[data-idx="0"]').forEach(sel => {
-    sel.addEventListener('change', function() {
-      const val = this.value;
-      document.querySelectorAll('.combo-transport').forEach((other, j) => { if (j > 0) other.value = val; });
-    });
+  document.getElementById('comboMainTransport').addEventListener('change', function() {
+    const val = this.value;
+    document.querySelectorAll('.combo-sub-transport').forEach(td => { td.textContent = val; });
   });
 
   document.getElementById('comboConfirmMask').classList.add('show');
@@ -2307,13 +2318,13 @@ function closeComboConfirm() {
   comboConfirmContext = null;
 }
 
-// 仅确认本条
 function comboConfirmOnly() {
   if (!comboConfirmContext) return;
-  const m = comboConfirmContext.allMembers[0]; // 当前行
-  const newQty = parseInt(document.querySelector('.combo-qty[data-idx="0"]')?.value || m.qty);
-  const newTransport = document.querySelector('.combo-transport[data-idx="0"]')?.value || m.transport;
-  // 更新数量和运输方式
+  const members = comboConfirmContext.allMembers;
+  const newQty = parseInt(document.getElementById('comboMainQty')?.value || members[0].qty);
+  const newTransport = document.getElementById('comboMainTransport')?.value || members[0].transport;
+  // 只更新当前行（第一个member）
+  const m = members[0];
   const inp = m.tr.querySelector('input.nt-input');
   const sel = m.tr.querySelector('select.nt-input');
   if (inp) inp.value = newQty;
@@ -2324,15 +2335,18 @@ function comboConfirmOnly() {
   showToast('已确认本条批次');
 }
 
-// 同时确认所有关联批次
 function comboConfirmAll() {
   if (!comboConfirmContext) return;
   const members = comboConfirmContext.allMembers;
-  const newQty = parseInt(document.querySelector('.combo-qty[data-idx="0"]')?.value || members[0].qty);
-  const newTransport = document.querySelector('.combo-transport[data-idx="0"]')?.value || members[0].transport;
+  const newQty = parseInt(document.getElementById('comboMainQty')?.value || members[0].qty);
+  const newTransport = document.getElementById('comboMainTransport')?.value || members[0].transport;
+  // 校验最小可发货量
+  if (newQty > comboConfirmContext.minCapacity) {
+    alert('数量 '+newQty+' 超过最小可发货量 '+comboConfirmContext.minCapacity+'，请调整后重试。');
+    return;
+  }
   let count = 0;
   members.forEach(m => {
-    // 更新数量和运输方式
     const inp = m.tr.querySelector('input.nt-input');
     const sel = m.tr.querySelector('select.nt-input');
     if (inp) inp.value = newQty;
