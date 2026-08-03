@@ -874,7 +874,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
       <th style="width:200px; min-width:200px;">商品信息<div class="col-resizer"></div></th>
       <th style="width:200px; min-width:200px;">采购申请信息<div class="col-resizer"></div></th>
       <th style="width:210px; min-width:210px;">采购单信息<div class="col-resizer"></div></th>
-      <th style="width:160px; min-width:160px;">销售信息<div class="col-resizer"></div></th>
+      <th style="width:180px; min-width:180px;">销售信息<div class="col-resizer"></div></th>
       <th style="width:160px; min-width:160px;">单箱尺寸信息(商品)<div class="col-resizer"></div></th>
       <th style="width:200px; min-width:200px;">发货方式<div class="col-resizer"></div></th>
       <th style="width:150px; min-width:150px;">关键数值<div class="col-resizer"></div></th>
@@ -886,6 +886,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
 
     <tr class="row-main" data-suggestion-status="待完成">
       <td><span class="vxe-checkbox checked"></span></td>
+      <!-- 商品信息 -->
       <td><div class="field-stack">
         <div class="field-line"><span class="field-value col-code">8143903</span></div>
         <div class="field-line"><span class="muted">马自达MX-5防水车罩</span></div>
@@ -894,13 +895,48 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
         <div class="field-line"><span class="field-label">组合SKU:</span> <span class="field-value">否</span></div>
         <div class="field-line"><span class="field-label">定制化:</span> <span class="field-value">否</span></div>
       </div></td>
+      <!-- 采购申请信息 -->
       <td><div class="field-stack">
+        <div class="field-line key"><span class="field-label">PR单号:</span> <span class="field-value col-code">PR202607030009</span></div>
+        <div class="field-line key"><span class="field-label">PR需求数:</span> <span class="field-value metric">100</span></div>
+        <div class="field-line"><span class="field-label">默认运输方式:</span> <span class="field-value">空运</span></div>
+        <div class="field-line"><span class="field-label">需求日期:</span> <span class="field-value">2026-07-03</span></div>
+      </div></td>
+      <!-- 采购单信息 -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">PO单号:</span> <span class="field-value col-code">PO202607030012</span></div>
+        <div class="field-line"><span class="field-label">备货方式:</span> <span class="field-value">普通发货</span></div>
+        <div class="field-line key"><span class="field-label">PO下单数:</span> <span class="field-value metric">100</span></div>
+        <div class="field-line"><span class="field-label">入库数:</span> <span class="field-value metric">100</span></div>
+      </div></td>
+      <!-- 销售信息 -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">国家:</span> <span class="field-value">英国(UK)</span></div>
+        <div class="field-line"><span class="field-label">运营人员:</span> <span class="field-value">ShirleyLiu</span></div>
+        <div class="field-line key"><span class="field-label">可售天数:</span> <span class="field-value metric">8天</span> <span class="warn-text">⚠ 低于安全库存</span></div>
+        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">橙联英国仓</span></div>
+      </div></td>
+      <!-- 单箱尺寸信息(商品) -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">长×宽×高:</span> <span class="field-value">42×42×43 cm</span></div>
+        <div class="field-line"><span class="field-label">单箱数量:</span> <span class="field-value">16</span></div>
+        <div class="field-line"><span class="field-label">单箱重量:</span> <span class="field-value">8.00 kg</span></div>
+      </div></td>
+      <!-- 发货方式 -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">发货仓:</span> <span class="field-value">深圳-02仓</span></div>
+        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">橙联英国仓</span></div>
+        <div class="field-line"><span class="field-label">计费重:</span> <span class="field-value">120 kg (抛率85%)</span></div>
+        <div class="field-line"><span class="field-label">实际重/体积重/体积:</span> <span class="field-value muted">102kg / 141kg / 1.20m³</span></div>
+      </div></td>
+<td><div class="field-stack">
         <div class="field-line"><span class="field-label">需求数量:</span> <span class="field-value metric">100</span></div>
         <div class="field-line"><span class="field-label">需求未建FH:</span> <span class="field-value metric">100</span></div>
         <div class="field-line"><span class="field-label">入库数量:</span> <span class="field-value metric">100</span></div>
         <div class="field-line"><span class="field-label">入库未建FH:</span> <span class="field-value metric">100</span></div>
         <div class="field-line"><span class="field-label">暂缓量:</span> <span class="field-value muted">0</span></div>
       </div></td>
+            <!-- 智能拆批（信诚式嵌套子表格：复选框+可编辑数量+货源状态+底部按钮区） -->
       <td>
         <table class="nested-table">
           <thead><tr>
@@ -914,8 +950,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
             <th>截仓发货日</th>
             <th>状态</th>
             <th style="width:56px;">操作</th>
-          
-    </tr></thead>
+          </tr></thead>
           <tbody>
             <tr>
               <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
@@ -944,40 +979,12 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
         <div class="batch-summary">已勾选 <span class="sum-num sel-qty">100</span> 件 / PR需 <span class="sum-num">100</span> · <span style="color:var(--warning);font-weight:500;">暂缓量 0</span></div>
         <div class="nt-actions"><button class="nt-btn link" data-act="add">新增批次</button></div>
       </td>
-      <td><div class="field-stack">
-        <div class="field-line key"><span class="field-label">PR单号:</span> <span class="field-value col-code">PR202607030009</span></div>
-        <div class="field-line key"><span class="field-label">PR需求数:</span> <span class="field-value metric">100</span></div>
-        <div class="field-line"><span class="field-label">默认运输方式:</span> <span class="field-value">空运</span></div>
-        <div class="field-line"><span class="field-label">需求日期:</span> <span class="field-value">2026-07-03</span></div>
-        <div class="field-line"><span class="field-label">计划人员:</span> <span class="field-value">PlanGuo</span></div>
-      </div></td>
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">PO单号:</span> <span class="field-value col-code">PO202607030012</span></div>
-        <div class="field-line"><span class="field-label">备货方式:</span> <span class="field-value">普通发货</span></div>
-        <div class="field-line key"><span class="field-label">PO下单数:</span> <span class="field-value metric">100</span></div>
-        <div class="field-line"><span class="field-label">入库数:</span> <span class="field-value metric">100</span></div>
-      </div></td>
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">国家:</span> <span class="field-value">英国(UK)</span></div>
-        <div class="field-line"><span class="field-label">运营人员:</span> <span class="field-value">ShirleyLiu</span></div>
-        <div class="field-line key"><span class="field-label">可售天数:</span> <span class="field-value metric">8天</span> <span class="warn-text">⚠ 低于安全库存</span></div>
-      </div></td>
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">发货仓:</span> <span class="field-value">深圳-02仓</span></div>
-        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">橙联英国仓</span></div>
-        <div class="field-line"><span class="field-label">计费重:</span> <span class="field-value">120 kg (抛率85%)</span></div>
-        <div class="field-line"><span class="field-label">实际重/体积重/体积:</span> <span class="field-value muted">102kg / 141kg / 1.20m³</span></div>
-      </div></td>
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">长×宽×高:</span> <span class="field-value">42×42×43 cm</span></div>
-        <div class="field-line"><span class="field-label">单箱数量:</span> <span class="field-value">16</span></div>
-        <div class="field-line"><span class="field-label">单箱重量:</span> <span class="field-value">8.00 kg</span></div>
-      </div></td>
       <td class="td-op"><button class="nt-btn link" data-act="log">日志</button></td>
     </tr>
 
     <tr class="row-main" data-suggestion-status="待完成">
       <td><span class="vxe-checkbox checked"></span></td>
+      <!-- 商品信息 -->
       <td><div class="field-stack">
         <div class="field-line"><span class="field-value col-code">7234012</span></div>
         <div class="field-line"><span class="muted">LED车灯模组 H7</span></div>
@@ -986,13 +993,48 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
         <div class="field-line"><span class="field-label">组合SKU:</span> <span class="field-value">否</span></div>
         <div class="field-line"><span class="field-label">定制化:</span> <span class="field-value">否</span></div>
       </div></td>
+      <!-- 采购申请信息 -->
       <td><div class="field-stack">
+        <div class="field-line key"><span class="field-label">PR单号:</span> <span class="field-value col-code">PR202607020016</span></div>
+        <div class="field-line key"><span class="field-label">PR需求数:</span> <span class="field-value metric">500</span></div>
+        <div class="field-line"><span class="field-label">默认运输方式:</span> <span class="field-value">慢船</span></div>
+        <div class="field-line"><span class="field-label">需求日期:</span> <span class="field-value">2026-07-02</span></div>
+      </div></td>
+      <!-- 采购单信息（2个PO，默认展示1个，展开看第2个） -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">PO单号:</span> <span class="field-value col-code">PO202607020022</span></div>
+        <div class="field-line"><span class="field-label">备货方式:</span> <span class="field-value">普通发货</span></div>
+        <div class="field-line key"><span class="field-label">PO下单数:</span> <span class="field-value metric">500</span></div>
+        <div class="field-line"><span class="field-label">入库数:</span> <span class="field-value metric">300</span><span class="muted">(余200预7/20到)</span></div>
+      </div></td>
+      <!-- 销售信息 -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">国家:</span> <span class="field-value">德国(DE)</span></div>
+        <div class="field-line"><span class="field-label">运营人员:</span> <span class="field-value">MaxZou</span></div>
+        <div class="field-line key"><span class="field-label">可售天数:</span> <span class="field-value metric">45天</span> <span class="ok-text">正常</span></div>
+        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">橙联德国仓</span></div>
+      </div></td>
+      <!-- 单箱尺寸信息(商品) -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">长×宽×高:</span> <span class="field-value">35×28×30 cm</span></div>
+        <div class="field-line"><span class="field-label">单箱数量:</span> <span class="field-value">24</span></div>
+        <div class="field-line"><span class="field-label">单箱重量:</span> <span class="field-value">1.80 kg</span></div>
+      </div></td>
+      <!-- 发货方式 -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">发货仓:</span> <span class="field-value">深圳-02仓</span></div>
+        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">橙联德国仓</span></div>
+        <div class="field-line"><span class="field-label">计费重:</span> <span class="field-value">240 kg (抛率30%)</span></div>
+        <div class="field-line"><span class="field-label">实际重/体积重/体积:</span> <span class="field-value muted">185kg / 260kg / 1.75m³</span></div>
+      </div></td>
+<td><div class="field-stack">
         <div class="field-line"><span class="field-label">需求数量:</span> <span class="field-value metric">500</span></div>
         <div class="field-line"><span class="field-label">需求未建FH:</span> <span class="field-value metric">400</span></div>
         <div class="field-line"><span class="field-label">入库数量:</span> <span class="field-value metric">500</span></div>
         <div class="field-line"><span class="field-label">入库未建FH:</span> <span class="field-value metric">400</span></div>
         <div class="field-line"><span class="field-label">暂缓量:</span> <span class="field-value muted">0</span></div>
       </div></td>
+            <!-- 智能拆批（嵌套子表格：基于需求数500拆3批，部分入库，演示🟡待入库场景） -->
       <td>
         <table class="nested-table">
           <thead><tr>
@@ -1006,8 +1048,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
             <th>截仓发货日</th>
             <th>状态</th>
             <th style="width:56px;">操作</th>
-          
-    </tr></thead>
+          </tr></thead>
           <tbody>
             <tr>
               <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
@@ -1047,41 +1088,12 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
         <div class="batch-summary">已勾选 <span class="sum-num sel-qty">400</span> 件 / PR需 <span class="sum-num">500</span> · <span style="color:var(--warning);font-weight:500;">暂缓量 0</span></div>
         <div class="nt-actions"><button class="nt-btn link" data-act="add">新增批次</button></div>
       </td>
-      <td><div class="field-stack">
-        <div class="field-line key"><span class="field-label">PR单号:</span> <span class="field-value col-code">PR202607020016</span></div>
-        <div class="field-line key"><span class="field-label">PR需求数:</span> <span class="field-value metric">500</span></div>
-        <div class="field-line"><span class="field-label">默认运输方式:</span> <span class="field-value">慢船</span></div>
-        <div class="field-line"><span class="field-label">需求日期:</span> <span class="field-value">2026-07-02</span></div>
-        <div class="field-line"><span class="field-label">计划人员:</span> <span class="field-value">PlanLi</span></div>
-      </div></td>
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">PO单号:</span> <span class="field-value col-code">PO202607020022</span></div>
-        <div class="field-line"><span class="field-label">备货方式:</span> <span class="field-value">普通发货</span></div>
-        <div class="field-line key"><span class="field-label">PO下单数:</span> <span class="field-value metric">500</span></div>
-        <div class="field-line"><span class="field-label">入库数:</span> <span class="field-value metric">300</span><span class="muted">(余200预7/20到)</span></div>
-      </div></td>
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">国家:</span> <span class="field-value">德国(DE)</span></div>
-        <div class="field-line"><span class="field-label">运营人员:</span> <span class="field-value">MaxZou</span></div>
-        <div class="field-line key"><span class="field-label">可售天数:</span> <span class="field-value metric">45天</span> <span class="ok-text">正常</span></div>
-        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">橙联德国仓</span></div>
-      </div></td>
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">发货仓:</span> <span class="field-value">深圳-02仓</span></div>
-        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">橙联德国仓</span></div>
-        <div class="field-line"><span class="field-label">计费重:</span> <span class="field-value">240 kg (抛率30%)</span></div>
-        <div class="field-line"><span class="field-label">实际重/体积重/体积:</span> <span class="field-value muted">185kg / 260kg / 1.75m³</span></div>
-      </div></td>
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">长×宽×高:</span> <span class="field-value">35×28×30 cm</span></div>
-        <div class="field-line"><span class="field-label">单箱数量:</span> <span class="field-value">24</span></div>
-        <div class="field-line"><span class="field-label">单箱重量:</span> <span class="field-value">1.80 kg</span></div>
-      </div></td>
       <td class="td-op"><button class="nt-btn link" data-act="log">日志</button></td>
     </tr>
 
     <tr class="row-main" data-suggestion-status="待完成">
       <td><span class="vxe-checkbox checked"></span></td>
+      <!-- 商品信息 -->
       <td><div class="field-stack">
         <div class="field-line"><span class="field-value col-code">5560890</span></div>
         <div class="field-line"><span class="muted">电动车充气泵</span></div>
@@ -1090,13 +1102,48 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
         <div class="field-line"><span class="field-label">组合SKU:</span> <span class="field-value" style="color:var(--warning);">是（拆包组合）</span></div>
         <div class="field-line"><span class="field-label">定制化:</span> <span class="field-value">否</span></div>
       </div></td>
+      <!-- 采购申请信息 -->
       <td><div class="field-stack">
+        <div class="field-line key"><span class="field-label">PR单号:</span> <span class="field-value col-code">PR202607020011</span></div>
+        <div class="field-line key"><span class="field-label">PR需求数:</span> <span class="field-value metric">300</span></div>
+        <div class="field-line"><span class="field-label">默认运输方式:</span> <span class="field-value">快船</span></div>
+        <div class="field-line"><span class="field-label">需求日期:</span> <span class="field-value">2026-07-02</span></div>
+      </div></td>
+      <!-- 采购单信息 -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">PO单号:</span> <span class="field-value col-code">PO202607020018</span></div>
+        <div class="field-line"><span class="field-label">备货方式:</span> <span class="field-value">普通发货</span></div>
+        <div class="field-line key"><span class="field-label">PO下单数:</span> <span class="field-value metric">300</span></div>
+        <div class="field-line"><span class="field-label">入库数:</span> <span class="field-value metric">300</span></div>
+      </div></td>
+      <!-- 销售信息 -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">国家:</span> <span class="field-value">法国(FR)</span></div>
+        <div class="field-line"><span class="field-label">运营人员:</span> <span class="field-value">WayZhu</span></div>
+        <div class="field-line key"><span class="field-label">可售天数:</span> <span class="field-value metric">5天</span> <span class="warn-text">⚠ 断货风险</span></div>
+        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">橙联法国仓</span></div>
+      </div></td>
+      <!-- 单箱尺寸信息(商品) -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">长×宽×高:</span> <span class="field-value">50×40×45 cm</span></div>
+        <div class="field-line"><span class="field-label">单箱数量:</span> <span class="field-value">12</span></div>
+        <div class="field-line"><span class="field-label">单箱重量:</span> <span class="field-value">5.60 kg</span></div>
+      </div></td>
+      <!-- 发货方式 -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">发货仓:</span> <span class="field-value">深圳-02仓</span></div>
+        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">橙联法国仓</span></div>
+        <div class="field-line"><span class="field-label">计费重:</span> <span class="field-value">210 kg (抛率60%)</span></div>
+        <div class="field-line"><span class="field-label">实际重/体积重/体积:</span> <span class="field-value muted">168kg / 280kg / 1.50m³</span></div>
+      </div></td>
+<td><div class="field-stack">
         <div class="field-line"><span class="field-label">需求数量:</span> <span class="field-value metric">300</span></div>
         <div class="field-line"><span class="field-label">需求未建FH:</span> <span class="field-value metric">300</span></div>
         <div class="field-line"><span class="field-label">入库数量:</span> <span class="field-value metric">300</span></div>
         <div class="field-line"><span class="field-label">入库未建FH:</span> <span class="field-value metric">300</span></div>
         <div class="field-line"><span class="field-label">暂缓量:</span> <span class="field-value muted">0</span></div>
       </div></td>
+            <!-- 智能拆批（嵌套子表格：紧急拆2批，断货风险，货源全现货） -->
       <td>
         <table class="nested-table">
           <thead><tr>
@@ -1110,8 +1157,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
             <th>截仓发货日</th>
             <th>状态</th>
             <th style="width:56px;">操作</th>
-          
-    </tr></thead>
+          </tr></thead>
           <tbody>
             <tr>
               <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
@@ -1140,42 +1186,13 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
         <div class="batch-summary">已勾选 <span class="sum-num sel-qty">300</span> 件 / PR需 <span class="sum-num">300</span> · <span style="color:var(--warning);font-weight:500;">暂缓量 0</span></div>
         <div class="nt-actions"><button class="nt-btn link" data-act="add">新增批次</button></div>
       </td>
-      <td><div class="field-stack">
-        <div class="field-line key"><span class="field-label">PR单号:</span> <span class="field-value col-code">PR202607020011</span></div>
-        <div class="field-line key"><span class="field-label">PR需求数:</span> <span class="field-value metric">300</span></div>
-        <div class="field-line"><span class="field-label">默认运输方式:</span> <span class="field-value">快船</span></div>
-        <div class="field-line"><span class="field-label">需求日期:</span> <span class="field-value">2026-07-02</span></div>
-        <div class="field-line"><span class="field-label">计划人员:</span> <span class="field-value">PlanWang</span></div>
-      </div></td>
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">PO单号:</span> <span class="field-value col-code">PO202607020018</span></div>
-        <div class="field-line"><span class="field-label">备货方式:</span> <span class="field-value">普通发货</span></div>
-        <div class="field-line key"><span class="field-label">PO下单数:</span> <span class="field-value metric">300</span></div>
-        <div class="field-line"><span class="field-label">入库数:</span> <span class="field-value metric">300</span></div>
-      </div></td>
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">国家:</span> <span class="field-value">法国(FR)</span></div>
-        <div class="field-line"><span class="field-label">运营人员:</span> <span class="field-value">WayZhu</span></div>
-        <div class="field-line key"><span class="field-label">可售天数:</span> <span class="field-value metric">5天</span> <span class="warn-text">⚠ 断货风险</span></div>
-        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">橙联法国仓</span></div>
-      </div></td>
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">发货仓:</span> <span class="field-value">深圳-02仓</span></div>
-        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">橙联法国仓</span></div>
-        <div class="field-line"><span class="field-label">计费重:</span> <span class="field-value">210 kg (抛率60%)</span></div>
-        <div class="field-line"><span class="field-label">实际重/体积重/体积:</span> <span class="field-value muted">168kg / 280kg / 1.50m³</span></div>
-      </div></td>
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">长×宽×高:</span> <span class="field-value">50×40×45 cm</span></div>
-        <div class="field-line"><span class="field-label">单箱数量:</span> <span class="field-value">12</span></div>
-        <div class="field-line"><span class="field-label">单箱重量:</span> <span class="field-value">5.60 kg</span></div>
-      </div></td>
       <td class="td-op"><button class="nt-btn link" data-act="log">日志</button></td>
     </tr>
 
     <!-- 兄弟SKU示例行：5560891（充气管配件），5560890的拆包组合搭档，主SKU=5560899 -->
     <tr class="row-main" data-suggestion-status="待完成">
       <td><span class="vxe-checkbox checked"></span></td>
+      <!-- 商品信息 -->
       <td><div class="field-stack">
         <div class="field-line"><span class="field-value col-code">5560891</span></div>
         <div class="field-line"><span class="muted">充气管配件</span></div>
@@ -1184,6 +1201,40 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
         <div class="field-line"><span class="field-label">组合SKU:</span> <span class="field-value" style="color:var(--warning);">是（拆包组合）</span></div>
         <div class="field-line"><span class="field-label">定制化:</span> <span class="field-value">否</span></div>
       </div></td>
+      <!-- 采购申请信息 -->
+      <td><div class="field-stack">
+        <div class="field-line key"><span class="field-label">PR单号:</span> <span class="field-value col-code">PR202607020012</span></div>
+        <div class="field-line key"><span class="field-label">PR需求数:</span> <span class="field-value metric">200</span></div>
+        <div class="field-line"><span class="field-label">默认运输方式:</span> <span class="field-value">空运</span></div>
+        <div class="field-line"><span class="field-label">需求日期:</span> <span class="field-value">2026-07-02</span></div>
+      </div></td>
+      <!-- 采购单信息 -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">PO单号:</span> <span class="field-value col-code">PO202607020019</span></div>
+        <div class="field-line"><span class="field-label">备货方式:</span> <span class="field-value">普通发货</span></div>
+        <div class="field-line key"><span class="field-label">PO下单数:</span> <span class="field-value metric">200</span></div>
+        <div class="field-line"><span class="field-label">入库数:</span> <span class="field-value metric">200</span></div>
+      </div></td>
+      <!-- 销售信息 -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">国家:</span> <span class="field-value">法国(FR)</span></div>
+        <div class="field-line"><span class="field-label">运营人员:</span> <span class="field-value">WayZhu</span></div>
+        <div class="field-line key"><span class="field-label">可售天数:</span> <span class="field-value metric">5天</span> <span class="warn-text">⚠ 断货风险</span></div>
+        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">橙联法国仓</span></div>
+      </div></td>
+      <!-- 单箱尺寸信息(商品) -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">长×宽×高:</span> <span class="field-value">20×15×8 cm</span></div>
+        <div class="field-line"><span class="field-label">单箱数量:</span> <span class="field-value">50</span></div>
+        <div class="field-line"><span class="field-label">单箱重量:</span> <span class="field-value">0.50 kg</span></div>
+      </div></td>
+      <!-- 发货方式 -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">发货仓:</span> <span class="field-value">深圳-02仓</span></div>
+        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">橙联法国仓</span></div>
+        <div class="field-line"><span class="field-label">计费重:</span> <span class="field-value muted">—</span></div>
+      </div></td>
+      <!-- 关键数值 -->
       <td><div class="field-stack">
         <div class="field-line"><span class="field-label">需求数量:</span> <span class="field-value metric">200</span></div>
         <div class="field-line"><span class="field-label">需求未建FH:</span> <span class="field-value metric">200</span></div>
@@ -1191,6 +1242,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
         <div class="field-line"><span class="field-label">入库未建FH:</span> <span class="field-value metric">200</span></div>
         <div class="field-line"><span class="field-label">暂缓量:</span> <span class="field-value muted">0</span></div>
       </div></td>
+      <!-- 智能拆批 -->
       <td>
         <table class="nested-table">
           <thead><tr>
@@ -1203,8 +1255,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
             <th>截仓发货日</th>
             <th>状态</th>
             <th style="width:56px;">操作</th>
-          
-    </tr></thead>
+          </tr></thead>
           <tbody>
             <tr>
               <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
@@ -1222,41 +1273,13 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
         <div class="batch-summary">已勾选 <span class="sum-num sel-qty">200</span> 件 / PR需 <span class="sum-num">200</span> · <span style="color:var(--warning);font-weight:500;">暂缓量 0</span></div>
         <div class="nt-actions"><button class="nt-btn link" data-act="add">新增批次</button></div>
       </td>
-      <td><div class="field-stack">
-        <div class="field-line key"><span class="field-label">PR单号:</span> <span class="field-value col-code">PR202607020012</span></div>
-        <div class="field-line key"><span class="field-label">PR需求数:</span> <span class="field-value metric">200</span></div>
-        <div class="field-line"><span class="field-label">默认运输方式:</span> <span class="field-value">空运</span></div>
-        <div class="field-line"><span class="field-label">需求日期:</span> <span class="field-value">2026-07-02</span></div>
-        <div class="field-line"><span class="field-label">计划人员:</span> <span class="field-value">PlanZhao</span></div>
-      </div></td>
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">PO单号:</span> <span class="field-value col-code">PO202607020019</span></div>
-        <div class="field-line"><span class="field-label">备货方式:</span> <span class="field-value">普通发货</span></div>
-        <div class="field-line key"><span class="field-label">PO下单数:</span> <span class="field-value metric">200</span></div>
-        <div class="field-line"><span class="field-label">入库数:</span> <span class="field-value metric">200</span></div>
-      </div></td>
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">国家:</span> <span class="field-value">法国(FR)</span></div>
-        <div class="field-line"><span class="field-label">运营人员:</span> <span class="field-value">WayZhu</span></div>
-        <div class="field-line key"><span class="field-label">可售天数:</span> <span class="field-value metric">5天</span> <span class="warn-text">⚠ 断货风险</span></div>
-        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">橙联法国仓</span></div>
-      </div></td>
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">发货仓:</span> <span class="field-value">深圳-02仓</span></div>
-        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">橙联法国仓</span></div>
-        <div class="field-line"><span class="field-label">计费重:</span> <span class="field-value muted">—</span></div>
-      </div></td>
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">长×宽×高:</span> <span class="field-value">20×15×8 cm</span></div>
-        <div class="field-line"><span class="field-label">单箱数量:</span> <span class="field-value">50</span></div>
-        <div class="field-line"><span class="field-label">单箱重量:</span> <span class="field-value">0.50 kg</span></div>
-      </div></td>
       <td class="td-op"><button class="nt-btn link" data-act="log">日志</button></td>
     </tr>
 
     <!-- 已关闭示例行：PR需求500，实际买480发480，PR完结 → 发货建议已关闭 -->
     <tr class="row-main row-closed" data-suggestion-status="已关闭">
       <td><span class="vxe-checkbox" style="opacity:0.4;pointer-events:none;"></span></td>
+      <!-- 商品信息 -->
       <td><div class="field-stack">
         <div class="field-line"><span class="field-value col-code">4471882</span></div>
         <div class="field-line"><span class="muted">便携式车载吸尘器</span></div>
@@ -1265,6 +1288,40 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
         <div class="field-line"><span class="field-label">组合SKU:</span> <span class="field-value">否</span></div>
         <div class="field-line"><span class="field-label">定制化:</span> <span class="field-value">否</span></div>
       </div></td>
+      <!-- 采购申请信息 -->
+      <td><div class="field-stack">
+        <div class="field-line key"><span class="field-label">PR单号:</span> <span class="field-value col-code">PR202607010005</span></div>
+        <div class="field-line key"><span class="field-label">PR需求数:</span> <span class="field-value metric">500</span></div>
+        <div class="field-line"><span class="field-label">默认运输方式:</span> <span class="field-value">快船</span></div>
+        <div class="field-line"><span class="field-label">需求日期:</span> <span class="field-value">2026-07-01</span></div>
+      </div></td>
+      <!-- 采购单信息 -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">PO单号:</span> <span class="field-value col-code">PO202607010009</span></div>
+        <div class="field-line"><span class="field-label">备货方式:</span> <span class="field-value">普通发货</span></div>
+        <div class="field-line key"><span class="field-label">PO下单数:</span> <span class="field-value metric">480</span></div>
+        <div class="field-line"><span class="field-label">入库数:</span> <span class="field-value metric">480</span></div>
+      </div></td>
+      <!-- 销售信息 -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">国家:</span> <span class="field-value">美国(US)</span></div>
+        <div class="field-line"><span class="field-label">运营人员:</span> <span class="field-value">TomWang</span></div>
+        <div class="field-line key"><span class="field-label">可售天数:</span> <span class="field-value metric">38天</span></div>
+        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">ONT8美西仓</span></div>
+      </div></td>
+      <!-- 单箱尺寸信息(商品) -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">长×宽×高:</span> <span class="field-value">35×28×20 cm</span></div>
+        <div class="field-line"><span class="field-label">单箱数量:</span> <span class="field-value">20</span></div>
+        <div class="field-line"><span class="field-label">单箱重量:</span> <span class="field-value">4.50 kg</span></div>
+      </div></td>
+      <!-- 发货方式 -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">发货仓:</span> <span class="field-value">深圳-02仓</span></div>
+        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">ONT8美西仓</span></div>
+        <div class="field-line"><span class="field-label">计费重:</span> <span class="field-value muted">—</span></div>
+      </div></td>
+      <!-- 关键数值 -->
       <td><div class="field-stack">
         <div class="field-line"><span class="field-label">需求数量:</span> <span class="field-value muted">500</span></div>
         <div class="field-line"><span class="field-label">需求未建FH:</span> <span class="field-value muted">0</span></div>
@@ -1272,6 +1329,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
         <div class="field-line"><span class="field-label">入库未建FH:</span> <span class="field-value muted">0</span></div>
         <div class="field-line"><span class="field-label">暂缓量:</span> <span class="field-value muted">—</span></div>
       </div></td>
+      <!-- 智能拆批：已关闭，展示一条已生成的发货批次 -->
       <td>
         <table class="nested-table">
           <thead><tr>
@@ -1284,8 +1342,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
             <th>截仓发货日</th>
             <th>状态</th>
             <th style="width:56px;">操作</th>
-          
-    </tr></thead>
+          </tr></thead>
           <tbody>
             <tr class="row-done">
               <td class="nt-ck"><span class="vxe-checkbox"></span></td>
@@ -1305,41 +1362,13 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
           PR需求500，实际采购入库480并已发货，PR已完结，发货建议关闭
         </div>
       </td>
-      <td><div class="field-stack">
-        <div class="field-line key"><span class="field-label">PR单号:</span> <span class="field-value col-code">PR202607010005</span></div>
-        <div class="field-line key"><span class="field-label">PR需求数:</span> <span class="field-value metric">500</span></div>
-        <div class="field-line"><span class="field-label">默认运输方式:</span> <span class="field-value">快船</span></div>
-        <div class="field-line"><span class="field-label">需求日期:</span> <span class="field-value">2026-07-01</span></div>
-        <div class="field-line"><span class="field-label">计划人员:</span> <span class="field-value">PlanChen</span></div>
-      </div></td>
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">PO单号:</span> <span class="field-value col-code">PO202607010009</span></div>
-        <div class="field-line"><span class="field-label">备货方式:</span> <span class="field-value">普通发货</span></div>
-        <div class="field-line key"><span class="field-label">PO下单数:</span> <span class="field-value metric">480</span></div>
-        <div class="field-line"><span class="field-label">入库数:</span> <span class="field-value metric">480</span></div>
-      </div></td>
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">国家:</span> <span class="field-value">美国(US)</span></div>
-        <div class="field-line"><span class="field-label">运营人员:</span> <span class="field-value">TomWang</span></div>
-        <div class="field-line key"><span class="field-label">可售天数:</span> <span class="field-value metric">38天</span></div>
-        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">ONT8美西仓</span></div>
-      </div></td>
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">发货仓:</span> <span class="field-value">深圳-02仓</span></div>
-        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">ONT8美西仓</span></div>
-        <div class="field-line"><span class="field-label">计费重:</span> <span class="field-value muted">—</span></div>
-      </div></td>
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">长×宽×高:</span> <span class="field-value">35×28×20 cm</span></div>
-        <div class="field-line"><span class="field-label">单箱数量:</span> <span class="field-value">20</span></div>
-        <div class="field-line"><span class="field-label">单箱重量:</span> <span class="field-value">4.50 kg</span></div>
-      </div></td>
       <td class="td-op"><span class="muted" style="font-size:12px;">—</span></td>
     </tr>
 
     <!-- 待计算示例行：上游数据已进来，引擎还没拆批 -->
     <tr class="row-main row-pending-calc" data-suggestion-status="待计算">
       <td><span class="vxe-checkbox" style="opacity:0.4;pointer-events:none;"></span></td>
+      <!-- 商品信息 -->
       <td><div class="field-stack">
         <div class="field-line"><span class="field-value col-code">3390214</span></div>
         <div class="field-line"><span class="muted">车载蓝牙接收器</span></div>
@@ -1348,16 +1377,40 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
         <div class="field-line"><span class="field-label">组合SKU:</span> <span class="field-value">否</span></div>
         <div class="field-line"><span class="field-label">定制化:</span> <span class="field-value">否</span></div>
       </div></td>
+      <!-- 采购申请信息 -->
       <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">发货仓:</span> <span class="field-value">深圳-02仓</span></div>
-        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">FTW1美东仓</span></div>
-        <div class="field-line"><span class="field-label">计费重:</span> <span class="field-value muted">待计算</span></div>
+        <div class="field-line key"><span class="field-label">PR单号:</span> <span class="field-value col-code">PR202607190031</span></div>
+        <div class="field-line key"><span class="field-label">PR需求数:</span> <span class="field-value metric">150</span></div>
+        <div class="field-line"><span class="field-label">默认运输方式:</span> <span class="field-value">空运</span></div>
+        <div class="field-line"><span class="field-label">需求日期:</span> <span class="field-value">2026-07-19</span></div>
       </div></td>
+      <!-- 采购单信息 -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">PO单号:</span> <span class="field-value col-code">PO202607190022</span></div>
+        <div class="field-line"><span class="field-label">备货方式:</span> <span class="field-value">普通发货</span></div>
+        <div class="field-line key"><span class="field-label">PO下单数:</span> <span class="field-value metric">150</span></div>
+        <div class="field-line"><span class="field-label">入库数:</span> <span class="field-value metric">150</span></div>
+      </div></td>
+      <!-- 销售信息 -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">国家:</span> <span class="field-value">美国(US)</span></div>
+        <div class="field-line"><span class="field-label">运营人员:</span> <span class="field-value">MingZhao</span></div>
+        <div class="field-line key"><span class="field-label">可售天数:</span> <span class="field-value metric">18天</span></div>
+        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">FTW1美东仓</span></div>
+      </div></td>
+      <!-- 单箱尺寸信息(商品) -->
       <td><div class="field-stack">
         <div class="field-line"><span class="field-label">长×宽×高:</span> <span class="field-value">15×10×8 cm</span></div>
         <div class="field-line"><span class="field-label">单箱数量:</span> <span class="field-value">24</span></div>
         <div class="field-line"><span class="field-label">单箱重量:</span> <span class="field-value">0.80 kg</span></div>
       </div></td>
+      <!-- 发货方式 -->
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">发货仓:</span> <span class="field-value">深圳-02仓</span></div>
+        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">FTW1美东仓</span></div>
+        <div class="field-line"><span class="field-label">计费重:</span> <span class="field-value muted">待计算</span></div>
+      </div></td>
+      <!-- 关键数值：待计算时未分配=总量（实际批次=0） -->
       <td><div class="field-stack">
         <div class="field-line"><span class="field-label">需求数量:</span> <span class="field-value metric">150</span></div>
         <div class="field-line"><span class="field-label">需求未建FH:</span> <span class="field-value metric">150</span></div>
@@ -1365,6 +1418,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
         <div class="field-line"><span class="field-label">入库未建FH:</span> <span class="field-value metric">150</span></div>
         <div class="field-line"><span class="field-label">暂缓量:</span> <span class="field-value muted">待计算</span></div>
       </div></td>
+      <!-- 智能拆批：待计算占位 + 立即计算按钮 -->
       <td>
         <div class="pending-calc-box">
           <div class="pending-calc-icon">⏳</div>
@@ -1373,27 +1427,6 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
           <button class="nt-btn primary" data-act="calc-now" onclick="calcNow(this)">立即计算</button>
         </div>
       </td>
-      <td><div class="field-stack">
-        <div class="field-line key"><span class="field-label">PR单号:</span> <span class="field-value col-code">PR202607190031</span></div>
-        <div class="field-line key"><span class="field-label">PR需求数:</span> <span class="field-value metric">150</span></div>
-        <div class="field-line"><span class="field-label">默认运输方式:</span> <span class="field-value">空运</span></div>
-        <div class="field-line"><span class="field-label">需求日期:</span> <span class="field-value">2026-07-19</span></div>
-        <div class="field-line"><span class="field-label">计划人员:</span> <span class="field-value">PlanGuo</span></div>
-      
-        <div class="field-line"><span class="field-label">计划人员:</span> <span class="field-value">PlanGuo</span></div>
-      </div></td>
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">国家:</span> <span class="field-value">美国(US)</span></div>
-        <div class="field-line"><span class="field-label">运营人员:</span> <span class="field-value">MingZhao</span></div>
-        <div class="field-line key"><span class="field-label">可售天数:</span> <span class="field-value metric">18天</span></div>
-        
-      </div></td>
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">PO单号:</span> <span class="field-value col-code">PO202607190022</span></div>
-        <div class="field-line"><span class="field-label">备货方式:</span> <span class="field-value">普通发货</span></div>
-        <div class="field-line key"><span class="field-label">PO下单数:</span> <span class="field-value metric">150</span></div>
-        <div class="field-line"><span class="field-label">入库数:</span> <span class="field-value metric">150</span></div>
-      </div></td>
       <td class="td-op"><span class="muted" style="font-size:12px;">—</span></td>
     </tr>
 
@@ -1973,37 +2006,6 @@ function getDefaultTransport(tr) {
     }
   });
   return defaultT;
-}
-
-  }
-  document.querySelectorAll('.data-table > tbody > tr.row-main').forEach(tr => {
-    // 只取直接子 td（不深入嵌套表格）
-    const tds = Array.from(tr.children).filter(el => el.tagName === 'TD');
-    if (tds.length !== 10) return;
-    const newOrder = [0, 1, 7, 8, 2, 3, 4, 6, 5, 9];
-    newOrder.map(i => tds[i]).forEach(td => tr.appendChild(td));
-  });
-}
-
-// 动态重排主表列（用DOM children API，天然排除嵌套表格）
-function reorderColumns() {
-  // 表头
-  const theadTr = document.querySelector('.data-table > thead > tr');
-  if (theadTr) {
-    const ths = Array.from(theadTr.children);
-    if (ths.length === 10) {
-      // 旧:0复选框 1商品 2采购申请 3采购单 4销售 5尺寸 6发货方式 7关键数值 8智能拆批 9操作
-      // 新:0复选框 1商品 2关键数值(7) 3智能拆批(8) 4采购申请(2) 5采购单(3) 6销售(4) 7发货方式(6) 8尺寸(5) 9操作(9)
-      [0,1,7,8,2,3,4,6,5,9].forEach(i => theadTr.appendChild(ths[i]));
-    }
-  }
-  // 数据行
-  document.querySelectorAll('.data-table > tbody > tr.row-main').forEach(tr => {
-    const tds = Array.from(tr.children).filter(el => el.tagName === 'TD');
-    if (tds.length === 10) {
-      [0,1,7,8,2,3,4,6,5,9].forEach(i => tr.appendChild(tds[i]));
-    }
-  });
 }
 
 // 优先程度计算：根据截仓发货日 + 提前准备天数，判断超期/需确认/无需确认
@@ -3277,7 +3279,6 @@ refreshCheckboxLock();
 refreshBatchMenu();
 refreshAllTransportLevels();
 refreshConfirmStatus();
-reorderColumns();
 
 loadAnnotations();
 restoreHighlights();
