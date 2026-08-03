@@ -818,7 +818,11 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
           <select class="input select"><option>请选择</option><option>优先处理</option><option>无需处理</option></select>
         </div>
         <div class="query-item"><label>可售天数</label>
-          <select class="input select"><option>请选择</option><option>&lt;15天（紧急）</option><option>15-30天</option><option>30-60天</option><option>&gt;60天</option></select>
+          <div class="date-range">
+            <input type="number" placeholder="下限" style="width:56px;" />
+            <span class="date-sep">~</span>
+            <input type="number" placeholder="上限" style="width:56px;" />
+          </div>
         </div>
         <div class="query-actions">
           <button class="op-btn primary">查询</button>
