@@ -915,7 +915,6 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
         <div class="field-line"><span class="field-label">国家:</span> <span class="field-value">英国(UK)</span></div>
         <div class="field-line"><span class="field-label">运营人员:</span> <span class="field-value">ShirleyLiu</span></div>
         <div class="field-line key"><span class="field-label">可售天数:</span> <span class="field-value metric">8天</span> <span class="warn-text">⚠ 低于安全库存</span></div>
-        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">橙联英国仓</span></div>
       </div></td>
       <!-- 单箱尺寸信息(商品) -->
       <td><div class="field-stack">
@@ -2015,15 +2014,21 @@ function getDefaultTransport(tr) {
 // 动态重排主表列顺序（不改HTML结构，运行时移动td）
 // 目标：商品 → 关键数值 → 智能拆批 → 采购申请 → 采购单 → 销售 → 发货方式 → 尺寸 → 操作
 function reorderColumns() {
-  const rows = document.querySelectorAll('.data-table tr');
-  rows.forEach(tr => {
-    const tds = Array.from(tr.querySelectorAll(':scope > td, :scope > th'));
-    if (tds.length < 10) return;
-    // 旧顺序索引：0复选框 1商品 2采购申请 3采购单 4销售 5尺寸 6发货方式 7关键数值 8智能拆批 9操作
-    // 新顺序：0复选框 1商品 2关键数值(旧7) 3智能拆批(旧8) 4采购申请(旧2) 5采购单(旧3) 6销售(旧4) 7发货方式(旧6) 8尺寸(旧5) 9操作(旧9)
+  // 只处理主表的 thead tr 和 tbody > tr.row-main（排除嵌套表格的 tr）
+  const theadTr = document.querySelector('.data-table > thead > tr');
+  if (theadTr) {
+    const ths = Array.from(theadTr.children).filter(el => el.tagName === 'TH');
+    if (ths.length === 10) {
+      const newOrder = [0, 1, 7, 8, 2, 3, 4, 6, 5, 9];
+      newOrder.map(i => ths[i]).forEach(th => theadTr.appendChild(th));
+    }
+  }
+  document.querySelectorAll('.data-table > tbody > tr.row-main').forEach(tr => {
+    // 只取直接子 td（不深入嵌套表格）
+    const tds = Array.from(tr.children).filter(el => el.tagName === 'TD');
+    if (tds.length !== 10) return;
     const newOrder = [0, 1, 7, 8, 2, 3, 4, 6, 5, 9];
-    const newTds = newOrder.map(i => tds[i]);
-    newTds.forEach(td => tr.appendChild(td)); // 按新顺序追加（append会移动而不是复制）
+    newOrder.map(i => tds[i]).forEach(td => tr.appendChild(td));
   });
 }
 
