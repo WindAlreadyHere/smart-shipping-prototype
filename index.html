@@ -2057,23 +2057,9 @@ function refreshConfirmStatus() {
     if (row.classList.contains('row-closed') || row.classList.contains('row-pending-calc')) return;
     row.querySelectorAll('.nested-table tbody tr').forEach(tr => {
       if (tr.classList.contains('tr-hold') || tr.classList.contains('row-done')) return;
-      // 找或创建优先程度单元格（插在截仓发货日单元格前）
-      const cells = Array.from(tr.children);
-      // 找截仓发货日单元格（文本含 数字/数字 格式的）
-      let cutoffIdx = -1;
-      for (let i = 0; i < cells.length; i++) {
-        const txt = cells[i].textContent.trim();
-        if (/^\d{1,2}\/\d{1,2}/.test(txt) || txt === '—') { cutoffIdx = i; break; }
-      }
-      if (cutoffIdx === -1) return;
-      // 检查优先程度单元格是否已存在（在截仓日前一个位置）
-      let csCell = cells[cutoffIdx - 1];
-      if (!csCell || !csCell.classList.contains('nt-confirm')) {
-        // 创建并插在截仓日前
-        csCell = document.createElement('td');
-        csCell.className = 'nt-confirm';
-        tr.insertBefore(csCell, cells[cutoffIdx]);
-      }
+      // 直接找已有的 nt-confirm td（HTML 里已写死占位）
+      let csCell = tr.querySelector('.nt-confirm');
+      if (!csCell) return; // 没有则跳过（不应发生）
       const cs = calcConfirmStatus(tr, row);
       csCell.innerHTML = '<span class="confirm-status ' + cs.cls + '">' + cs.label + '</span>';
     });
