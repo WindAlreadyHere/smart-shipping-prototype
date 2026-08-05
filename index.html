@@ -180,7 +180,7 @@ tr.row-pending-calc:hover td { background: #fafbfc; }
 /* 智能拆批列：嵌套表格按内容自适应，但限定在列宽内不溢出 */
 .nested-table { table-layout: auto; width: 100%; }
 /* 智能拆批列（第8列）：内容不溢出到操作列 */
-.data-table > tbody > tr > td:nth-child(9) { overflow: hidden; }
+.data-table > tbody > tr > td:nth-child(4) { overflow: hidden; }
 .nested-table .row-urgent td { background: #FFF8F8; }
 .nested-table .row-urgent:hover td { background: #FFEEEE; }
 /* 批次标签（序号列里的类型小标签） */
@@ -194,12 +194,7 @@ tr.row-pending-calc:hover td { background: #fafbfc; }
 
 /* 子表格复选框列（暂缓批次禁选） */
 .nested-table .nt-ck { width: 32px; text-align: center; }
-.nested-table .nt-seq { width: 52px; text-align: center; color: var(--text-secondary); font-size: 12px; }
-.nested-table .nt-seq .seq-num { display: block; }
-.nested-table .nt-region { display: inline-block; font-size: 10px; line-height: 14px; padding: 0 4px; border-radius: 2px; margin-top: 2px; color: #fff; white-space: nowrap; }
-.nested-table .nt-region.r-west { background: #3487FF; }
-.nested-table .nt-region.r-east { background: #FF8C42; }
-.nested-table .nt-region.r-south { background: #67C23A; }
+.nested-table .nt-seq { width: 42px; text-align: center; color: var(--text-secondary); font-size: 12px; }
 .nested-table .nt-op { width: 56px; text-align: center; }
 .nested-table .nt-btn.sm { height: 22px; padding: 0 8px; font-size: 11px; }
 .nested-table .nt-ck .vxe-checkbox { width: 14px; height: 14px; }
@@ -885,12 +880,12 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
       <th style="width:40px;"><span class="vxe-checkbox checked"></span></th>
       <th style="width:200px; min-width:200px;">商品信息<div class="col-resizer"></div></th>
       <th style="width:200px; min-width:200px;">采购申请信息<div class="col-resizer"></div></th>
+      <th style="width: 742px; min-width: 640px;">智能拆批<div class="col-resizer"></div></th>
       <th style="width:210px; min-width:210px;">采购单信息<div class="col-resizer"></div></th>
-      <th style="width:180px; min-width:180px;">销售信息<div class="col-resizer"></div></th>
-      <th style="width:160px; min-width:160px;">单箱尺寸信息(商品)<div class="col-resizer"></div></th>
       <th style="width:200px; min-width:200px;">发货方式<div class="col-resizer"></div></th>
       <th style="width:150px; min-width:150px;">关键数值<div class="col-resizer"></div></th>
-      <th style="width:640px; min-width:640px;">智能拆批<div class="col-resizer"></div></th>
+      <th style="width:180px; min-width:180px;">销售信息<div class="col-resizer"></div></th>
+      <th style="width:160px; min-width:160px;">单箱尺寸信息(商品)<div class="col-resizer"></div></th>
       <th style="width:90px; min-width:90px;" class="th-fixed-op">操作</th>
     </tr>
     </thead>
@@ -898,7 +893,6 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
 
     <tr class="row-main" data-suggestion-status="待完成">
       <td><span class="vxe-checkbox checked"></span></td>
-      <!-- 商品信息 -->
       <td><div class="field-stack">
         <div class="field-line"><span class="field-value col-code">8143903</span></div>
         <div class="field-line"><span class="muted">马自达MX-5防水车罩</span></div>
@@ -907,48 +901,12 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
         <div class="field-line"><span class="field-label">组合SKU:</span> <span class="field-value">否</span></div>
         <div class="field-line"><span class="field-label">定制化:</span> <span class="field-value">否</span></div>
       </div></td>
-      <!-- 采购申请信息 -->
       <td><div class="field-stack">
         <div class="field-line key"><span class="field-label">PR单号:</span> <span class="field-value col-code">PR202607030009</span></div>
         <div class="field-line key"><span class="field-label">PR需求数:</span> <span class="field-value metric">100</span></div>
         <div class="field-line"><span class="field-label">默认运输方式:</span> <span class="field-value">空运</span></div>
         <div class="field-line"><span class="field-label">需求日期:</span> <span class="field-value">2026-07-03</span></div>
       </div></td>
-      <!-- 采购单信息 -->
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">PO单号:</span> <span class="field-value col-code">PO202607030012</span></div>
-        <div class="field-line"><span class="field-label">备货方式:</span> <span class="field-value">普通发货</span></div>
-        <div class="field-line key"><span class="field-label">PO下单数:</span> <span class="field-value metric">100</span></div>
-        <div class="field-line"><span class="field-label">入库数:</span> <span class="field-value metric">100</span></div>
-      </div></td>
-      <!-- 销售信息 -->
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">国家:</span> <span class="field-value">英国(UK)</span></div>
-        <div class="field-line"><span class="field-label">运营人员:</span> <span class="field-value">ShirleyLiu</span></div>
-        <div class="field-line key"><span class="field-label">可售天数:</span> <span class="field-value metric">8天</span> <span class="warn-text">⚠ 低于安全库存</span></div>
-        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">橙联英国仓</span></div>
-      </div></td>
-      <!-- 单箱尺寸信息(商品) -->
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">长×宽×高:</span> <span class="field-value">42×42×43 cm</span></div>
-        <div class="field-line"><span class="field-label">单箱数量:</span> <span class="field-value">16</span></div>
-        <div class="field-line"><span class="field-label">单箱重量:</span> <span class="field-value">8.00 kg</span></div>
-      </div></td>
-      <!-- 发货方式 -->
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">发货仓:</span> <span class="field-value">深圳-02仓</span></div>
-        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">橙联英国仓</span></div>
-        <div class="field-line"><span class="field-label">计费重:</span> <span class="field-value">120 kg (抛率85%)</span></div>
-        <div class="field-line"><span class="field-label">实际重/体积重/体积:</span> <span class="field-value muted">102kg / 141kg / 1.20m³</span></div>
-      </div></td>
-<td><div class="field-stack">
-        <div class="field-line"><span class="field-label">需求数量:</span> <span class="field-value metric">100</span></div>
-        <div class="field-line"><span class="field-label">需求未建FH:</span> <span class="field-value metric">100</span></div>
-        <div class="field-line"><span class="field-label">入库数量:</span> <span class="field-value metric">100</span></div>
-        <div class="field-line"><span class="field-label">入库未建FH:</span> <span class="field-value metric">100</span></div>
-        <div class="field-line"><span class="field-label">暂缓量:</span> <span class="field-value muted">0</span></div>
-      </div></td>
-            <!-- 智能拆批（信诚式嵌套子表格：复选框+可编辑数量+货源状态+底部按钮区） -->
       <td>
         <table class="nested-table">
           <thead><tr>
@@ -959,6 +917,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
             <th>数量</th>
                         <th>运输方式</th>
             <th>派送方式</th>
+            <th>目的仓</th>
             <th style="width:72px;">优先程度</th>
             <th>截仓发货日</th>
             <th>状态</th>
@@ -969,9 +928,10 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
               <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
               <td class="nt-seq">1</td>
               <td><span class="src-tag smart">建议</span></td>
-              <td><input class="nt-input" value="40"></td>
-              <td><select class="nt-input" style="width:70px;"><option selected="">快递</option><option>空运</option><option>快船</option><option>卡航</option><option>卡航整柜</option><option>铁路</option><option>慢船</option><option>海运整柜</option></select><span class="ship-level up">↑升</span></td>
-              <td><select class="nt-input" style="width:70px;"><option selected="">方式1</option><option>方式2</option><option>方式3</option><option>方式4</option><option>方式5</option><option>方式6</option><option>方式7</option><option>方式8</option></select></td>
+              <td>40</td>
+              <td>快递<span class="ship-level up">↑升</span></td>
+              <td>方式1</td>
+              <td>橙联英国仓</td>
               <td class="nt-confirm"><span class="confirm-status normal">无需处理</span></td>
               <td>7/24（周四）</td>
               <td><span class="tag tag-orange">待确认</span></td>
@@ -981,9 +941,10 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
               <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
               <td class="nt-seq">2</td>
               <td><span class="src-tag smart">建议</span></td>
-              <td><input class="nt-input" value="60"></td>
-              <td><select class="nt-input" style="width:70px;"><option>快递</option><option>空运</option><option selected="">快船</option><option>卡航</option><option>卡航整柜</option><option>铁路</option><option>慢船</option><option>海运整柜</option></select><span class="ship-level down">↓降</span></td>
-              <td><select class="nt-input" style="width:70px;"><option>方式1</option><option>方式2</option><option selected="">方式3</option><option>方式4</option><option>方式5</option><option>方式6</option><option>方式7</option><option>方式8</option></select></td>
+              <td>60</td>
+              <td>快船<span class="ship-level down">↓降</span></td>
+              <td>方式3</td>
+              <td>橙联英国仓</td>
               <td class="nt-confirm"><span class="confirm-status normal">无需处理</span></td>
               <td>7/24（周四）</td>
               <td><span class="tag tag-orange">待确认</span></td>
@@ -992,14 +953,42 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
           </tbody>
         </table>
         <div class="batch-summary">已勾选 <span class="sum-num sel-qty">100</span> 件 / PR需 <span class="sum-num">100</span> · <span style="color:var(--warning);font-weight:500;">暂缓量 0</span></div>
-        <div class="nt-actions"><button class="nt-btn link" data-act="add">新增批次</button></div>
       </td>
-      <td class="td-op"><button class="nt-btn link" data-act="log">日志</button></td>
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">PO单号:</span> <span class="field-value col-code">PO202607030012</span></div>
+        <div class="field-line"><span class="field-label">备货方式:</span> <span class="field-value">普通发货</span></div>
+        <div class="field-line key"><span class="field-label">PO下单数:</span> <span class="field-value metric">100</span></div>
+        <div class="field-line"><span class="field-label">入库数:</span> <span class="field-value metric">100</span></div>
+      </div></td>
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">发货仓:</span> <span class="field-value">深圳-02仓</span></div>
+        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">橙联英国仓</span></div>
+        <div class="field-line"><span class="field-label">计费重:</span> <span class="field-value">120 kg (抛率85%)</span></div>
+        <div class="field-line"><span class="field-label">实际重/体积重/体积:</span> <span class="field-value muted">102kg / 141kg / 1.20m³</span></div>
+      </div></td>
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">需求数量:</span> <span class="field-value metric">100</span></div>
+        <div class="field-line"><span class="field-label">需求未建FH:</span> <span class="field-value metric">100</span></div>
+        <div class="field-line"><span class="field-label">入库数量:</span> <span class="field-value metric">100</span></div>
+        <div class="field-line"><span class="field-label">入库未建FH:</span> <span class="field-value metric">100</span></div>
+        <div class="field-line"><span class="field-label">暂缓量:</span> <span class="field-value muted">0</span></div>
+      </div></td>
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">国家:</span> <span class="field-value">英国(UK)</span></div>
+        <div class="field-line"><span class="field-label">运营人员:</span> <span class="field-value">ShirleyLiu</span></div>
+        <div class="field-line key"><span class="field-label">可售天数:</span> <span class="field-value metric">8天</span> <span class="warn-text">⚠ 低于安全库存</span></div>
+        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">橙联英国仓</span></div>
+      </div></td>
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">长×宽×高:</span> <span class="field-value">42×42×43 cm</span></div>
+        <div class="field-line"><span class="field-label">单箱数量:</span> <span class="field-value">16</span></div>
+        <div class="field-line"><span class="field-label">单箱重量:</span> <span class="field-value">8.00 kg</span></div>
+      </div></td>
+      <td class="td-op"><button class="nt-btn link" data-act="edit-batches">编辑</button><button class="nt-btn link" data-act="log">日志</button></td>
     </tr>
 
     <tr class="row-main" data-suggestion-status="待完成">
       <td><span class="vxe-checkbox checked"></span></td>
-      <!-- 商品信息 -->
       <td><div class="field-stack">
         <div class="field-line"><span class="field-value col-code">7234012</span></div>
         <div class="field-line"><span class="muted">LED车灯模组 H7</span></div>
@@ -1008,48 +997,12 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
         <div class="field-line"><span class="field-label">组合SKU:</span> <span class="field-value">否</span></div>
         <div class="field-line"><span class="field-label">定制化:</span> <span class="field-value">否</span></div>
       </div></td>
-      <!-- 采购申请信息 -->
       <td><div class="field-stack">
         <div class="field-line key"><span class="field-label">PR单号:</span> <span class="field-value col-code">PR202607020016</span></div>
         <div class="field-line key"><span class="field-label">PR需求数:</span> <span class="field-value metric">500</span></div>
         <div class="field-line"><span class="field-label">默认运输方式:</span> <span class="field-value">慢船</span></div>
         <div class="field-line"><span class="field-label">需求日期:</span> <span class="field-value">2026-07-02</span></div>
       </div></td>
-      <!-- 采购单信息（2个PO，默认展示1个，展开看第2个） -->
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">PO单号:</span> <span class="field-value col-code">PO202607020022</span></div>
-        <div class="field-line"><span class="field-label">备货方式:</span> <span class="field-value">普通发货</span></div>
-        <div class="field-line key"><span class="field-label">PO下单数:</span> <span class="field-value metric">500</span></div>
-        <div class="field-line"><span class="field-label">入库数:</span> <span class="field-value metric">300</span><span class="muted">(余200预7/20到)</span></div>
-      </div></td>
-      <!-- 销售信息 -->
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">国家:</span> <span class="field-value">德国(DE)</span></div>
-        <div class="field-line"><span class="field-label">运营人员:</span> <span class="field-value">MaxZou</span></div>
-        <div class="field-line key"><span class="field-label">可售天数:</span> <span class="field-value metric">45天</span> <span class="ok-text">正常</span></div>
-        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">橙联德国仓</span></div>
-      </div></td>
-      <!-- 单箱尺寸信息(商品) -->
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">长×宽×高:</span> <span class="field-value">35×28×30 cm</span></div>
-        <div class="field-line"><span class="field-label">单箱数量:</span> <span class="field-value">24</span></div>
-        <div class="field-line"><span class="field-label">单箱重量:</span> <span class="field-value">1.80 kg</span></div>
-      </div></td>
-      <!-- 发货方式 -->
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">发货仓:</span> <span class="field-value">深圳-02仓</span></div>
-        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">橙联德国仓</span></div>
-        <div class="field-line"><span class="field-label">计费重:</span> <span class="field-value">240 kg (抛率30%)</span></div>
-        <div class="field-line"><span class="field-label">实际重/体积重/体积:</span> <span class="field-value muted">185kg / 260kg / 1.75m³</span></div>
-      </div></td>
-<td><div class="field-stack">
-        <div class="field-line"><span class="field-label">需求数量:</span> <span class="field-value metric">500</span></div>
-        <div class="field-line"><span class="field-label">需求未建FH:</span> <span class="field-value metric">400</span></div>
-        <div class="field-line"><span class="field-label">入库数量:</span> <span class="field-value metric">500</span></div>
-        <div class="field-line"><span class="field-label">入库未建FH:</span> <span class="field-value metric">400</span></div>
-        <div class="field-line"><span class="field-label">暂缓量:</span> <span class="field-value muted">0</span></div>
-      </div></td>
-            <!-- 智能拆批（嵌套子表格：基于需求数500拆3批，部分入库，演示🟡待入库场景） -->
       <td>
         <table class="nested-table">
           <thead><tr>
@@ -1060,6 +1013,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
             <th>数量</th>
                         <th>运输方式</th>
             <th>派送方式</th>
+            <th>目的仓</th>
             <th style="width:72px;">优先程度</th>
             <th>截仓发货日</th>
             <th>状态</th>
@@ -1070,9 +1024,10 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
               <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
               <td class="nt-seq">1</td>
               <td><span class="src-tag smart">建议</span></td>
-              <td><input class="nt-input" value="200"></td>
-              <td><select class="nt-input" style="width:70px;"><option>快递</option><option>空运</option><option>快船</option><option>卡航</option><option>卡航整柜</option><option>铁路</option><option selected="">慢船</option><option>海运整柜</option></select></td>
-              <td><select class="nt-input" style="width:70px;"><option>方式1</option><option>方式2</option><option>方式3</option><option>方式4</option><option>方式5</option><option>方式6</option><option selected="">方式7</option><option>方式8</option></select></td>
+              <td>200</td>
+              <td>慢船</td>
+              <td>方式7</td>
+              <td>橙联英国仓</td>
               <td class="nt-confirm"><span class="confirm-status normal">无需处理</span></td>
               <td>7/24（周四）</td>
               <td><span class="tag tag-orange">待确认</span></td>
@@ -1082,9 +1037,10 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
               <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
               <td class="nt-seq">2</td>
               <td><span class="src-tag smart">建议</span></td>
-              <td><input class="nt-input" value="200"></td>
-              <td><select class="nt-input" style="width:70px;"><option>快递</option><option>空运</option><option>快船</option><option>卡航</option><option>卡航整柜</option><option>铁路</option><option selected="">慢船</option><option>海运整柜</option></select></td>
-              <td><select class="nt-input" style="width:70px;"><option>方式1</option><option>方式2</option><option>方式3</option><option>方式4</option><option>方式5</option><option>方式6</option><option selected="">方式7</option><option>方式8</option></select></td>
+              <td>200</td>
+              <td>慢船</td>
+              <td>方式7</td>
+              <td>橙联英国仓</td>
               <td class="nt-confirm"><span class="confirm-status normal">无需处理</span></td>
               <td>7/24（周四）</td>
               <td><span class="tag tag-orange">待确认</span></td>
@@ -1094,9 +1050,10 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
               <td class="nt-ck"><span class="vxe-checkbox"></span></td>
               <td class="nt-seq">3</td>
               <td><span class="src-tag manual">实际</span></td>
-              <td><input class="nt-input" value="100" disabled=""></td>
-              <td><select class="nt-input" style="width:70px;" disabled=""><option>快递</option><option>空运</option><option>快船</option><option>卡航</option><option>卡航整柜</option><option>铁路</option><option selected="">慢船</option><option>海运整柜</option></select></td>
-              <td><select class="nt-input" style="width:70px;" disabled=""><option>方式1</option><option>方式2</option><option>方式3</option><option>方式4</option><option>方式5</option><option>方式6</option><option selected="">方式7</option><option>方式8</option></select></td>
+              <td>100</td>
+              <td>慢船</td>
+              <td>方式7</td>
+              <td>橙联德国仓</td>
               <td class="nt-confirm"><span class="confirm-status normal">—</span></td>
               <td>7/24（周四）</td>
               <td><span class="tag" style="color:var(--success);background:#e8ffea;border:1px solid #c9f0d0;">已完成</span></td>
@@ -1105,14 +1062,42 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
           </tbody>
         </table>
         <div class="batch-summary">已勾选 <span class="sum-num sel-qty">400</span> 件 / PR需 <span class="sum-num">500</span> · <span style="color:var(--warning);font-weight:500;">暂缓量 0</span></div>
-        <div class="nt-actions"><button class="nt-btn link" data-act="add">新增批次</button></div>
       </td>
-      <td class="td-op"><button class="nt-btn link" data-act="log">日志</button></td>
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">PO单号:</span> <span class="field-value col-code">PO202607020022</span></div>
+        <div class="field-line"><span class="field-label">备货方式:</span> <span class="field-value">普通发货</span></div>
+        <div class="field-line key"><span class="field-label">PO下单数:</span> <span class="field-value metric">500</span></div>
+        <div class="field-line"><span class="field-label">入库数:</span> <span class="field-value metric">300</span><span class="muted">(余200预7/20到)</span></div>
+      </div></td>
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">发货仓:</span> <span class="field-value">深圳-02仓</span></div>
+        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">橙联德国仓</span></div>
+        <div class="field-line"><span class="field-label">计费重:</span> <span class="field-value">240 kg (抛率30%)</span></div>
+        <div class="field-line"><span class="field-label">实际重/体积重/体积:</span> <span class="field-value muted">185kg / 260kg / 1.75m³</span></div>
+      </div></td>
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">需求数量:</span> <span class="field-value metric">500</span></div>
+        <div class="field-line"><span class="field-label">需求未建FH:</span> <span class="field-value metric">400</span></div>
+        <div class="field-line"><span class="field-label">入库数量:</span> <span class="field-value metric">500</span></div>
+        <div class="field-line"><span class="field-label">入库未建FH:</span> <span class="field-value metric">400</span></div>
+        <div class="field-line"><span class="field-label">暂缓量:</span> <span class="field-value muted">0</span></div>
+      </div></td>
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">国家:</span> <span class="field-value">德国(DE)</span></div>
+        <div class="field-line"><span class="field-label">运营人员:</span> <span class="field-value">MaxZou</span></div>
+        <div class="field-line key"><span class="field-label">可售天数:</span> <span class="field-value metric">45天</span> <span class="ok-text">正常</span></div>
+        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">橙联德国仓</span></div>
+      </div></td>
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">长×宽×高:</span> <span class="field-value">35×28×30 cm</span></div>
+        <div class="field-line"><span class="field-label">单箱数量:</span> <span class="field-value">24</span></div>
+        <div class="field-line"><span class="field-label">单箱重量:</span> <span class="field-value">1.80 kg</span></div>
+      </div></td>
+      <td class="td-op"><button class="nt-btn link" data-act="edit-batches">编辑</button><button class="nt-btn link" data-act="log">日志</button></td>
     </tr>
 
     <tr class="row-main" data-suggestion-status="待完成">
       <td><span class="vxe-checkbox checked"></span></td>
-      <!-- 商品信息 -->
       <td><div class="field-stack">
         <div class="field-line"><span class="field-value col-code">5560890</span></div>
         <div class="field-line"><span class="muted">电动车充气泵</span></div>
@@ -1121,48 +1106,12 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
         <div class="field-line"><span class="field-label">组合SKU:</span> <span class="field-value" style="color:var(--warning);">是（拆包组合）</span></div>
         <div class="field-line"><span class="field-label">定制化:</span> <span class="field-value">否</span></div>
       </div></td>
-      <!-- 采购申请信息 -->
       <td><div class="field-stack">
         <div class="field-line key"><span class="field-label">PR单号:</span> <span class="field-value col-code">PR202607020011</span></div>
         <div class="field-line key"><span class="field-label">PR需求数:</span> <span class="field-value metric">300</span></div>
         <div class="field-line"><span class="field-label">默认运输方式:</span> <span class="field-value">快船</span></div>
         <div class="field-line"><span class="field-label">需求日期:</span> <span class="field-value">2026-07-02</span></div>
       </div></td>
-      <!-- 采购单信息 -->
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">PO单号:</span> <span class="field-value col-code">PO202607020018</span></div>
-        <div class="field-line"><span class="field-label">备货方式:</span> <span class="field-value">普通发货</span></div>
-        <div class="field-line key"><span class="field-label">PO下单数:</span> <span class="field-value metric">300</span></div>
-        <div class="field-line"><span class="field-label">入库数:</span> <span class="field-value metric">300</span></div>
-      </div></td>
-      <!-- 销售信息 -->
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">国家:</span> <span class="field-value">法国(FR)</span></div>
-        <div class="field-line"><span class="field-label">运营人员:</span> <span class="field-value">WayZhu</span></div>
-        <div class="field-line key"><span class="field-label">可售天数:</span> <span class="field-value metric">5天</span> <span class="warn-text">⚠ 断货风险</span></div>
-        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">橙联法国仓</span></div>
-      </div></td>
-      <!-- 单箱尺寸信息(商品) -->
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">长×宽×高:</span> <span class="field-value">50×40×45 cm</span></div>
-        <div class="field-line"><span class="field-label">单箱数量:</span> <span class="field-value">12</span></div>
-        <div class="field-line"><span class="field-label">单箱重量:</span> <span class="field-value">5.60 kg</span></div>
-      </div></td>
-      <!-- 发货方式 -->
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">发货仓:</span> <span class="field-value">深圳-02仓</span></div>
-        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">橙联法国仓</span></div>
-        <div class="field-line"><span class="field-label">计费重:</span> <span class="field-value">210 kg (抛率60%)</span></div>
-        <div class="field-line"><span class="field-label">实际重/体积重/体积:</span> <span class="field-value muted">168kg / 280kg / 1.50m³</span></div>
-      </div></td>
-<td><div class="field-stack">
-        <div class="field-line"><span class="field-label">需求数量:</span> <span class="field-value metric">300</span></div>
-        <div class="field-line"><span class="field-label">需求未建FH:</span> <span class="field-value metric">300</span></div>
-        <div class="field-line"><span class="field-label">入库数量:</span> <span class="field-value metric">300</span></div>
-        <div class="field-line"><span class="field-label">入库未建FH:</span> <span class="field-value metric">300</span></div>
-        <div class="field-line"><span class="field-label">暂缓量:</span> <span class="field-value muted">0</span></div>
-      </div></td>
-            <!-- 智能拆批（嵌套子表格：紧急拆2批，断货风险，货源全现货） -->
       <td>
         <table class="nested-table">
           <thead><tr>
@@ -1173,6 +1122,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
             <th>数量</th>
                         <th>运输方式</th>
             <th>派送方式</th>
+            <th>目的仓</th>
             <th style="width:72px;">优先程度</th>
             <th>截仓发货日</th>
             <th>状态</th>
@@ -1183,9 +1133,10 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
               <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
               <td class="nt-seq">1</td>
               <td><span class="src-tag smart">建议</span></td>
-              <td><input class="nt-input" value="200"></td>
-              <td><select class="nt-input" style="width:70px;"><option>快递</option><option selected="">空运</option><option>快船</option><option>卡航</option><option>卡航整柜</option><option>铁路</option><option>慢船</option><option>海运整柜</option></select><span class="ship-level up">↑升</span></td>
-              <td><select class="nt-input" style="width:70px;"><option>方式1</option><option selected="">方式2</option><option>方式3</option><option>方式4</option><option>方式5</option><option>方式6</option><option>方式7</option><option>方式8</option></select></td>
+              <td>200</td>
+              <td>空运<span class="ship-level up">↑升</span></td>
+              <td>方式2</td>
+              <td>橙联英国仓</td>
               <td class="nt-confirm"><span class="confirm-status normal">无需处理</span></td>
               <td>7/24（周四）</td>
               <td><span class="tag tag-orange">待确认</span></td>
@@ -1195,9 +1146,10 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
               <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
               <td class="nt-seq">2</td>
               <td><span class="src-tag smart">建议</span></td>
-              <td><input class="nt-input" value="100"></td>
-              <td><select class="nt-input" style="width:70px;"><option>快递</option><option>空运</option><option selected="">快船</option><option>卡航</option><option>卡航整柜</option><option>铁路</option><option>慢船</option><option>海运整柜</option></select></td>
-              <td><select class="nt-input" style="width:70px;"><option>方式1</option><option>方式2</option><option selected="">方式3</option><option>方式4</option><option>方式5</option><option>方式6</option><option>方式7</option><option>方式8</option></select></td>
+              <td>100</td>
+              <td>快船</td>
+              <td>方式3</td>
+              <td>橙联英国仓</td>
               <td class="nt-confirm"><span class="confirm-status normal">无需处理</span></td>
               <td>7/24（周四）</td>
               <td><span class="tag tag-orange">待确认</span></td>
@@ -1206,15 +1158,43 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
           </tbody>
         </table>
         <div class="batch-summary">已勾选 <span class="sum-num sel-qty">300</span> 件 / PR需 <span class="sum-num">300</span> · <span style="color:var(--warning);font-weight:500;">暂缓量 0</span></div>
-        <div class="nt-actions"><button class="nt-btn link" data-act="add">新增批次</button></div>
       </td>
-      <td class="td-op"><button class="nt-btn link" data-act="log">日志</button></td>
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">PO单号:</span> <span class="field-value col-code">PO202607020018</span></div>
+        <div class="field-line"><span class="field-label">备货方式:</span> <span class="field-value">普通发货</span></div>
+        <div class="field-line key"><span class="field-label">PO下单数:</span> <span class="field-value metric">300</span></div>
+        <div class="field-line"><span class="field-label">入库数:</span> <span class="field-value metric">300</span></div>
+      </div></td>
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">发货仓:</span> <span class="field-value">深圳-02仓</span></div>
+        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">橙联法国仓</span></div>
+        <div class="field-line"><span class="field-label">计费重:</span> <span class="field-value">210 kg (抛率60%)</span></div>
+        <div class="field-line"><span class="field-label">实际重/体积重/体积:</span> <span class="field-value muted">168kg / 280kg / 1.50m³</span></div>
+      </div></td>
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">需求数量:</span> <span class="field-value metric">300</span></div>
+        <div class="field-line"><span class="field-label">需求未建FH:</span> <span class="field-value metric">300</span></div>
+        <div class="field-line"><span class="field-label">入库数量:</span> <span class="field-value metric">300</span></div>
+        <div class="field-line"><span class="field-label">入库未建FH:</span> <span class="field-value metric">300</span></div>
+        <div class="field-line"><span class="field-label">暂缓量:</span> <span class="field-value muted">0</span></div>
+      </div></td>
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">国家:</span> <span class="field-value">法国(FR)</span></div>
+        <div class="field-line"><span class="field-label">运营人员:</span> <span class="field-value">WayZhu</span></div>
+        <div class="field-line key"><span class="field-label">可售天数:</span> <span class="field-value metric">5天</span> <span class="warn-text">⚠ 断货风险</span></div>
+        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">橙联法国仓</span></div>
+      </div></td>
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">长×宽×高:</span> <span class="field-value">50×40×45 cm</span></div>
+        <div class="field-line"><span class="field-label">单箱数量:</span> <span class="field-value">12</span></div>
+        <div class="field-line"><span class="field-label">单箱重量:</span> <span class="field-value">5.60 kg</span></div>
+      </div></td>
+      <td class="td-op"><button class="nt-btn link" data-act="edit-batches">编辑</button><button class="nt-btn link" data-act="log">日志</button></td>
     </tr>
 
     <!-- 兄弟SKU示例行：5560891（充气管配件），5560890的拆包组合搭档，主SKU=5560899 -->
     <tr class="row-main" data-suggestion-status="待完成">
       <td><span class="vxe-checkbox checked"></span></td>
-      <!-- 商品信息 -->
       <td><div class="field-stack">
         <div class="field-line"><span class="field-value col-code">5560891</span></div>
         <div class="field-line"><span class="muted">充气管配件</span></div>
@@ -1223,48 +1203,12 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
         <div class="field-line"><span class="field-label">组合SKU:</span> <span class="field-value" style="color:var(--warning);">是（拆包组合）</span></div>
         <div class="field-line"><span class="field-label">定制化:</span> <span class="field-value">否</span></div>
       </div></td>
-      <!-- 采购申请信息 -->
       <td><div class="field-stack">
         <div class="field-line key"><span class="field-label">PR单号:</span> <span class="field-value col-code">PR202607020012</span></div>
         <div class="field-line key"><span class="field-label">PR需求数:</span> <span class="field-value metric">200</span></div>
         <div class="field-line"><span class="field-label">默认运输方式:</span> <span class="field-value">空运</span></div>
         <div class="field-line"><span class="field-label">需求日期:</span> <span class="field-value">2026-07-02</span></div>
       </div></td>
-      <!-- 采购单信息 -->
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">PO单号:</span> <span class="field-value col-code">PO202607020019</span></div>
-        <div class="field-line"><span class="field-label">备货方式:</span> <span class="field-value">普通发货</span></div>
-        <div class="field-line key"><span class="field-label">PO下单数:</span> <span class="field-value metric">200</span></div>
-        <div class="field-line"><span class="field-label">入库数:</span> <span class="field-value metric">200</span></div>
-      </div></td>
-      <!-- 销售信息 -->
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">国家:</span> <span class="field-value">法国(FR)</span></div>
-        <div class="field-line"><span class="field-label">运营人员:</span> <span class="field-value">WayZhu</span></div>
-        <div class="field-line key"><span class="field-label">可售天数:</span> <span class="field-value metric">5天</span> <span class="warn-text">⚠ 断货风险</span></div>
-        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">橙联法国仓</span></div>
-      </div></td>
-      <!-- 单箱尺寸信息(商品) -->
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">长×宽×高:</span> <span class="field-value">20×15×8 cm</span></div>
-        <div class="field-line"><span class="field-label">单箱数量:</span> <span class="field-value">50</span></div>
-        <div class="field-line"><span class="field-label">单箱重量:</span> <span class="field-value">0.50 kg</span></div>
-      </div></td>
-      <!-- 发货方式 -->
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">发货仓:</span> <span class="field-value">深圳-02仓</span></div>
-        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">橙联法国仓</span></div>
-        <div class="field-line"><span class="field-label">计费重:</span> <span class="field-value muted">—</span></div>
-      </div></td>
-      <!-- 关键数值 -->
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">需求数量:</span> <span class="field-value metric">200</span></div>
-        <div class="field-line"><span class="field-label">需求未建FH:</span> <span class="field-value metric">200</span></div>
-        <div class="field-line"><span class="field-label">入库数量:</span> <span class="field-value metric">200</span></div>
-        <div class="field-line"><span class="field-label">入库未建FH:</span> <span class="field-value metric">200</span></div>
-        <div class="field-line"><span class="field-label">暂缓量:</span> <span class="field-value muted">0</span></div>
-      </div></td>
-      <!-- 智能拆批 -->
       <td>
         <table class="nested-table">
           <thead><tr>
@@ -1274,6 +1218,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
             <th>数量</th>
             <th>运输方式</th>
             <th>派送方式</th>
+            <th>目的仓</th>
             <th style="width:72px;">优先程度</th>
             <th>截仓发货日</th>
             <th>状态</th>
@@ -1284,9 +1229,10 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
               <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
               <td class="nt-seq">1</td>
               <td><span class="src-tag smart">建议</span></td>
-              <td><input class="nt-input" value="200"></td>
-              <td><select class="nt-input" style="width:70px;"><option>快递</option><option selected="">空运</option><option>快船</option><option>卡航</option><option>卡航整柜</option><option>铁路</option><option>慢船</option><option>海运整柜</option></select></td>
-              <td><select class="nt-input" style="width:70px;"><option>方式1</option><option selected="">方式2</option><option>方式3</option><option>方式4</option><option>方式5</option><option>方式6</option><option>方式7</option><option>方式8</option></select></td>
+              <td>200</td>
+              <td>空运</td>
+              <td>方式2</td>
+              <td>橙联英国仓</td>
               <td class="nt-confirm"><span class="confirm-status normal">无需处理</span></td>
               <td>7/24（周四）</td>
               <td><span class="tag tag-orange">待确认</span></td>
@@ -1295,15 +1241,42 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
           </tbody>
         </table>
         <div class="batch-summary">已勾选 <span class="sum-num sel-qty">200</span> 件 / PR需 <span class="sum-num">200</span> · <span style="color:var(--warning);font-weight:500;">暂缓量 0</span></div>
-        <div class="nt-actions"><button class="nt-btn link">新增批次</button><button class="nt-btn link" data-act="log">日志</button></div>
       </td>
-      <td class="td-op"><button class="nt-btn link" data-act="log">日志</button></td>
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">PO单号:</span> <span class="field-value col-code">PO202607020019</span></div>
+        <div class="field-line"><span class="field-label">备货方式:</span> <span class="field-value">普通发货</span></div>
+        <div class="field-line key"><span class="field-label">PO下单数:</span> <span class="field-value metric">200</span></div>
+        <div class="field-line"><span class="field-label">入库数:</span> <span class="field-value metric">200</span></div>
+      </div></td>
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">发货仓:</span> <span class="field-value">深圳-02仓</span></div>
+        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">橙联法国仓</span></div>
+        <div class="field-line"><span class="field-label">计费重:</span> <span class="field-value muted">—</span></div>
+      </div></td>
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">需求数量:</span> <span class="field-value metric">200</span></div>
+        <div class="field-line"><span class="field-label">需求未建FH:</span> <span class="field-value metric">200</span></div>
+        <div class="field-line"><span class="field-label">入库数量:</span> <span class="field-value metric">200</span></div>
+        <div class="field-line"><span class="field-label">入库未建FH:</span> <span class="field-value metric">200</span></div>
+        <div class="field-line"><span class="field-label">暂缓量:</span> <span class="field-value muted">0</span></div>
+      </div></td>
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">国家:</span> <span class="field-value">法国(FR)</span></div>
+        <div class="field-line"><span class="field-label">运营人员:</span> <span class="field-value">WayZhu</span></div>
+        <div class="field-line key"><span class="field-label">可售天数:</span> <span class="field-value metric">5天</span> <span class="warn-text">⚠ 断货风险</span></div>
+        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">橙联法国仓</span></div>
+      </div></td>
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">长×宽×高:</span> <span class="field-value">20×15×8 cm</span></div>
+        <div class="field-line"><span class="field-label">单箱数量:</span> <span class="field-value">50</span></div>
+        <div class="field-line"><span class="field-label">单箱重量:</span> <span class="field-value">0.50 kg</span></div>
+      </div></td>
+      <td class="td-op"><button class="nt-btn link" data-act="edit-batches">编辑</button><button class="nt-btn link" data-act="log">日志</button></td>
     </tr>
 
     <!-- 美国示例行：6023147，拆3批分发美东/美西/美南，演示区域标签 -->
     <tr class="row-main" data-suggestion-status="待完成">
       <td><span class="vxe-checkbox checked"></span></td>
-      <!-- 商品信息 -->
       <td><div class="field-stack">
         <div class="field-line"><span class="field-value col-code">6023147</span></div>
         <div class="field-line"><span class="muted">便携式汽车应急启动电源</span></div>
@@ -1312,49 +1285,12 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
         <div class="field-line"><span class="field-label">组合SKU:</span> <span class="field-value">否</span></div>
         <div class="field-line"><span class="field-label">定制化:</span> <span class="field-value">否</span></div>
       </div></td>
-      <!-- 采购申请信息 -->
       <td><div class="field-stack">
         <div class="field-line key"><span class="field-label">PR单号:</span> <span class="field-value col-code">PR202607040021</span></div>
         <div class="field-line key"><span class="field-label">PR需求数:</span> <span class="field-value metric">600</span></div>
         <div class="field-line"><span class="field-label">默认运输方式:</span> <span class="field-value">慢船</span></div>
         <div class="field-line"><span class="field-label">需求日期:</span> <span class="field-value">2026-07-04</span></div>
       </div></td>
-      <!-- 采购单信息 -->
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">PO单号:</span> <span class="field-value col-code">PO202607040028</span></div>
-        <div class="field-line"><span class="field-label">备货方式:</span> <span class="field-value">普通发货</span></div>
-        <div class="field-line key"><span class="field-label">PO下单数:</span> <span class="field-value metric">600</span></div>
-        <div class="field-line"><span class="field-label">入库数:</span> <span class="field-value metric">600</span></div>
-      </div></td>
-      <!-- 销售信息 -->
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">国家:</span> <span class="field-value">美国(US)</span></div>
-        <div class="field-line"><span class="field-label">运营人员:</span> <span class="field-value">MingZhao</span></div>
-        <div class="field-line key"><span class="field-label">可售天数:</span> <span class="field-value metric">12天</span> <span class="warn-text">⚠ 低于安全库存</span></div>
-        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">FTW1美东仓</span></div>
-      </div></td>
-      <!-- 单箱尺寸信息(商品) -->
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">长×宽×高:</span> <span class="field-value">32×25×18 cm</span></div>
-        <div class="field-line"><span class="field-label">单箱数量:</span> <span class="field-value">20</span></div>
-        <div class="field-line"><span class="field-label">单箱重量:</span> <span class="field-value">6.50 kg</span></div>
-      </div></td>
-      <!-- 发货方式 -->
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">发货仓:</span> <span class="field-value">深圳-02仓</span></div>
-        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">FTW1美东仓</span></div>
-        <div class="field-line"><span class="field-label">计费重:</span> <span class="field-value">390 kg (抛率75%)</span></div>
-        <div class="field-line"><span class="field-label">实际重/体积重/体积:</span> <span class="field-value muted">312kg / 520kg / 3.00m³</span></div>
-      </div></td>
-      <!-- 关键数值 -->
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">需求数量:</span> <span class="field-value metric">600</span></div>
-        <div class="field-line"><span class="field-label">需求未建FH:</span> <span class="field-value metric">600</span></div>
-        <div class="field-line"><span class="field-label">入库数量:</span> <span class="field-value metric">600</span></div>
-        <div class="field-line"><span class="field-label">入库未建FH:</span> <span class="field-value metric">600</span></div>
-        <div class="field-line"><span class="field-label">暂缓量:</span> <span class="field-value muted">0</span></div>
-      </div></td>
-      <!-- 智能拆批（美国拆3批，分发美东/美西/美南，演示区域标签） -->
       <td>
         <table class="nested-table">
           <thead><tr>
@@ -1364,6 +1300,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
             <th>数量</th>
             <th>运输方式</th>
             <th>派送方式</th>
+            <th>目的仓</th>
             <th style="width:72px;">优先程度</th>
             <th>截仓发货日</th>
             <th>状态</th>
@@ -1372,11 +1309,12 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
           <tbody>
             <tr>
               <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
-              <td class="nt-seq" data-region="美东"><span class="seq-num">1</span><span class="nt-region r-east">美东</span></td>
+              <td class="nt-seq">1</td>
               <td><span class="src-tag smart">建议</span></td>
-              <td><input class="nt-input" value="300"></td>
-              <td><select class="nt-input" style="width:70px;"><option>快递</option><option>空运</option><option>快船</option><option>卡航</option><option>卡航整柜</option><option>铁路</option><option selected="">慢船</option><option>海运整柜</option></select></td>
-              <td><select class="nt-input" style="width:70px;"><option>方式1</option><option>方式2</option><option>方式3</option><option>方式4</option><option>方式5</option><option>方式6</option><option selected="">方式7</option><option>方式8</option></select></td>
+              <td>300</td>
+              <td>慢船</td>
+              <td>方式7</td>
+              <td>橙联英国仓</td>
               <td class="nt-confirm"><span class="confirm-status normal">无需处理</span></td>
               <td>7/24（周四）</td>
               <td><span class="tag tag-orange">待确认</span></td>
@@ -1384,11 +1322,12 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
             </tr>
             <tr>
               <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
-              <td class="nt-seq" data-region="美西"><span class="seq-num">2</span><span class="nt-region r-west">美西</span></td>
+              <td class="nt-seq">2</td>
               <td><span class="src-tag smart">建议</span></td>
-              <td><input class="nt-input" value="200"></td>
-              <td><select class="nt-input" style="width:70px;"><option>快递</option><option>空运</option><option>快船</option><option>卡航</option><option>卡航整柜</option><option>铁路</option><option selected="">慢船</option><option>海运整柜</option></select></td>
-              <td><select class="nt-input" style="width:70px;"><option>方式1</option><option>方式2</option><option>方式3</option><option>方式4</option><option>方式5</option><option>方式6</option><option selected="">方式7</option><option>方式8</option></select></td>
+              <td>200</td>
+              <td>慢船</td>
+              <td>方式7</td>
+              <td>橙联英国仓</td>
               <td class="nt-confirm"><span class="confirm-status urgent">优先处理</span></td>
               <td>8/07（周四）</td>
               <td><span class="tag tag-orange">待确认</span></td>
@@ -1396,11 +1335,12 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
             </tr>
             <tr>
               <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
-              <td class="nt-seq" data-region="美南"><span class="seq-num">3</span><span class="nt-region r-south">美南</span></td>
+              <td class="nt-seq">3</td>
               <td><span class="src-tag smart">建议</span></td>
-              <td><input class="nt-input" value="100"></td>
-              <td><select class="nt-input" style="width:70px;"><option>快递</option><option>空运</option><option>快船</option><option>卡航</option><option>卡航整柜</option><option>铁路</option><option selected="">慢船</option><option>海运整柜</option></select></td>
-              <td><select class="nt-input" style="width:70px;"><option>方式1</option><option>方式2</option><option>方式3</option><option>方式4</option><option>方式5</option><option>方式6</option><option selected="">方式7</option><option>方式8</option></select></td>
+              <td>100</td>
+              <td>慢船</td>
+              <td>方式7</td>
+              <td>橙联英国仓</td>
               <td class="nt-confirm"><span class="confirm-status urgent">优先处理</span></td>
               <td>8/07（周四）</td>
               <td><span class="tag tag-orange">待确认</span></td>
@@ -1409,15 +1349,43 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
           </tbody>
         </table>
         <div class="batch-summary">已勾选 <span class="sum-num sel-qty">600</span> 件 / PR需 <span class="sum-num">600</span> · <span style="color:var(--warning);font-weight:500;">暂缓量 0</span></div>
-        <div class="nt-actions"><button class="nt-btn link" data-act="add">新增批次</button></div>
       </td>
-      <td class="td-op"><button class="nt-btn link" data-act="log">日志</button></td>
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">PO单号:</span> <span class="field-value col-code">PO202607040028</span></div>
+        <div class="field-line"><span class="field-label">备货方式:</span> <span class="field-value">普通发货</span></div>
+        <div class="field-line key"><span class="field-label">PO下单数:</span> <span class="field-value metric">600</span></div>
+        <div class="field-line"><span class="field-label">入库数:</span> <span class="field-value metric">600</span></div>
+      </div></td>
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">发货仓:</span> <span class="field-value">深圳-02仓</span></div>
+        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">FTW1美东仓</span></div>
+        <div class="field-line"><span class="field-label">计费重:</span> <span class="field-value">390 kg (抛率75%)</span></div>
+        <div class="field-line"><span class="field-label">实际重/体积重/体积:</span> <span class="field-value muted">312kg / 520kg / 3.00m³</span></div>
+      </div></td>
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">需求数量:</span> <span class="field-value metric">600</span></div>
+        <div class="field-line"><span class="field-label">需求未建FH:</span> <span class="field-value metric">600</span></div>
+        <div class="field-line"><span class="field-label">入库数量:</span> <span class="field-value metric">600</span></div>
+        <div class="field-line"><span class="field-label">入库未建FH:</span> <span class="field-value metric">600</span></div>
+        <div class="field-line"><span class="field-label">暂缓量:</span> <span class="field-value muted">0</span></div>
+      </div></td>
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">国家:</span> <span class="field-value">美国(US)</span></div>
+        <div class="field-line"><span class="field-label">运营人员:</span> <span class="field-value">MingZhao</span></div>
+        <div class="field-line key"><span class="field-label">可售天数:</span> <span class="field-value metric">12天</span> <span class="warn-text">⚠ 低于安全库存</span></div>
+        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">FTW1美东仓</span></div>
+      </div></td>
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">长×宽×高:</span> <span class="field-value">32×25×18 cm</span></div>
+        <div class="field-line"><span class="field-label">单箱数量:</span> <span class="field-value">20</span></div>
+        <div class="field-line"><span class="field-label">单箱重量:</span> <span class="field-value">6.50 kg</span></div>
+      </div></td>
+      <td class="td-op"><button class="nt-btn link" data-act="edit-batches">编辑</button><button class="nt-btn link" data-act="log">日志</button></td>
     </tr>
 
     <!-- 已关闭示例行：PR需求500，实际买480发480，PR完结 → 发货建议已关闭 -->
     <tr class="row-main row-closed" data-suggestion-status="已关闭" style="display: none;">
       <td><span class="vxe-checkbox" style="opacity:0.4;pointer-events:none;"></span></td>
-      <!-- 商品信息 -->
       <td><div class="field-stack">
         <div class="field-line"><span class="field-value col-code">4471882</span></div>
         <div class="field-line"><span class="muted">便携式车载吸尘器</span></div>
@@ -1426,48 +1394,12 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
         <div class="field-line"><span class="field-label">组合SKU:</span> <span class="field-value">否</span></div>
         <div class="field-line"><span class="field-label">定制化:</span> <span class="field-value">否</span></div>
       </div></td>
-      <!-- 采购申请信息 -->
       <td><div class="field-stack">
         <div class="field-line key"><span class="field-label">PR单号:</span> <span class="field-value col-code">PR202607010005</span></div>
         <div class="field-line key"><span class="field-label">PR需求数:</span> <span class="field-value metric">500</span></div>
         <div class="field-line"><span class="field-label">默认运输方式:</span> <span class="field-value">快船</span></div>
         <div class="field-line"><span class="field-label">需求日期:</span> <span class="field-value">2026-07-01</span></div>
       </div></td>
-      <!-- 采购单信息 -->
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">PO单号:</span> <span class="field-value col-code">PO202607010009</span></div>
-        <div class="field-line"><span class="field-label">备货方式:</span> <span class="field-value">普通发货</span></div>
-        <div class="field-line key"><span class="field-label">PO下单数:</span> <span class="field-value metric">480</span></div>
-        <div class="field-line"><span class="field-label">入库数:</span> <span class="field-value metric">480</span></div>
-      </div></td>
-      <!-- 销售信息 -->
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">国家:</span> <span class="field-value">美国(US)</span></div>
-        <div class="field-line"><span class="field-label">运营人员:</span> <span class="field-value">TomWang</span></div>
-        <div class="field-line key"><span class="field-label">可售天数:</span> <span class="field-value metric">38天</span></div>
-        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">ONT8美西仓</span></div>
-      </div></td>
-      <!-- 单箱尺寸信息(商品) -->
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">长×宽×高:</span> <span class="field-value">35×28×20 cm</span></div>
-        <div class="field-line"><span class="field-label">单箱数量:</span> <span class="field-value">20</span></div>
-        <div class="field-line"><span class="field-label">单箱重量:</span> <span class="field-value">4.50 kg</span></div>
-      </div></td>
-      <!-- 发货方式 -->
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">发货仓:</span> <span class="field-value">深圳-02仓</span></div>
-        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">ONT8美西仓</span></div>
-        <div class="field-line"><span class="field-label">计费重:</span> <span class="field-value muted">—</span></div>
-      </div></td>
-      <!-- 关键数值 -->
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">需求数量:</span> <span class="field-value muted">500</span></div>
-        <div class="field-line"><span class="field-label">需求未建FH:</span> <span class="field-value muted">0</span></div>
-        <div class="field-line"><span class="field-label">入库数量:</span> <span class="field-value muted">480</span></div>
-        <div class="field-line"><span class="field-label">入库未建FH:</span> <span class="field-value muted">0</span></div>
-        <div class="field-line"><span class="field-label">暂缓量:</span> <span class="field-value muted">0</span></div>
-      </div></td>
-      <!-- 智能拆批：已关闭，展示一条已生成的发货批次 -->
       <td>
         <table class="nested-table">
           <thead><tr>
@@ -1477,6 +1409,7 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
             <th>数量</th>
             <th>运输方式</th>
             <th>派送方式</th>
+            <th>目的仓</th>
             <th style="width:72px;">优先程度</th>
             <th>截仓发货日</th>
             <th>状态</th>
@@ -1485,11 +1418,12 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
           <tbody>
             <tr class="row-done">
               <td class="nt-ck"><span class="vxe-checkbox"></span></td>
-              <td class="nt-seq" data-region="美西"><span class="seq-num">1</span><span class="nt-region r-west">美西</span></td>
+              <td class="nt-seq">1</td>
               <td><span class="src-tag manual">实际</span></td>
-              <td><input class="nt-input" value="480" disabled=""></td>
-              <td><select class="nt-input" style="width:70px;" disabled=""><option>快递</option><option>空运</option><option selected="">快船</option><option>卡航</option><option>卡航整柜</option><option>铁路</option><option>慢船</option><option>海运整柜</option></select></td>
-              <td><select class="nt-input" style="width:70px;" disabled=""><option>方式1</option><option>方式2</option><option selected="">方式3</option><option>方式4</option><option>方式5</option><option>方式6</option><option>方式7</option><option>方式8</option></select></td>
+              <td>480</td>
+              <td>快船</td>
+              <td>方式3</td>
+              <td>ONT8美西仓</td>
               <td class="nt-confirm"><span class="confirm-status normal">—</span></td>
               <td>7/18（周四）</td>
               <td><span class="tag" style="color:var(--success);background:#e8ffea;border:1px solid #c9f0d0;">已生成</span></td>
@@ -1502,13 +1436,41 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
           PR需求500，实际采购入库480并已发货，PR已完结，发货建议关闭
         </div>
       </td>
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">PO单号:</span> <span class="field-value col-code">PO202607010009</span></div>
+        <div class="field-line"><span class="field-label">备货方式:</span> <span class="field-value">普通发货</span></div>
+        <div class="field-line key"><span class="field-label">PO下单数:</span> <span class="field-value metric">480</span></div>
+        <div class="field-line"><span class="field-label">入库数:</span> <span class="field-value metric">480</span></div>
+      </div></td>
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">发货仓:</span> <span class="field-value">深圳-02仓</span></div>
+        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">ONT8美西仓</span></div>
+        <div class="field-line"><span class="field-label">计费重:</span> <span class="field-value muted">—</span></div>
+      </div></td>
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">需求数量:</span> <span class="field-value muted">500</span></div>
+        <div class="field-line"><span class="field-label">需求未建FH:</span> <span class="field-value muted">0</span></div>
+        <div class="field-line"><span class="field-label">入库数量:</span> <span class="field-value muted">480</span></div>
+        <div class="field-line"><span class="field-label">入库未建FH:</span> <span class="field-value muted">0</span></div>
+        <div class="field-line"><span class="field-label">暂缓量:</span> <span class="field-value muted">0</span></div>
+      </div></td>
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">国家:</span> <span class="field-value">美国(US)</span></div>
+        <div class="field-line"><span class="field-label">运营人员:</span> <span class="field-value">TomWang</span></div>
+        <div class="field-line key"><span class="field-label">可售天数:</span> <span class="field-value metric">38天</span></div>
+        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">ONT8美西仓</span></div>
+      </div></td>
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">长×宽×高:</span> <span class="field-value">35×28×20 cm</span></div>
+        <div class="field-line"><span class="field-label">单箱数量:</span> <span class="field-value">20</span></div>
+        <div class="field-line"><span class="field-label">单箱重量:</span> <span class="field-value">4.50 kg</span></div>
+      </div></td>
       <td class="td-op"><span class="muted" style="font-size:12px;">—</span></td>
     </tr>
 
     <!-- 待计算示例行：上游数据已进来，引擎还没拆批 -->
     <tr class="row-main row-pending-calc" data-suggestion-status="待计算">
       <td><span class="vxe-checkbox" style="opacity:0.4;pointer-events:none;"></span></td>
-      <!-- 商品信息 -->
       <td><div class="field-stack">
         <div class="field-line"><span class="field-value col-code">3390214</span></div>
         <div class="field-line"><span class="muted">车载蓝牙接收器</span></div>
@@ -1517,48 +1479,12 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
         <div class="field-line"><span class="field-label">组合SKU:</span> <span class="field-value">否</span></div>
         <div class="field-line"><span class="field-label">定制化:</span> <span class="field-value">否</span></div>
       </div></td>
-      <!-- 采购申请信息 -->
       <td><div class="field-stack">
         <div class="field-line key"><span class="field-label">PR单号:</span> <span class="field-value col-code">PR202607190031</span></div>
         <div class="field-line key"><span class="field-label">PR需求数:</span> <span class="field-value metric">150</span></div>
         <div class="field-line"><span class="field-label">默认运输方式:</span> <span class="field-value">空运</span></div>
         <div class="field-line"><span class="field-label">需求日期:</span> <span class="field-value">2026-07-19</span></div>
       </div></td>
-      <!-- 采购单信息 -->
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">PO单号:</span> <span class="field-value col-code">PO202607190022</span></div>
-        <div class="field-line"><span class="field-label">备货方式:</span> <span class="field-value">普通发货</span></div>
-        <div class="field-line key"><span class="field-label">PO下单数:</span> <span class="field-value metric">150</span></div>
-        <div class="field-line"><span class="field-label">入库数:</span> <span class="field-value metric">150</span></div>
-      </div></td>
-      <!-- 销售信息 -->
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">国家:</span> <span class="field-value">美国(US)</span></div>
-        <div class="field-line"><span class="field-label">运营人员:</span> <span class="field-value">MingZhao</span></div>
-        <div class="field-line key"><span class="field-label">可售天数:</span> <span class="field-value metric">18天</span></div>
-        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">FTW1美东仓</span></div>
-      </div></td>
-      <!-- 单箱尺寸信息(商品) -->
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">长×宽×高:</span> <span class="field-value">15×10×8 cm</span></div>
-        <div class="field-line"><span class="field-label">单箱数量:</span> <span class="field-value">24</span></div>
-        <div class="field-line"><span class="field-label">单箱重量:</span> <span class="field-value">0.80 kg</span></div>
-      </div></td>
-      <!-- 发货方式 -->
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">发货仓:</span> <span class="field-value">深圳-02仓</span></div>
-        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">FTW1美东仓</span></div>
-        <div class="field-line"><span class="field-label">计费重:</span> <span class="field-value muted">待计算</span></div>
-      </div></td>
-      <!-- 关键数值：待计算时未分配=总量（实际批次=0） -->
-      <td><div class="field-stack">
-        <div class="field-line"><span class="field-label">需求数量:</span> <span class="field-value metric">150</span></div>
-        <div class="field-line"><span class="field-label">需求未建FH:</span> <span class="field-value metric">150</span></div>
-        <div class="field-line"><span class="field-label">入库数量:</span> <span class="field-value metric">150</span></div>
-        <div class="field-line"><span class="field-label">入库未建FH:</span> <span class="field-value metric">150</span></div>
-        <div class="field-line"><span class="field-label">暂缓量:</span> <span class="field-value muted">待计算</span></div>
-      </div></td>
-      <!-- 智能拆批：待计算占位 + 立即计算按钮 -->
       <td>
         <div class="pending-calc-box">
           <div class="pending-calc-icon">⏳</div>
@@ -1567,6 +1493,35 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
           <button class="nt-btn primary" data-act="calc-now" onclick="calcNow(this)">立即计算</button>
         </div>
       </td>
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">PO单号:</span> <span class="field-value col-code">PO202607190022</span></div>
+        <div class="field-line"><span class="field-label">备货方式:</span> <span class="field-value">普通发货</span></div>
+        <div class="field-line key"><span class="field-label">PO下单数:</span> <span class="field-value metric">150</span></div>
+        <div class="field-line"><span class="field-label">入库数:</span> <span class="field-value metric">150</span></div>
+      </div></td>
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">发货仓:</span> <span class="field-value">深圳-02仓</span></div>
+        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">FTW1美东仓</span></div>
+        <div class="field-line"><span class="field-label">计费重:</span> <span class="field-value muted">待计算</span></div>
+      </div></td>
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">需求数量:</span> <span class="field-value metric">150</span></div>
+        <div class="field-line"><span class="field-label">需求未建FH:</span> <span class="field-value metric">150</span></div>
+        <div class="field-line"><span class="field-label">入库数量:</span> <span class="field-value metric">150</span></div>
+        <div class="field-line"><span class="field-label">入库未建FH:</span> <span class="field-value metric">150</span></div>
+        <div class="field-line"><span class="field-label">暂缓量:</span> <span class="field-value muted">待计算</span></div>
+      </div></td>
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">国家:</span> <span class="field-value">美国(US)</span></div>
+        <div class="field-line"><span class="field-label">运营人员:</span> <span class="field-value">MingZhao</span></div>
+        <div class="field-line key"><span class="field-label">可售天数:</span> <span class="field-value metric">18天</span></div>
+        <div class="field-line"><span class="field-label">目的仓:</span> <span class="field-value">FTW1美东仓</span></div>
+      </div></td>
+      <td><div class="field-stack">
+        <div class="field-line"><span class="field-label">长×宽×高:</span> <span class="field-value">15×10×8 cm</span></div>
+        <div class="field-line"><span class="field-label">单箱数量:</span> <span class="field-value">24</span></div>
+        <div class="field-line"><span class="field-label">单箱重量:</span> <span class="field-value">0.80 kg</span></div>
+      </div></td>
       <td class="td-op"><span class="muted" style="font-size:12px;">—</span></td>
     </tr>
 
@@ -1836,55 +1791,37 @@ body.spec-anchoring-mode [data-no-anchor="true"]:hover { outline: none !importan
 </div>
 
 <!-- 内嵌的产品说明数据（发布快照，开发打开即看到；PM 的工作副本在 localStorage） -->
-<script type="application/json" id="spec-embedded-data">{"version":2,"publishedAt":"2026-08-05 10:28","publishedBy":"PM","specs":[{"id":1,"group":"顶部导航栏","element":"菜单-信诚BI","type":"fixed","source":"","rule":"","interaction":"点击切换模块","status":"draft","createdAt":"2026-07-15 12:28"},{"id":2,"group":"顶部导航栏","element":"菜单-销售","type":"fixed","source":"","rule":"","interaction":"点击切换模块","status":"draft","createdAt":"2026-07-15 12:28"},{"id":3,"group":"顶部导航栏","element":"菜单-商品","type":"fixed","source":"","rule":"","interaction":"点击切换模块","status":"draft","createdAt":"2026-07-15 12:28"},{"id":4,"group":"顶部导航栏","element":"菜单-PMC","type":"fixed","source":"","rule":"","interaction":"点击切换模块","status":"draft","createdAt":"2026-07-15 12:28"},{"id":5,"group":"顶部导航栏","element":"菜单-采购","type":"fixed","source":"","rule":"","interaction":"当前激活:采购","status":"draft","createdAt":"2026-07-15 12:28"},{"id":6,"group":"顶部导航栏","element":"菜单-头程","type":"fixed","source":"","rule":"","interaction":"点击切换模块","status":"draft","createdAt":"2026-07-15 12:28"},{"id":7,"group":"顶部导航栏","element":"菜单-仓库","type":"fixed","source":"","rule":"","interaction":"点击切换模块","status":"draft","createdAt":"2026-07-15 12:28"},{"id":8,"group":"顶部导航栏","element":"菜单-订单","type":"fixed","source":"","rule":"","interaction":"点击切换模块","status":"draft","createdAt":"2026-07-15 12:28"},{"id":9,"group":"顶部导航栏","element":"菜单-物流","type":"fixed","source":"","rule":"","interaction":"点击切换模块","status":"draft","createdAt":"2026-07-15 12:28"},{"id":10,"group":"侧边栏菜单","element":"菜单-多平台备货分析","type":"fixed","source":"","rule":"","interaction":"点击进入多平台备货分析","status":"draft","createdAt":"2026-07-15 12:28"},{"id":11,"group":"侧边栏菜单","element":"菜单-多平台备货计划待确认","type":"fixed","source":"","rule":"","interaction":"点击进入多平台备货计划待确认","status":"draft","createdAt":"2026-07-15 12:28"},{"id":12,"group":"侧边栏菜单","element":"菜单-备库需求单","type":"fixed","source":"","rule":"","interaction":"点击进入备库需求单","status":"draft","createdAt":"2026-07-15 12:28"},{"id":13,"group":"侧边栏菜单","element":"菜单-预发货计划","type":"fixed","source":"","rule":"","interaction":"点击进入预发货计划","status":"draft","createdAt":"2026-07-15 12:28"},{"id":14,"group":"侧边栏菜单","element":"菜单-发货计划","type":"fixed","source":"","rule":"","interaction":"点击进入发货计划","status":"draft","createdAt":"2026-07-15 12:28"},{"id":15,"group":"侧边栏菜单","element":"菜单-智能发货","type":"fixed","source":"","rule":"","interaction":"当前激活:智能发货","status":"draft","createdAt":"2026-07-15 12:28"},{"id":16,"group":"侧边栏菜单","element":"菜单-下单待提交","type":"fixed","source":"","rule":"","interaction":"点击进入下单待提交","status":"draft","createdAt":"2026-07-15 12:28"},{"id":17,"group":"侧边栏菜单","element":"菜单-审核采购单","type":"fixed","source":"","rule":"","interaction":"点击进入审核采购单","status":"draft","createdAt":"2026-07-15 12:28"},{"id":18,"group":"侧边栏菜单","element":"菜单-采购单管理","type":"fixed","source":"","rule":"","interaction":"点击进入采购单管理","status":"draft","createdAt":"2026-07-15 12:28"},{"id":19,"group":"侧边栏菜单","element":"菜单-产品列表","type":"fixed","source":"","rule":"","interaction":"点击进入产品列表","status":"draft","createdAt":"2026-07-15 12:28"},{"id":20,"group":"面包屑","element":"面包屑路径","type":"fixed","source":"","rule":"","interaction":"显示当前位置:首页 / 采购 / 备货需求及发货 / 智能发货","status":"draft","createdAt":"2026-07-15 12:28"},{"id":21,"group":"页面级Tab","element":"Tab-FBA发货计划","type":"config","source":"","rule":"","interaction":"当前激活:FBA发货计划","status":"draft","createdAt":"2026-07-15 12:28"},{"id":22,"group":"页面级Tab","element":"Tab-海外仓发货计划","type":"config","source":"","rule":"","interaction":"点击切换海外仓发货计划","status":"draft","createdAt":"2026-07-15 12:28"},{"id":23,"group":"查询条件区","element":"SKU","type":"dynamic","source":"复用现有组件","rule":"空","interaction":"复用现有组件","status":"draft","createdAt":"2026-07-15 12:28"},{"id":24,"group":"查询条件区","element":"国家","type":"dynamic","source":"复用现有组件","rule":"空","interaction":"复用现有组件","status":"draft","createdAt":"2026-07-15 12:28"},{"id":25,"group":"查询条件区","element":"销售人员","type":"dynamic","source":"","rule":"","interaction":"输入请输入","status":"draft","createdAt":"2026-07-15 12:28"},{"id":26,"group":"查询条件区","element":"需求部门","type":"dynamic","source":"","rule":"","interaction":"输入筛选","status":"draft","createdAt":"2026-07-15 12:28"},{"id":27,"group":"查询条件区","element":"PR单号","type":"dynamic","source":"","rule":"","interaction":"输入如 PR202607030009","status":"draft","createdAt":"2026-07-15 12:28"},{"id":28,"group":"查询条件区","element":"可售天数","type":"dynamic","source":"","rule":"","interaction":"输入筛选","status":"draft","createdAt":"2026-07-15 12:28"},{"id":29,"group":"查询条件区","element":"备货方式","type":"dynamic","source":"","rule":"","interaction":"输入筛选","status":"draft","createdAt":"2026-07-15 12:28"},{"id":30,"group":"查询条件区","element":"物流属性","type":"dynamic","source":"","rule":"","interaction":"输入筛选","status":"draft","createdAt":"2026-07-15 12:28"},{"id":31,"group":"查询条件区","element":"默认运输方式","type":"dynamic","source":"","rule":"","interaction":"输入筛选","status":"draft","createdAt":"2026-07-15 12:28"},{"id":32,"group":"查询条件区","element":"运输方式","type":"dynamic","source":"","rule":"","interaction":"输入筛选","status":"draft","createdAt":"2026-07-15 12:28"},{"id":33,"group":"查询条件区","element":"货源状态","type":"dynamic","source":"","rule":"","interaction":"输入筛选","status":"draft","createdAt":"2026-07-15 12:28"},{"id":34,"group":"查询条件区","element":"供应商编号","type":"dynamic","source":"","rule":"","interaction":"输入请输入","status":"draft","createdAt":"2026-07-15 12:28"},{"id":35,"group":"查询条件区","element":"目的仓","type":"dynamic","source":"","rule":"","interaction":"输入请输入","status":"draft","createdAt":"2026-07-15 12:28"},{"id":36,"group":"状态Tab","element":"Tab-待确认 (42)","type":"config","source":"","rule":"","interaction":"点击筛选该状态记录","status":"draft","createdAt":"2026-07-15 12:28"},{"id":37,"group":"状态Tab","element":"Tab-待审核 (18)","type":"config","source":"","rule":"","interaction":"点击筛选该状态记录","status":"draft","createdAt":"2026-07-15 12:28"},{"id":38,"group":"状态Tab","element":"Tab-已生成 (312)","type":"config","source":"","rule":"","interaction":"点击筛选该状态记录","status":"draft","createdAt":"2026-07-15 12:28"},{"id":39,"group":"状态Tab","element":"Tab-已驳回 (5)","type":"config","source":"","rule":"","interaction":"点击筛选该状态记录","status":"draft","createdAt":"2026-07-15 12:28"},{"id":40,"group":"批量操作","element":"按钮-批量调整","type":"fixed","source":"","rule":"","interaction":"点击执行批量调整","status":"draft","createdAt":"2026-07-15 12:28"},{"id":41,"group":"批量操作","element":"按钮-美国配置比例","type":"fixed","source":"","rule":"","interaction":"点击执行美国配置比例","status":"draft","createdAt":"2026-07-15 12:28"},{"id":42,"group":"批量操作","element":"按钮-重新计算","type":"fixed","source":"","rule":"","interaction":"点击执行重新计算","status":"draft","createdAt":"2026-07-15 12:28"},{"id":43,"group":"主表-列","element":"列-商品信息","type":"dynamic","source":"","rule":"","interaction":"展示字段:商品信息","status":"draft","createdAt":"2026-07-15 12:28"},{"id":44,"group":"主表-列","element":"列-采购申请信息","type":"dynamic","source":"","rule":"","interaction":"展示字段:采购申请信息","status":"draft","createdAt":"2026-07-15 12:28"},{"id":45,"group":"主表-列","element":"列-采购单信息","type":"dynamic","source":"","rule":"","interaction":"展示字段:采购单信息","status":"draft","createdAt":"2026-07-15 12:28"},{"id":46,"group":"主表-列","element":"列-销售信息","type":"dynamic","source":"","rule":"","interaction":"展示字段:销售信息","status":"draft","createdAt":"2026-07-15 12:28"},{"id":47,"group":"主表-列","element":"列-单箱尺寸信息(商品)","type":"dynamic","source":"","rule":"","interaction":"展示字段:单箱尺寸信息(商品)","status":"draft","createdAt":"2026-07-15 12:28"},{"id":48,"group":"主表-列","element":"列-发货方式","type":"dynamic","source":"","rule":"","interaction":"展示字段:发货方式","status":"draft","createdAt":"2026-07-15 12:28"},{"id":49,"group":"主表-列","element":"列-智能拆批","type":"dynamic","source":"","rule":"","interaction":"展示字段:智能拆批","status":"draft","createdAt":"2026-07-15 12:28"},{"id":50,"group":"主表-列","element":"列-#","type":"dynamic","source":"","rule":"","interaction":"展示字段:#","status":"draft","createdAt":"2026-07-15 12:28"},{"id":51,"group":"主表-列","element":"列-批次","type":"dynamic","source":"","rule":"","interaction":"展示字段:批次","status":"draft","createdAt":"2026-07-15 12:28"},{"id":52,"group":"主表-列","element":"列-数量","type":"dynamic","source":"","rule":"","interaction":"展示字段:数量","status":"draft","createdAt":"2026-07-15 12:28"},{"id":53,"group":"主表-列","element":"列-货源状态","type":"dynamic","source":"","rule":"","interaction":"展示字段:货源状态","status":"draft","createdAt":"2026-07-15 12:28"},{"id":54,"group":"主表-列","element":"列-运输","type":"dynamic","source":"","rule":"","interaction":"展示字段:运输","status":"draft","createdAt":"2026-07-15 12:28"},{"id":55,"group":"主表-列","element":"列-截仓发货日","type":"dynamic","source":"","rule":"","interaction":"展示字段:截仓发货日","status":"draft","createdAt":"2026-07-15 12:28"},{"id":56,"group":"主表-列","element":"列-状态","type":"dynamic","source":"","rule":"","interaction":"展示字段:状态","status":"draft","createdAt":"2026-07-15 12:28"},{"id":57,"group":"子表格-列","element":"子表列-#","type":"dynamic","source":"","rule":"","interaction":"展示批次字段:#","status":"draft","createdAt":"2026-07-15 12:28"},{"id":58,"group":"子表格-列","element":"子表列-批次","type":"dynamic","source":"","rule":"","interaction":"展示批次字段:批次","status":"draft","createdAt":"2026-07-15 12:28"},{"id":59,"group":"子表格-列","element":"子表列-数量","type":"dynamic","source":"","rule":"","interaction":"展示批次字段:数量","status":"draft","createdAt":"2026-07-15 12:28"},{"id":60,"group":"子表格-列","element":"子表列-货源状态","type":"dynamic","source":"","rule":"","interaction":"展示批次字段:货源状态","status":"draft","createdAt":"2026-07-15 12:28"},{"id":61,"group":"子表格-列","element":"子表列-运输","type":"dynamic","source":"","rule":"","interaction":"展示批次字段:运输","status":"draft","createdAt":"2026-07-15 12:28"},{"id":62,"group":"子表格-列","element":"子表列-截仓发货日","type":"dynamic","source":"","rule":"","interaction":"展示批次字段:截仓发货日","status":"draft","createdAt":"2026-07-15 12:28"},{"id":63,"group":"子表格-列","element":"子表列-状态","type":"dynamic","source":"","rule":"","interaction":"展示批次字段:状态","status":"draft","createdAt":"2026-07-15 12:28"},{"id":64,"group":"分页","element":"分页器","type":"config","source":"","rule":"","interaction":"翻页、设置每页条数","status":"draft","createdAt":"2026-07-15 12:28"},{"id":65,"group":"日志弹窗","element":"Tab-操作记录","type":"fixed","source":"","rule":"","interaction":"点击切换查看操作记录","status":"draft","createdAt":"2026-07-15 12:28"},{"id":66,"group":"日志弹窗","element":"Tab-计算过程","type":"fixed","source":"","rule":"","interaction":"点击切换查看计算过程","status":"draft","createdAt":"2026-07-15 12:28"},{"id":68,"group":"主表-商品信息","element":"马自达MX-5防水车罩","type":"dynamic","source":"","rule":"","interaction":"展示字段：商品信息/马自达MX-5防水车罩","status":"draft","createdAt":"2026-07-15 13:36"},{"id":69,"group":"主表-商品信息","element":"活跃度","type":"dynamic","source":"","rule":"","interaction":"展示字段：商品信息/活跃度","status":"draft","createdAt":"2026-07-15 13:36"},{"id":70,"group":"主表-商品信息","element":"物流属性","type":"dynamic","source":"","rule":"","interaction":"展示字段：商品信息/物流属性","status":"draft","createdAt":"2026-07-15 13:36"},{"id":71,"group":"主表-商品信息","element":"组合SKU","type":"dynamic","source":"","rule":"","interaction":"展示字段：商品信息/组合SKU","status":"draft","createdAt":"2026-07-15 13:36"},{"id":72,"group":"主表-商品信息","element":"定制化","type":"dynamic","source":"","rule":"","interaction":"展示字段：商品信息/定制化","status":"draft","createdAt":"2026-07-15 13:36"},{"id":73,"group":"主表-采购申请信息","element":"PR单号","type":"dynamic","source":"","rule":"","interaction":"展示字段：采购申请信息/PR单号","status":"draft","createdAt":"2026-07-15 13:36"},{"id":74,"group":"主表-采购申请信息","element":"PR需求数","type":"dynamic","source":"","rule":"","interaction":"展示字段：采购申请信息/PR需求数","status":"draft","createdAt":"2026-07-15 13:36"},{"id":75,"group":"主表-采购申请信息","element":"默认运输方式","type":"dynamic","source":"","rule":"","interaction":"展示字段：采购申请信息/默认运输方式","status":"draft","createdAt":"2026-07-15 13:36"},{"id":76,"group":"主表-采购申请信息","element":"需求日期","type":"dynamic","source":"","rule":"","interaction":"展示字段：采购申请信息/需求日期","status":"draft","createdAt":"2026-07-15 13:36"},{"id":77,"group":"主表-采购单信息","element":"PO单号","type":"dynamic","source":"","rule":"","interaction":"展示字段：采购单信息/PO单号","status":"draft","createdAt":"2026-07-15 13:36"},{"id":78,"group":"主表-采购单信息","element":"备货方式","type":"dynamic","source":"","rule":"","interaction":"展示字段：采购单信息/备货方式","status":"draft","createdAt":"2026-07-15 13:36"},{"id":79,"group":"主表-采购单信息","element":"PO下单数","type":"dynamic","source":"","rule":"","interaction":"展示字段：采购单信息/PO下单数","status":"draft","createdAt":"2026-07-15 13:36"},{"id":80,"group":"主表-采购单信息","element":"入库数","type":"dynamic","source":"","rule":"","interaction":"展示字段：采购单信息/入库数","status":"draft","createdAt":"2026-07-15 13:36"},{"id":81,"group":"主表-销售信息","element":"国家","type":"dynamic","source":"","rule":"","interaction":"展示字段：销售信息/国家","status":"draft","createdAt":"2026-07-15 13:36"},{"id":82,"group":"主表-销售信息","element":"运营人员","type":"dynamic","source":"","rule":"","interaction":"展示字段：销售信息/运营人员","status":"draft","createdAt":"2026-07-15 13:36"},{"id":83,"group":"主表-销售信息","element":"可售天数","type":"dynamic","source":"","rule":"","interaction":"展示字段：销售信息/可售天数","status":"draft","createdAt":"2026-07-15 13:36"},{"id":84,"group":"主表-销售信息","element":"目的仓","type":"dynamic","source":"","rule":"","interaction":"展示字段：销售信息/目的仓","status":"draft","createdAt":"2026-07-15 13:36"},{"id":85,"group":"主表-单箱尺寸信息(商品)","element":"长×宽×高","type":"dynamic","source":"","rule":"","interaction":"展示字段：单箱尺寸信息(商品)/长×宽×高","status":"draft","createdAt":"2026-07-15 13:36"},{"id":86,"group":"主表-单箱尺寸信息(商品)","element":"单箱数量","type":"dynamic","source":"","rule":"","interaction":"展示字段：单箱尺寸信息(商品)/单箱数量","status":"draft","createdAt":"2026-07-15 13:36"},{"id":87,"group":"主表-单箱尺寸信息(商品)","element":"单箱重量","type":"dynamic","source":"","rule":"","interaction":"展示字段：单箱尺寸信息(商品)/单箱重量","status":"draft","createdAt":"2026-07-15 13:36"},{"id":88,"group":"主表-发货方式","element":"发货仓","type":"dynamic","source":"","rule":"","interaction":"展示字段：发货方式/发货仓","status":"draft","createdAt":"2026-07-15 13:36"},{"id":89,"group":"主表-发货方式","element":"目的仓","type":"dynamic","source":"","rule":"","interaction":"展示字段：发货方式/目的仓","status":"draft","createdAt":"2026-07-15 13:36"},{"id":90,"group":"主表-发货方式","element":"计费重","type":"dynamic","source":"","rule":"","interaction":"展示字段：发货方式/计费重","status":"draft","createdAt":"2026-07-15 13:36"},{"id":91,"group":"主表-发货方式","element":"实际重/体积重/体积","type":"dynamic","source":"","rule":"","interaction":"展示字段：发货方式/实际重/体积重/体积","status":"draft","createdAt":"2026-07-15 13:36"},{"id":92,"group":"主表-商品信息","element":"7234012","type":"dynamic","source":"","rule":"","interaction":"展示字段：商品信息/7234012","status":"draft","createdAt":"2026-07-15 13:36"},{"id":93,"group":"主表-商品信息","element":"LED车灯模组 H7","type":"dynamic","source":"","rule":"","interaction":"展示字段：商品信息/LED车灯模组 H7","status":"draft","createdAt":"2026-07-15 13:36"},{"id":94,"group":"主表-商品信息","element":"5560890","type":"dynamic","source":"","rule":"","interaction":"展示字段：商品信息/5560890","status":"draft","createdAt":"2026-07-15 13:36"},{"id":95,"group":"主表-商品信息","element":"电动车充气泵","type":"dynamic","source":"","rule":"","interaction":"展示字段：商品信息/电动车充气泵","status":"draft","createdAt":"2026-07-15 13:36"},{"id":96,"group":"主表-采购单信息","element":"状态","type":"dynamic","source":"","rule":"","interaction":"展示字段：采购单信息/状态","status":"draft","createdAt":"2026-07-15 13:36"},{"id":97,"group":"主表-商品信息","element":"8143903","type":"dynamic","source":"","rule":"","interaction":"展示字段：商品信息/8143903","status":"draft","createdAt":"2026-07-15 13:52"},{"id":98,"group":"主表-列","element":"列-商品信息📋","type":"dynamic","source":"","rule":"","interaction":"展示字段:商品信息📋","status":"draft","createdAt":"2026-07-15 13:55"},{"id":99,"group":"主表-列","element":"列-智能拆批📋","type":"dynamic","source":"","rule":"","interaction":"展示字段:智能拆批📋","status":"draft","createdAt":"2026-07-15 13:55"},{"id":100,"group":"主表-商品信息📋","element":"8143903","type":"dynamic","source":"","rule":"","interaction":"展示字段：商品信息📋/8143903","status":"draft","createdAt":"2026-07-15 13:55"},{"id":101,"group":"主表-商品信息📋","element":"马自达MX-5防水车罩","type":"dynamic","source":"","rule":"","interaction":"展示字段：商品信息📋/马自达MX-5防水车罩","status":"draft","createdAt":"2026-07-15 13:55"},{"id":102,"group":"主表-商品信息📋","element":"活跃度","type":"dynamic","source":"","rule":"","interaction":"展示字段：商品信息📋/活跃度","status":"draft","createdAt":"2026-07-15 13:55"},{"id":103,"group":"主表-商品信息📋","element":"物流属性","type":"dynamic","source":"","rule":"","interaction":"展示字段：商品信息📋/物流属性","status":"draft","createdAt":"2026-07-15 13:55"},{"id":104,"group":"主表-商品信息📋","element":"组合SKU","type":"dynamic","source":"","rule":"","interaction":"展示字段：商品信息📋/组合SKU","status":"draft","createdAt":"2026-07-15 13:55"},{"id":105,"group":"主表-商品信息📋","element":"定制化","type":"dynamic","source":"","rule":"","interaction":"展示字段：商品信息📋/定制化","status":"draft","createdAt":"2026-07-15 13:55"},{"id":106,"group":"主表-商品信息📋","element":"7234012","type":"dynamic","source":"","rule":"","interaction":"展示字段：商品信息📋/7234012","status":"draft","createdAt":"2026-07-15 13:55"},{"id":107,"group":"主表-商品信息📋","element":"LED车灯模组 H7","type":"dynamic","source":"","rule":"","interaction":"展示字段：商品信息📋/LED车灯模组 H7","status":"draft","createdAt":"2026-07-15 13:55"},{"id":108,"group":"主表-商品信息📋","element":"5560890","type":"dynamic","source":"","rule":"","interaction":"展示字段：商品信息📋/5560890","status":"draft","createdAt":"2026-07-15 13:55"},{"id":109,"group":"主表-商品信息📋","element":"电动车充气泵","type":"dynamic","source":"","rule":"","interaction":"展示字段：商品信息📋/电动车充气泵","status":"draft","createdAt":"2026-07-15 13:55"},{"id":110,"group":"页面级Tab","element":"Tab-FBA发货建议","type":"config","source":"","rule":"","interaction":"点击切换FBA发货建议","status":"draft","anchor":"#content div.layout:nth-child(2) > div.main:nth-child(2) > div.page-tabs:nth-child(2) > div.page-tab-item:nth-child(1)","anchorText":"FBA发货建议","createdAt":"2026-07-20 15:35"},{"id":111,"group":"页面级Tab","element":"Tab-海外仓发货建议","type":"config","source":"","rule":"","interaction":"当前激活:海外仓发货建议","status":"draft","anchor":"#content div.layout:nth-child(2) > div.main:nth-child(2) > div.page-tabs:nth-child(2) > div.page-tab-item:nth-child(2)","anchorText":"海外仓发货建议","createdAt":"2026-07-20 15:35"},{"id":112,"group":"查询条件区","element":"运营人员","type":"dynamic","source":"","rule":"","interaction":"输入请输入","status":"draft","anchor":"#content div.layout:nth-child(2) > div.main:nth-child(2) > div.query-bar:nth-child(3) > div.query-row > div.query-item:nth-child(4)","anchorText":"运营人员","createdAt":"2026-07-20 15:35"},{"id":113,"group":"查询条件区","element":"需求日期","type":"dynamic","source":"","rule":"","interaction":"输入开始日期","status":"draft","anchor":"#content div.layout:nth-child(2) > div.main:nth-child(2) > div.query-bar:nth-child(3) > div.query-row > div.query-item:nth-child(5)","anchorText":"需求日期\n          \n            \n            ~","createdAt":"2026-07-20 15:35"},{"id":114,"group":"查询条件区","element":"截仓发货日","type":"dynamic","source":"","rule":"","interaction":"输入开始日期","status":"draft","anchor":"#content div.layout:nth-child(2) > div.main:nth-child(2) > div.query-bar:nth-child(3) > div.query-row > div.query-item:nth-child(6)","anchorText":"截仓发货日\n          \n            \n            ~","createdAt":"2026-07-20 15:35"},{"id":115,"group":"批量操作","element":"按钮-批量调整建议 ▾","type":"fixed","source":"","rule":"","interaction":"点击执行批量调整建议 ▾","status":"draft","anchor":"#content div.layout:nth-child(2) > div.main:nth-child(2) > div.batch-bar:nth-child(5) > div.batch-dropdown:nth-child(2) > button.op-btn:nth-child(1)","anchorText":"批量调整建议 ▾","createdAt":"2026-07-20 15:35"},{"id":116,"group":"批量操作","element":"按钮-批量调整批次 ▾","type":"fixed","source":"","rule":"","interaction":"点击执行批量调整批次 ▾","status":"draft","anchor":"#content div.layout:nth-child(2) > div.main:nth-child(2) > div.batch-bar:nth-child(5) > div.batch-dropdown:nth-child(3) > button.op-btn:nth-child(1)","anchorText":"批量调整批次 ▾","createdAt":"2026-07-20 15:35"},{"id":117,"group":"主表-列","element":"列-关键数值","type":"dynamic","source":"","rule":"","interaction":"展示字段:关键数值","status":"draft","anchor":"#content div.layout:nth-child(2) > div.main:nth-child(2) > div.table-wrap:nth-child(6) > table.data-table:nth-child(1)","anchorText":"商品信息\n      采购申请信息\n      采购单信息\n      销售信息\n      单箱尺","createdAt":"2026-07-20 15:35"},{"id":118,"group":"主表-列","element":"列-序号","type":"dynamic","source":"","rule":"","interaction":"展示字段:序号","status":"draft","anchor":"#content div.layout:nth-child(2) > div.main:nth-child(2) > div.table-wrap:nth-child(6) > table.data-table:nth-child(1) > tbody:nth-child(2) > tr.row-main:nth-child(1) > td:nth-child(9) > table.nested-table:nth-child(1)","anchorText":"序号\n            来源\n            批次\n            数量\n  ","createdAt":"2026-07-20 15:35"},{"id":119,"group":"主表-列","element":"列-来源","type":"dynamic","source":"","rule":"","interaction":"展示字段:来源","status":"draft","anchor":"#content div.layout:nth-child(2) > div.main:nth-child(2) > div.table-wrap:nth-child(6) > table.data-table:nth-child(1) > tbody:nth-child(2) > tr.row-main:nth-child(1) > td:nth-child(9) > table.nested-table:nth-child(1)","anchorText":"序号\n            来源\n            批次\n            数量\n  ","createdAt":"2026-07-20 15:35"},{"id":120,"group":"主表-列","element":"列-运输方式","type":"dynamic","source":"","rule":"","interaction":"展示字段:运输方式","status":"draft","anchor":"#content div.layout:nth-child(2) > div.main:nth-child(2) > div.table-wrap:nth-child(6) > table.data-table:nth-child(1) > tbody:nth-child(2) > tr.row-main:nth-child(1) > td:nth-child(9) > table.nested-table:nth-child(1)","anchorText":"序号\n            来源\n            批次\n            数量\n  ","createdAt":"2026-07-20 15:35"},{"id":121,"group":"子表格-列","element":"子表列-序号","type":"dynamic","source":"","rule":"","interaction":"展示批次字段:序号","status":"draft","anchor":"#content div.layout:nth-child(2) > div.main:nth-child(2) > div.table-wrap:nth-child(6) > table.data-table:nth-child(1) > tbody:nth-child(2) > tr.row-main:nth-child(1) > td:nth-child(9) > table.nested-table:nth-child(1)","anchorText":"序号\n            来源\n            批次\n            数量\n  ","createdAt":"2026-07-20 15:35"},{"id":122,"group":"子表格-列","element":"子表列-来源","type":"dynamic","source":"","rule":"","interaction":"展示批次字段:来源","status":"draft","anchor":"#content div.layout:nth-child(2) > div.main:nth-child(2) > div.table-wrap:nth-child(6) > table.data-table:nth-child(1) > tbody:nth-child(2) > tr.row-main:nth-child(1) > td:nth-child(9) > table.nested-table:nth-child(1)","anchorText":"序号\n            来源\n            批次\n            数量\n  ","createdAt":"2026-07-20 15:35"},{"id":123,"group":"子表格-列","element":"子表列-运输方式","type":"dynamic","source":"","rule":"","interaction":"展示批次字段:运输方式","status":"draft","anchor":"#content div.layout:nth-child(2) > div.main:nth-child(2) > div.table-wrap:nth-child(6) > table.data-table:nth-child(1) > tbody:nth-child(2) > tr.row-main:nth-child(1) > td:nth-child(9) > table.nested-table:nth-child(1)","anchorText":"序号\n            来源\n            批次\n            数量\n  ","createdAt":"2026-07-20 15:35"},{"id":124,"group":"主表-关键数值","element":"需求数量","type":"dynamic","source":"","rule":"","interaction":"展示字段：关键数值/需求数量","status":"draft","anchor":"#content div.layout:nth-child(2) > div.main:nth-child(2) > div.table-wrap:nth-child(6) > table.data-table:nth-child(1) > tbody:nth-child(2) > tr.row-main:nth-child(1) > td:nth-child(8) > div.field-stack > div.field-line:nth-child(1)","anchorText":"需求数量: 100","createdAt":"2026-07-20 15:35"},{"id":125,"group":"主表-关键数值","element":"需求未分配","type":"dynamic","source":"","rule":"","interaction":"展示字段：关键数值/需求未分配","status":"draft","anchor":"#content div.layout:nth-child(2) > div.main:nth-child(2) > div.table-wrap:nth-child(6) > table.data-table:nth-child(1) > tbody:nth-child(2) > tr.row-main:nth-child(1) > td:nth-child(8) > div.field-stack > div.field-line:nth-child(2)","anchorText":"需求未分配: 100","createdAt":"2026-07-20 15:35"},{"id":126,"group":"主表-关键数值","element":"入库数量","type":"dynamic","source":"","rule":"","interaction":"展示字段：关键数值/入库数量","status":"draft","anchor":"#content div.layout:nth-child(2) > div.main:nth-child(2) > div.table-wrap:nth-child(6) > table.data-table:nth-child(1) > tbody:nth-child(2) > tr.row-main:nth-child(1) > td:nth-child(8) > div.field-stack > div.field-line:nth-child(3)","anchorText":"入库数量: 100","createdAt":"2026-07-20 15:35"},{"id":127,"group":"主表-关键数值","element":"入库未分配","type":"dynamic","source":"","rule":"","interaction":"展示字段：关键数值/入库未分配","status":"draft","anchor":"#content div.layout:nth-child(2) > div.main:nth-child(2) > div.table-wrap:nth-child(6) > table.data-table:nth-child(1) > tbody:nth-child(2) > tr.row-main:nth-child(1) > td:nth-child(8) > div.field-stack > div.field-line:nth-child(4)","anchorText":"入库未分配: 100","createdAt":"2026-07-20 15:35"},{"id":128,"group":"主表-商品信息","element":"3390214","type":"dynamic","source":"","rule":"","interaction":"展示字段：商品信息/3390214","status":"draft","anchor":"#content div.layout:nth-child(2) > div.main:nth-child(2) > div.table-wrap:nth-child(6) > table.data-table:nth-child(1) > tbody:nth-child(2) > tr.row-main:nth-child(4) > td:nth-child(2) > div.field-stack > div.field-line:nth-child(1)","anchorText":"3390214","createdAt":"2026-07-20 15:35"},{"id":129,"group":"主表-商品信息","element":"车载蓝牙接收器","type":"dynamic","source":"","rule":"","interaction":"展示字段：商品信息/车载蓝牙接收器","status":"draft","anchor":"#content div.layout:nth-child(2) > div.main:nth-child(2) > div.table-wrap:nth-child(6) > table.data-table:nth-child(1) > tbody:nth-child(2) > tr.row-main:nth-child(4) > td:nth-child(2) > div.field-stack > div.field-line:nth-child(2)","anchorText":"车载蓝牙接收器","createdAt":"2026-07-20 15:35"}]}</script>
+<script type="application/json" id="spec-embedded-data">{"version":2,"publishedAt":"2026-08-05 14:05","publishedBy":"PM","specs":[{"id":1,"group":"顶部导航栏","element":"菜单-信诚BI","type":"fixed","source":"","rule":"","interaction":"点击切换模块","status":"draft","createdAt":"2026-07-15 12:28"},{"id":2,"group":"顶部导航栏","element":"菜单-销售","type":"fixed","source":"","rule":"","interaction":"点击切换模块","status":"draft","createdAt":"2026-07-15 12:28"},{"id":3,"group":"顶部导航栏","element":"菜单-商品","type":"fixed","source":"","rule":"","interaction":"点击切换模块","status":"draft","createdAt":"2026-07-15 12:28"},{"id":4,"group":"顶部导航栏","element":"菜单-PMC","type":"fixed","source":"","rule":"","interaction":"点击切换模块","status":"draft","createdAt":"2026-07-15 12:28"},{"id":5,"group":"顶部导航栏","element":"菜单-采购","type":"fixed","source":"","rule":"","interaction":"当前激活:采购","status":"draft","createdAt":"2026-07-15 12:28"},{"id":6,"group":"顶部导航栏","element":"菜单-头程","type":"fixed","source":"","rule":"","interaction":"点击切换模块","status":"draft","createdAt":"2026-07-15 12:28"},{"id":7,"group":"顶部导航栏","element":"菜单-仓库","type":"fixed","source":"","rule":"","interaction":"点击切换模块","status":"draft","createdAt":"2026-07-15 12:28"},{"id":8,"group":"顶部导航栏","element":"菜单-订单","type":"fixed","source":"","rule":"","interaction":"点击切换模块","status":"draft","createdAt":"2026-07-15 12:28"},{"id":9,"group":"顶部导航栏","element":"菜单-物流","type":"fixed","source":"","rule":"","interaction":"点击切换模块","status":"draft","createdAt":"2026-07-15 12:28"},{"id":10,"group":"侧边栏菜单","element":"菜单-多平台备货分析","type":"fixed","source":"","rule":"","interaction":"点击进入多平台备货分析","status":"draft","createdAt":"2026-07-15 12:28"},{"id":11,"group":"侧边栏菜单","element":"菜单-多平台备货计划待确认","type":"fixed","source":"","rule":"","interaction":"点击进入多平台备货计划待确认","status":"draft","createdAt":"2026-07-15 12:28"},{"id":12,"group":"侧边栏菜单","element":"菜单-备库需求单","type":"fixed","source":"","rule":"","interaction":"点击进入备库需求单","status":"draft","createdAt":"2026-07-15 12:28"},{"id":13,"group":"侧边栏菜单","element":"菜单-预发货计划","type":"fixed","source":"","rule":"","interaction":"点击进入预发货计划","status":"draft","createdAt":"2026-07-15 12:28"},{"id":14,"group":"侧边栏菜单","element":"菜单-发货计划","type":"fixed","source":"","rule":"","interaction":"点击进入发货计划","status":"draft","createdAt":"2026-07-15 12:28"},{"id":15,"group":"侧边栏菜单","element":"菜单-智能发货","type":"fixed","source":"","rule":"","interaction":"当前激活:智能发货","status":"draft","createdAt":"2026-07-15 12:28"},{"id":16,"group":"侧边栏菜单","element":"菜单-下单待提交","type":"fixed","source":"","rule":"","interaction":"点击进入下单待提交","status":"draft","createdAt":"2026-07-15 12:28"},{"id":17,"group":"侧边栏菜单","element":"菜单-审核采购单","type":"fixed","source":"","rule":"","interaction":"点击进入审核采购单","status":"draft","createdAt":"2026-07-15 12:28"},{"id":18,"group":"侧边栏菜单","element":"菜单-采购单管理","type":"fixed","source":"","rule":"","interaction":"点击进入采购单管理","status":"draft","createdAt":"2026-07-15 12:28"},{"id":19,"group":"侧边栏菜单","element":"菜单-产品列表","type":"fixed","source":"","rule":"","interaction":"点击进入产品列表","status":"draft","createdAt":"2026-07-15 12:28"},{"id":20,"group":"面包屑","element":"面包屑路径","type":"fixed","source":"","rule":"","interaction":"显示当前位置:首页 / 采购 / 备货需求及发货 / 智能发货","status":"draft","createdAt":"2026-07-15 12:28"},{"id":21,"group":"页面级Tab","element":"Tab-FBA发货计划","type":"config","source":"","rule":"","interaction":"当前激活:FBA发货计划","status":"draft","createdAt":"2026-07-15 12:28"},{"id":22,"group":"页面级Tab","element":"Tab-海外仓发货计划","type":"config","source":"","rule":"","interaction":"点击切换海外仓发货计划","status":"draft","createdAt":"2026-07-15 12:28"},{"id":23,"group":"查询条件区","element":"SKU","type":"dynamic","source":"复用现有组件","rule":"空","interaction":"复用现有组件","status":"draft","createdAt":"2026-07-15 12:28"},{"id":24,"group":"查询条件区","element":"国家","type":"dynamic","source":"复用现有组件","rule":"空","interaction":"复用现有组件","status":"draft","createdAt":"2026-07-15 12:28"},{"id":25,"group":"查询条件区","element":"销售人员","type":"dynamic","source":"","rule":"","interaction":"输入请输入","status":"draft","createdAt":"2026-07-15 12:28"},{"id":26,"group":"查询条件区","element":"需求部门","type":"dynamic","source":"","rule":"","interaction":"输入筛选","status":"draft","createdAt":"2026-07-15 12:28"},{"id":27,"group":"查询条件区","element":"PR单号","type":"dynamic","source":"","rule":"","interaction":"输入如 PR202607030009","status":"draft","createdAt":"2026-07-15 12:28"},{"id":28,"group":"查询条件区","element":"可售天数","type":"dynamic","source":"","rule":"","interaction":"输入筛选","status":"draft","createdAt":"2026-07-15 12:28"},{"id":29,"group":"查询条件区","element":"备货方式","type":"dynamic","source":"","rule":"","interaction":"输入筛选","status":"draft","createdAt":"2026-07-15 12:28"},{"id":30,"group":"查询条件区","element":"物流属性","type":"dynamic","source":"","rule":"","interaction":"输入筛选","status":"draft","createdAt":"2026-07-15 12:28"},{"id":31,"group":"查询条件区","element":"默认运输方式","type":"dynamic","source":"","rule":"","interaction":"输入筛选","status":"draft","createdAt":"2026-07-15 12:28"},{"id":32,"group":"查询条件区","element":"运输方式","type":"dynamic","source":"","rule":"","interaction":"输入筛选","status":"draft","createdAt":"2026-07-15 12:28"},{"id":33,"group":"查询条件区","element":"货源状态","type":"dynamic","source":"","rule":"","interaction":"输入筛选","status":"draft","createdAt":"2026-07-15 12:28"},{"id":34,"group":"查询条件区","element":"供应商编号","type":"dynamic","source":"","rule":"","interaction":"输入请输入","status":"draft","createdAt":"2026-07-15 12:28"},{"id":35,"group":"查询条件区","element":"目的仓","type":"dynamic","source":"","rule":"","interaction":"输入请输入","status":"draft","createdAt":"2026-07-15 12:28"},{"id":36,"group":"状态Tab","element":"Tab-待确认 (42)","type":"config","source":"","rule":"","interaction":"点击筛选该状态记录","status":"draft","createdAt":"2026-07-15 12:28"},{"id":37,"group":"状态Tab","element":"Tab-待审核 (18)","type":"config","source":"","rule":"","interaction":"点击筛选该状态记录","status":"draft","createdAt":"2026-07-15 12:28"},{"id":38,"group":"状态Tab","element":"Tab-已生成 (312)","type":"config","source":"","rule":"","interaction":"点击筛选该状态记录","status":"draft","createdAt":"2026-07-15 12:28"},{"id":39,"group":"状态Tab","element":"Tab-已驳回 (5)","type":"config","source":"","rule":"","interaction":"点击筛选该状态记录","status":"draft","createdAt":"2026-07-15 12:28"},{"id":40,"group":"批量操作","element":"按钮-批量调整","type":"fixed","source":"","rule":"","interaction":"点击执行批量调整","status":"draft","createdAt":"2026-07-15 12:28"},{"id":41,"group":"批量操作","element":"按钮-美国配置比例","type":"fixed","source":"","rule":"","interaction":"点击执行美国配置比例","status":"draft","createdAt":"2026-07-15 12:28"},{"id":42,"group":"批量操作","element":"按钮-重新计算","type":"fixed","source":"","rule":"","interaction":"点击执行重新计算","status":"draft","createdAt":"2026-07-15 12:28"},{"id":43,"group":"主表-列","element":"列-商品信息","type":"dynamic","source":"","rule":"","interaction":"展示字段:商品信息","status":"draft","createdAt":"2026-07-15 12:28"},{"id":44,"group":"主表-列","element":"列-采购申请信息","type":"dynamic","source":"","rule":"","interaction":"展示字段:采购申请信息","status":"draft","createdAt":"2026-07-15 12:28"},{"id":45,"group":"主表-列","element":"列-采购单信息","type":"dynamic","source":"","rule":"","interaction":"展示字段:采购单信息","status":"draft","createdAt":"2026-07-15 12:28"},{"id":46,"group":"主表-列","element":"列-销售信息","type":"dynamic","source":"","rule":"","interaction":"展示字段:销售信息","status":"draft","createdAt":"2026-07-15 12:28"},{"id":47,"group":"主表-列","element":"列-单箱尺寸信息(商品)","type":"dynamic","source":"","rule":"","interaction":"展示字段:单箱尺寸信息(商品)","status":"draft","createdAt":"2026-07-15 12:28"},{"id":48,"group":"主表-列","element":"列-发货方式","type":"dynamic","source":"","rule":"","interaction":"展示字段:发货方式","status":"draft","createdAt":"2026-07-15 12:28"},{"id":49,"group":"主表-列","element":"列-智能拆批","type":"dynamic","source":"","rule":"","interaction":"展示字段:智能拆批","status":"draft","createdAt":"2026-07-15 12:28"},{"id":50,"group":"主表-列","element":"列-#","type":"dynamic","source":"","rule":"","interaction":"展示字段:#","status":"draft","createdAt":"2026-07-15 12:28"},{"id":51,"group":"主表-列","element":"列-批次","type":"dynamic","source":"","rule":"","interaction":"展示字段:批次","status":"draft","createdAt":"2026-07-15 12:28"},{"id":52,"group":"主表-列","element":"列-数量","type":"dynamic","source":"","rule":"","interaction":"展示字段:数量","status":"draft","createdAt":"2026-07-15 12:28"},{"id":53,"group":"主表-列","element":"列-货源状态","type":"dynamic","source":"","rule":"","interaction":"展示字段:货源状态","status":"draft","createdAt":"2026-07-15 12:28"},{"id":54,"group":"主表-列","element":"列-运输","type":"dynamic","source":"","rule":"","interaction":"展示字段:运输","status":"draft","createdAt":"2026-07-15 12:28"},{"id":55,"group":"主表-列","element":"列-截仓发货日","type":"dynamic","source":"","rule":"","interaction":"展示字段:截仓发货日","status":"draft","createdAt":"2026-07-15 12:28"},{"id":56,"group":"主表-列","element":"列-状态","type":"dynamic","source":"","rule":"","interaction":"展示字段:状态","status":"draft","createdAt":"2026-07-15 12:28"},{"id":57,"group":"子表格-列","element":"子表列-#","type":"dynamic","source":"","rule":"","interaction":"展示批次字段:#","status":"draft","createdAt":"2026-07-15 12:28"},{"id":58,"group":"子表格-列","element":"子表列-批次","type":"dynamic","source":"","rule":"","interaction":"展示批次字段:批次","status":"draft","createdAt":"2026-07-15 12:28"},{"id":59,"group":"子表格-列","element":"子表列-数量","type":"dynamic","source":"","rule":"","interaction":"展示批次字段:数量","status":"draft","createdAt":"2026-07-15 12:28"},{"id":60,"group":"子表格-列","element":"子表列-货源状态","type":"dynamic","source":"","rule":"","interaction":"展示批次字段:货源状态","status":"draft","createdAt":"2026-07-15 12:28"},{"id":61,"group":"子表格-列","element":"子表列-运输","type":"dynamic","source":"","rule":"","interaction":"展示批次字段:运输","status":"draft","createdAt":"2026-07-15 12:28"},{"id":62,"group":"子表格-列","element":"子表列-截仓发货日","type":"dynamic","source":"","rule":"","interaction":"展示批次字段:截仓发货日","status":"draft","createdAt":"2026-07-15 12:28"},{"id":63,"group":"子表格-列","element":"子表列-状态","type":"dynamic","source":"","rule":"","interaction":"展示批次字段:状态","status":"draft","createdAt":"2026-07-15 12:28"},{"id":64,"group":"分页","element":"分页器","type":"config","source":"","rule":"","interaction":"翻页、设置每页条数","status":"draft","createdAt":"2026-07-15 12:28"},{"id":65,"group":"日志弹窗","element":"Tab-操作记录","type":"fixed","source":"","rule":"","interaction":"点击切换查看操作记录","status":"draft","createdAt":"2026-07-15 12:28"},{"id":66,"group":"日志弹窗","element":"Tab-计算过程","type":"fixed","source":"","rule":"","interaction":"点击切换查看计算过程","status":"draft","createdAt":"2026-07-15 12:28"},{"id":68,"group":"主表-商品信息","element":"马自达MX-5防水车罩","type":"dynamic","source":"","rule":"","interaction":"展示字段：商品信息/马自达MX-5防水车罩","status":"draft","createdAt":"2026-07-15 13:36"},{"id":69,"group":"主表-商品信息","element":"活跃度","type":"dynamic","source":"","rule":"","interaction":"展示字段：商品信息/活跃度","status":"draft","createdAt":"2026-07-15 13:36"},{"id":70,"group":"主表-商品信息","element":"物流属性","type":"dynamic","source":"","rule":"","interaction":"展示字段：商品信息/物流属性","status":"draft","createdAt":"2026-07-15 13:36"},{"id":71,"group":"主表-商品信息","element":"组合SKU","type":"dynamic","source":"","rule":"","interaction":"展示字段：商品信息/组合SKU","status":"draft","createdAt":"2026-07-15 13:36"},{"id":72,"group":"主表-商品信息","element":"定制化","type":"dynamic","source":"","rule":"","interaction":"展示字段：商品信息/定制化","status":"draft","createdAt":"2026-07-15 13:36"},{"id":73,"group":"主表-采购申请信息","element":"PR单号","type":"dynamic","source":"","rule":"","interaction":"展示字段：采购申请信息/PR单号","status":"draft","createdAt":"2026-07-15 13:36"},{"id":74,"group":"主表-采购申请信息","element":"PR需求数","type":"dynamic","source":"","rule":"","interaction":"展示字段：采购申请信息/PR需求数","status":"draft","createdAt":"2026-07-15 13:36"},{"id":75,"group":"主表-采购申请信息","element":"默认运输方式","type":"dynamic","source":"","rule":"","interaction":"展示字段：采购申请信息/默认运输方式","status":"draft","createdAt":"2026-07-15 13:36"},{"id":76,"group":"主表-采购申请信息","element":"需求日期","type":"dynamic","source":"","rule":"","interaction":"展示字段：采购申请信息/需求日期","status":"draft","createdAt":"2026-07-15 13:36"},{"id":77,"group":"主表-采购单信息","element":"PO单号","type":"dynamic","source":"","rule":"","interaction":"展示字段：采购单信息/PO单号","status":"draft","createdAt":"2026-07-15 13:36"},{"id":78,"group":"主表-采购单信息","element":"备货方式","type":"dynamic","source":"","rule":"","interaction":"展示字段：采购单信息/备货方式","status":"draft","createdAt":"2026-07-15 13:36"},{"id":79,"group":"主表-采购单信息","element":"PO下单数","type":"dynamic","source":"","rule":"","interaction":"展示字段：采购单信息/PO下单数","status":"draft","createdAt":"2026-07-15 13:36"},{"id":80,"group":"主表-采购单信息","element":"入库数","type":"dynamic","source":"","rule":"","interaction":"展示字段：采购单信息/入库数","status":"draft","createdAt":"2026-07-15 13:36"},{"id":81,"group":"主表-销售信息","element":"国家","type":"dynamic","source":"","rule":"","interaction":"展示字段：销售信息/国家","status":"draft","createdAt":"2026-07-15 13:36"},{"id":82,"group":"主表-销售信息","element":"运营人员","type":"dynamic","source":"","rule":"","interaction":"展示字段：销售信息/运营人员","status":"draft","createdAt":"2026-07-15 13:36"},{"id":83,"group":"主表-销售信息","element":"可售天数","type":"dynamic","source":"","rule":"","interaction":"展示字段：销售信息/可售天数","status":"draft","createdAt":"2026-07-15 13:36"},{"id":84,"group":"主表-销售信息","element":"目的仓","type":"dynamic","source":"","rule":"","interaction":"展示字段：销售信息/目的仓","status":"draft","createdAt":"2026-07-15 13:36"},{"id":85,"group":"主表-单箱尺寸信息(商品)","element":"长×宽×高","type":"dynamic","source":"","rule":"","interaction":"展示字段：单箱尺寸信息(商品)/长×宽×高","status":"draft","createdAt":"2026-07-15 13:36"},{"id":86,"group":"主表-单箱尺寸信息(商品)","element":"单箱数量","type":"dynamic","source":"","rule":"","interaction":"展示字段：单箱尺寸信息(商品)/单箱数量","status":"draft","createdAt":"2026-07-15 13:36"},{"id":87,"group":"主表-单箱尺寸信息(商品)","element":"单箱重量","type":"dynamic","source":"","rule":"","interaction":"展示字段：单箱尺寸信息(商品)/单箱重量","status":"draft","createdAt":"2026-07-15 13:36"},{"id":88,"group":"主表-发货方式","element":"发货仓","type":"dynamic","source":"","rule":"","interaction":"展示字段：发货方式/发货仓","status":"draft","createdAt":"2026-07-15 13:36"},{"id":89,"group":"主表-发货方式","element":"目的仓","type":"dynamic","source":"","rule":"","interaction":"展示字段：发货方式/目的仓","status":"draft","createdAt":"2026-07-15 13:36"},{"id":90,"group":"主表-发货方式","element":"计费重","type":"dynamic","source":"","rule":"","interaction":"展示字段：发货方式/计费重","status":"draft","createdAt":"2026-07-15 13:36"},{"id":91,"group":"主表-发货方式","element":"实际重/体积重/体积","type":"dynamic","source":"","rule":"","interaction":"展示字段：发货方式/实际重/体积重/体积","status":"draft","createdAt":"2026-07-15 13:36"},{"id":92,"group":"主表-商品信息","element":"7234012","type":"dynamic","source":"","rule":"","interaction":"展示字段：商品信息/7234012","status":"draft","createdAt":"2026-07-15 13:36"},{"id":93,"group":"主表-商品信息","element":"LED车灯模组 H7","type":"dynamic","source":"","rule":"","interaction":"展示字段：商品信息/LED车灯模组 H7","status":"draft","createdAt":"2026-07-15 13:36"},{"id":94,"group":"主表-商品信息","element":"5560890","type":"dynamic","source":"","rule":"","interaction":"展示字段：商品信息/5560890","status":"draft","createdAt":"2026-07-15 13:36"},{"id":95,"group":"主表-商品信息","element":"电动车充气泵","type":"dynamic","source":"","rule":"","interaction":"展示字段：商品信息/电动车充气泵","status":"draft","createdAt":"2026-07-15 13:36"},{"id":96,"group":"主表-采购单信息","element":"状态","type":"dynamic","source":"","rule":"","interaction":"展示字段：采购单信息/状态","status":"draft","createdAt":"2026-07-15 13:36"},{"id":97,"group":"主表-商品信息","element":"8143903","type":"dynamic","source":"","rule":"","interaction":"展示字段：商品信息/8143903","status":"draft","createdAt":"2026-07-15 13:52"},{"id":98,"group":"主表-列","element":"列-商品信息📋","type":"dynamic","source":"","rule":"","interaction":"展示字段:商品信息📋","status":"draft","createdAt":"2026-07-15 13:55"},{"id":99,"group":"主表-列","element":"列-智能拆批📋","type":"dynamic","source":"","rule":"","interaction":"展示字段:智能拆批📋","status":"draft","createdAt":"2026-07-15 13:55"},{"id":100,"group":"主表-商品信息📋","element":"8143903","type":"dynamic","source":"","rule":"","interaction":"展示字段：商品信息📋/8143903","status":"draft","createdAt":"2026-07-15 13:55"},{"id":101,"group":"主表-商品信息📋","element":"马自达MX-5防水车罩","type":"dynamic","source":"","rule":"","interaction":"展示字段：商品信息📋/马自达MX-5防水车罩","status":"draft","createdAt":"2026-07-15 13:55"},{"id":102,"group":"主表-商品信息📋","element":"活跃度","type":"dynamic","source":"","rule":"","interaction":"展示字段：商品信息📋/活跃度","status":"draft","createdAt":"2026-07-15 13:55"},{"id":103,"group":"主表-商品信息📋","element":"物流属性","type":"dynamic","source":"","rule":"","interaction":"展示字段：商品信息📋/物流属性","status":"draft","createdAt":"2026-07-15 13:55"},{"id":104,"group":"主表-商品信息📋","element":"组合SKU","type":"dynamic","source":"","rule":"","interaction":"展示字段：商品信息📋/组合SKU","status":"draft","createdAt":"2026-07-15 13:55"},{"id":105,"group":"主表-商品信息📋","element":"定制化","type":"dynamic","source":"","rule":"","interaction":"展示字段：商品信息📋/定制化","status":"draft","createdAt":"2026-07-15 13:55"},{"id":106,"group":"主表-商品信息📋","element":"7234012","type":"dynamic","source":"","rule":"","interaction":"展示字段：商品信息📋/7234012","status":"draft","createdAt":"2026-07-15 13:55"},{"id":107,"group":"主表-商品信息📋","element":"LED车灯模组 H7","type":"dynamic","source":"","rule":"","interaction":"展示字段：商品信息📋/LED车灯模组 H7","status":"draft","createdAt":"2026-07-15 13:55"},{"id":108,"group":"主表-商品信息📋","element":"5560890","type":"dynamic","source":"","rule":"","interaction":"展示字段：商品信息📋/5560890","status":"draft","createdAt":"2026-07-15 13:55"},{"id":109,"group":"主表-商品信息📋","element":"电动车充气泵","type":"dynamic","source":"","rule":"","interaction":"展示字段：商品信息📋/电动车充气泵","status":"draft","createdAt":"2026-07-15 13:55"},{"id":110,"group":"页面级Tab","element":"Tab-FBA发货建议","type":"config","source":"","rule":"","interaction":"点击切换FBA发货建议","status":"draft","anchor":"#content div.layout:nth-child(2) > div.main:nth-child(2) > div.page-tabs:nth-child(2) > div.page-tab-item:nth-child(1)","anchorText":"FBA发货建议","createdAt":"2026-07-20 15:35"},{"id":111,"group":"页面级Tab","element":"Tab-海外仓发货建议","type":"config","source":"","rule":"","interaction":"当前激活:海外仓发货建议","status":"draft","anchor":"#content div.layout:nth-child(2) > div.main:nth-child(2) > div.page-tabs:nth-child(2) > div.page-tab-item:nth-child(2)","anchorText":"海外仓发货建议","createdAt":"2026-07-20 15:35"},{"id":112,"group":"查询条件区","element":"运营人员","type":"dynamic","source":"","rule":"","interaction":"输入请输入","status":"draft","anchor":"#content div.layout:nth-child(2) > div.main:nth-child(2) > div.query-bar:nth-child(3) > div.query-row > div.query-item:nth-child(4)","anchorText":"运营人员","createdAt":"2026-07-20 15:35"},{"id":113,"group":"查询条件区","element":"需求日期","type":"dynamic","source":"","rule":"","interaction":"输入开始日期","status":"draft","anchor":"#content div.layout:nth-child(2) > div.main:nth-child(2) > div.query-bar:nth-child(3) > div.query-row > div.query-item:nth-child(5)","anchorText":"需求日期\n          \n            \n            ~","createdAt":"2026-07-20 15:35"},{"id":114,"group":"查询条件区","element":"截仓发货日","type":"dynamic","source":"","rule":"","interaction":"输入开始日期","status":"draft","anchor":"#content div.layout:nth-child(2) > div.main:nth-child(2) > div.query-bar:nth-child(3) > div.query-row > div.query-item:nth-child(6)","anchorText":"截仓发货日\n          \n            \n            ~","createdAt":"2026-07-20 15:35"},{"id":115,"group":"批量操作","element":"按钮-批量调整建议 ▾","type":"fixed","source":"","rule":"","interaction":"点击执行批量调整建议 ▾","status":"draft","anchor":"#content div.layout:nth-child(2) > div.main:nth-child(2) > div.batch-bar:nth-child(5) > div.batch-dropdown:nth-child(2) > button.op-btn:nth-child(1)","anchorText":"批量调整建议 ▾","createdAt":"2026-07-20 15:35"},{"id":116,"group":"批量操作","element":"按钮-批量调整批次 ▾","type":"fixed","source":"","rule":"","interaction":"点击执行批量调整批次 ▾","status":"draft","anchor":"#content div.layout:nth-child(2) > div.main:nth-child(2) > div.batch-bar:nth-child(5) > div.batch-dropdown:nth-child(3) > button.op-btn:nth-child(1)","anchorText":"批量调整批次 ▾","createdAt":"2026-07-20 15:35"},{"id":117,"group":"主表-列","element":"列-关键数值","type":"dynamic","source":"","rule":"","interaction":"展示字段:关键数值","status":"draft","anchor":"#content div.layout:nth-child(2) > div.main:nth-child(2) > div.table-wrap:nth-child(6) > table.data-table:nth-child(1)","anchorText":"商品信息\n      采购申请信息\n      采购单信息\n      销售信息\n      单箱尺","createdAt":"2026-07-20 15:35"},{"id":118,"group":"主表-列","element":"列-序号","type":"dynamic","source":"","rule":"","interaction":"展示字段:序号","status":"draft","anchor":"#content div.layout:nth-child(2) > div.main:nth-child(2) > div.table-wrap:nth-child(6) > table.data-table:nth-child(1) > tbody:nth-child(2) > tr.row-main:nth-child(1) > td:nth-child(9) > table.nested-table:nth-child(1)","anchorText":"序号\n            来源\n            批次\n            数量\n  ","createdAt":"2026-07-20 15:35"},{"id":119,"group":"主表-列","element":"列-来源","type":"dynamic","source":"","rule":"","interaction":"展示字段:来源","status":"draft","anchor":"#content div.layout:nth-child(2) > div.main:nth-child(2) > div.table-wrap:nth-child(6) > table.data-table:nth-child(1) > tbody:nth-child(2) > tr.row-main:nth-child(1) > td:nth-child(9) > table.nested-table:nth-child(1)","anchorText":"序号\n            来源\n            批次\n            数量\n  ","createdAt":"2026-07-20 15:35"},{"id":120,"group":"主表-列","element":"列-运输方式","type":"dynamic","source":"","rule":"","interaction":"展示字段:运输方式","status":"draft","anchor":"#content div.layout:nth-child(2) > div.main:nth-child(2) > div.table-wrap:nth-child(6) > table.data-table:nth-child(1) > tbody:nth-child(2) > tr.row-main:nth-child(1) > td:nth-child(9) > table.nested-table:nth-child(1)","anchorText":"序号\n            来源\n            批次\n            数量\n  ","createdAt":"2026-07-20 15:35"},{"id":121,"group":"子表格-列","element":"子表列-序号","type":"dynamic","source":"","rule":"","interaction":"展示批次字段:序号","status":"draft","anchor":"#content div.layout:nth-child(2) > div.main:nth-child(2) > div.table-wrap:nth-child(6) > table.data-table:nth-child(1) > tbody:nth-child(2) > tr.row-main:nth-child(1) > td:nth-child(9) > table.nested-table:nth-child(1)","anchorText":"序号\n            来源\n            批次\n            数量\n  ","createdAt":"2026-07-20 15:35"},{"id":122,"group":"子表格-列","element":"子表列-来源","type":"dynamic","source":"","rule":"","interaction":"展示批次字段:来源","status":"draft","anchor":"#content div.layout:nth-child(2) > div.main:nth-child(2) > div.table-wrap:nth-child(6) > table.data-table:nth-child(1) > tbody:nth-child(2) > tr.row-main:nth-child(1) > td:nth-child(9) > table.nested-table:nth-child(1)","anchorText":"序号\n            来源\n            批次\n            数量\n  ","createdAt":"2026-07-20 15:35"},{"id":123,"group":"子表格-列","element":"子表列-运输方式","type":"dynamic","source":"","rule":"","interaction":"展示批次字段:运输方式","status":"draft","anchor":"#content div.layout:nth-child(2) > div.main:nth-child(2) > div.table-wrap:nth-child(6) > table.data-table:nth-child(1) > tbody:nth-child(2) > tr.row-main:nth-child(1) > td:nth-child(9) > table.nested-table:nth-child(1)","anchorText":"序号\n            来源\n            批次\n            数量\n  ","createdAt":"2026-07-20 15:35"},{"id":124,"group":"主表-关键数值","element":"需求数量","type":"dynamic","source":"","rule":"","interaction":"展示字段：关键数值/需求数量","status":"draft","anchor":"#content div.layout:nth-child(2) > div.main:nth-child(2) > div.table-wrap:nth-child(6) > table.data-table:nth-child(1) > tbody:nth-child(2) > tr.row-main:nth-child(1) > td:nth-child(8) > div.field-stack > div.field-line:nth-child(1)","anchorText":"需求数量: 100","createdAt":"2026-07-20 15:35"},{"id":125,"group":"主表-关键数值","element":"需求未分配","type":"dynamic","source":"","rule":"","interaction":"展示字段：关键数值/需求未分配","status":"draft","anchor":"#content div.layout:nth-child(2) > div.main:nth-child(2) > div.table-wrap:nth-child(6) > table.data-table:nth-child(1) > tbody:nth-child(2) > tr.row-main:nth-child(1) > td:nth-child(8) > div.field-stack > div.field-line:nth-child(2)","anchorText":"需求未分配: 100","createdAt":"2026-07-20 15:35"},{"id":126,"group":"主表-关键数值","element":"入库数量","type":"dynamic","source":"","rule":"","interaction":"展示字段：关键数值/入库数量","status":"draft","anchor":"#content div.layout:nth-child(2) > div.main:nth-child(2) > div.table-wrap:nth-child(6) > table.data-table:nth-child(1) > tbody:nth-child(2) > tr.row-main:nth-child(1) > td:nth-child(8) > div.field-stack > div.field-line:nth-child(3)","anchorText":"入库数量: 100","createdAt":"2026-07-20 15:35"},{"id":127,"group":"主表-关键数值","element":"入库未分配","type":"dynamic","source":"","rule":"","interaction":"展示字段：关键数值/入库未分配","status":"draft","anchor":"#content div.layout:nth-child(2) > div.main:nth-child(2) > div.table-wrap:nth-child(6) > table.data-table:nth-child(1) > tbody:nth-child(2) > tr.row-main:nth-child(1) > td:nth-child(8) > div.field-stack > div.field-line:nth-child(4)","anchorText":"入库未分配: 100","createdAt":"2026-07-20 15:35"},{"id":128,"group":"主表-商品信息","element":"3390214","type":"dynamic","source":"","rule":"","interaction":"展示字段：商品信息/3390214","status":"draft","anchor":"#content div.layout:nth-child(2) > div.main:nth-child(2) > div.table-wrap:nth-child(6) > table.data-table:nth-child(1) > tbody:nth-child(2) > tr.row-main:nth-child(4) > td:nth-child(2) > div.field-stack > div.field-line:nth-child(1)","anchorText":"3390214","createdAt":"2026-07-20 15:35"},{"id":129,"group":"主表-商品信息","element":"车载蓝牙接收器","type":"dynamic","source":"","rule":"","interaction":"展示字段：商品信息/车载蓝牙接收器","status":"draft","anchor":"#content div.layout:nth-child(2) > div.main:nth-child(2) > div.table-wrap:nth-child(6) > table.data-table:nth-child(1) > tbody:nth-child(2) > tr.row-main:nth-child(4) > td:nth-child(2) > div.field-stack > div.field-line:nth-child(2)","anchorText":"车载蓝牙接收器","createdAt":"2026-07-20 15:35"}]}</script>
 <!-- 内嵌的评论数据（发布快照，开发打开即看到 PM 的评审标注） -->
-<script type="application/json" id="comments-embedded-data">{"version":1,"publishedAt":"2026-08-05 10:28","publishedBy":"PM","comments":[]}</script>
+<script type="application/json" id="comments-embedded-data">{"version":1,"publishedAt":"2026-08-05 14:05","publishedBy":"PM","comments":[]}</script>
 
-<!-- 新增批次弹窗 -->
-<div class="spec-modal-mask" id="addBatchModalMask">
-  <div class="spec-modal" style="width:400px;">
+<!-- 编辑批次弹窗 -->
+<div class="spec-modal-mask" id="editBatchesMask">
+  <div class="spec-modal" style="width:880px;">
     <div class="spec-modal-header">
-      <h3>新增预发货批次</h3>
-      <button class="spec-modal-close" onclick="closeAddBatchModal()">×</button>
+      <h3 id="editBatchesTitle">编辑发货批次</h3>
+      <button class="spec-modal-close" onclick="closeEditBatches()">×</button>
     </div>
-    <div class="spec-modal-body">
-      <div class="spec-form-row">
-        <label>发货数量 <span style="color:#f53f3f;">*</span></label>
-        <input type="number" id="addBatchQty" placeholder="请输入发货数量" min="1" style="width:100%;height:36px;padding:0 10px;border:1px solid #d9d9d9;border-radius:4px;">
-      </div>
-      <div class="spec-form-row">
-        <label>运输方式 <span style="color:#f53f3f;">*</span></label>
-        <select id="addBatchTransport" style="width:100%;height:36px;padding:0 10px;border:1px solid #d9d9d9;border-radius:4px;background:#fff;">
-          <option value="">请选择</option>
-          <option>快递</option><option>空运</option><option>快船</option><option>卡航</option>
-          <option>卡航整柜</option><option>铁路</option><option>慢船</option><option>海运整柜</option>
-        </select>
-      </div>
-      <div class="spec-form-row">
-        <label>派送方式 <span style="color:#f53f3f;">*</span></label>
-        <select id="addBatchDelivery" style="width:100%;height:36px;padding:0 10px;border:1px solid #d9d9d9;border-radius:4px;background:#fff;">
-          <option value="">请选择</option>
-          <option>方式1</option><option>方式2</option><option>方式3</option><option>方式4</option>
-          <option>方式5</option><option>方式6</option><option>方式7</option><option>方式8</option>
-        </select>
-      </div>
-      <div class="spec-form-row">
-        <label>截仓发货日 <span style="color:#f53f3f;">*</span></label>
-        <input type="date" id="addBatchCutoff" style="width:100%;height:36px;padding:0 10px;border:1px solid #d9d9d9;border-radius:4px;">
-      </div>
-      <div class="spec-form-row" id="addBatchRegionRow" style="">
-        <label>区域 <span style="color:#f53f3f;">*</span></label>
-        <select id="addBatchRegion" style="width:100%;height:36px;padding:0 10px;border:1px solid #d9d9d9;border-radius:4px;background:#fff;">
-          <option value="">请选择</option>
-          <option value="美东">美东</option>
-          <option value="美西">美西</option>
-          <option value="美南">美南</option>
-        </select>
-      </div>
+    <div class="spec-modal-body" style="padding:12px 16px;">
+      <table class="nested-table" id="editBatchesTable" style="width:100%;">
+        <thead><tr>
+          <th style="width:42px;">序号</th>
+          <th style="width:56px;">来源</th>
+          <th style="width:70px;">数量</th>
+          <th style="width:70px;">运输方式</th>
+          <th style="width:70px;">派送方式</th>
+          <th style="width:90px;">目的仓</th>
+          <th style="width:110px;">截仓发货日</th>
+          <th style="width:70px;">状态</th>
+          <th style="width:56px;">操作</th>
+        </tr></thead>
+        <tbody id="editBatchesBody"></tbody>
+      </table>
+      <div style="margin-top:8px;"><button class="nt-btn link" onclick="editAddRow()">+ 新增批次</button></div>
     </div>
     <div class="spec-modal-foot">
-      <button class="btn-cancel" onclick="closeAddBatchModal()">取消</button>
-      <button class="btn-primary" onclick="confirmAddBatch()">确认新增</button>
+      <button class="btn-cancel" onclick="closeEditBatches()">取消</button>
+      <button class="btn-primary" onclick="saveEditBatches()">保存</button>
     </div>
   </div>
 </div>
@@ -1917,12 +1854,12 @@ let currentTab = 'pending';
 // === Tab 切换：子表格底部按钮 + 操作列按钮 + 批量菜单（都随Tab联动） ===
 const _logBtn = '<button class="nt-btn link" data-act="log">日志</button>';
 const tabBtnConfig = {
-  pending:  '<button class="nt-btn link" data-act="add">新增批次</button>',
+  pending:  '<span class="muted" style="font-size:12px;">编辑批次请点操作列「编辑」</span>',
   review:   '<span class="muted" style="font-size:12px;">批量操作请用顶部「批量调整批次」</span>',
   done:     '<span class="muted" style="font-size:12px;">已完成/已关闭</span>'
 };
 const tabHoldConfig = {
-  pending:  '<button class="nt-btn link">新增批次</button>' + _logBtn,
+  pending:  '<span class="muted" style="font-size:12px;">编辑批次请点操作列「编辑」</span>' + _logBtn,
   review:   '<span class="muted" style="font-size:12px;">—</span>' + _logBtn,
   done:     '<span class="muted" style="font-size:12px;">—</span>' + _logBtn
 };
@@ -1938,6 +1875,22 @@ const batchMenuConfig = {
   review:  [{act:'approve', label:'批量审核', hint:'待审核→已生成'}, {act:'reject', label:'批量驳回', hint:'退回待确认'}],
   done:    []
 };
+
+// 主表操作列配置（随Tab变化）
+const mainOpColConfig = {
+  pending: '<button class="nt-btn link" data-act="edit-batches">编辑</button><button class="nt-btn link" data-act="log">日志</button>',
+  review:  '<button class="nt-btn link" data-act="log">日志</button>',
+  done:    '<button class="nt-btn link" data-act="log">日志</button>'
+};
+function refreshMainOpColumns() {
+  document.querySelectorAll('.data-table > tbody > tr.row-main').forEach(tr => {
+    const opCell = tr.querySelector('.td-op');
+    if (!opCell) return;
+    // 已关闭/待计算行：保持"—"
+    if (tr.classList.contains('row-closed') || tr.classList.contains('row-pending-calc')) return;
+    opCell.innerHTML = mainOpColConfig[currentTab] || '<span class="muted">—</span>';
+  });
+}
 
 function refreshOpColumns() {
   document.querySelectorAll('.nested-table tbody tr').forEach(tr => {
@@ -2075,6 +2028,7 @@ document.querySelectorAll('.tab-item').forEach(tab => {
     });
     // 更新操作列按钮
     refreshOpColumns();
+    refreshMainOpColumns();
     // 过滤嵌套表格行（待确认全部，其他只显示对应状态）
     filterNestedRows();
     // 控制可编辑性（仅待确认可编辑）
@@ -2109,13 +2063,27 @@ document.querySelectorAll('.tab-item').forEach(tab => {
 });
 
 // === 子表格复选框：点击切换 + 统计行联动 ===
+// 辅助：从批次行读数量（兼容只读文本和可编辑input）
+function getBatchQty(tr) {
+  const inp = tr.querySelector('input.nt-input');
+  if (inp) return parseInt(inp.value) || 0;
+  const tds = Array.from(tr.children).filter(td => td.tagName === 'TD');
+  return parseInt(tds[3]?.textContent.trim()) || 0;
+}
+// 辅助：从批次行读运输方式（兼容只读文本和可编辑select）
+function getBatchTransport(tr) {
+  const sel = tr.querySelector('select.nt-input');
+  if (sel) return sel.value;
+  const tds = Array.from(tr.children).filter(td => td.tagName === 'TD');
+  return tds[4]?.textContent.trim() || '';
+}
+
 function updateSummary(table) {
   let total = 0;
   table.querySelectorAll('tbody tr').forEach(tr => {
     const ck = tr.querySelector('.nt-ck .vxe-checkbox');
-    const input = tr.querySelector('.nt-input');
-    if (ck && ck.classList.contains('checked') && input) {
-      total += parseInt(input.value) || 0;
+    if (ck && ck.classList.contains('checked')) {
+      total += getBatchQty(tr);
     }
   });
   const cell = table.parentElement.querySelector('.sel-qty');
@@ -2228,17 +2196,18 @@ document.addEventListener('click', (e) => {
   const sku = row ? (row.querySelector('.col-code')?.textContent || '该明细') : '该明细';
   const prNo = row ? (row.querySelector('.field-line.key .col-code')?.textContent || '') : '';
 
-  if (act === 'add') {
-    openAddBatchModal(row, sku);
+  if (act === 'edit-batches') {
+    openEditBatches(row);
   } else if (act === 'del-batch') {
     deleteBatch(btn, sku);
   } else if (act === 'confirm-batch') {
     // 单批次确认（校验 + 组合检测 + 弹窗/普通确认）
     const tr = btn.closest('tr');
     if (!tr) return;
-    const inp = tr.querySelector('input.nt-input');
-    const sel = tr.querySelector('select.nt-input');
-    const thisQty = inp ? (parseInt(inp.value) || 0) : 0;
+    // 嵌套表格只读后，从 td 文本读数量和运输方式
+    const tds = Array.from(tr.children).filter(td => td.tagName === 'TD');
+    const thisQty = parseInt(tds[3]?.textContent.trim()) || 0;
+    const transportVal = tds[4]?.textContent.trim() || '';
     // 容量校验
     const chk = validateConfirmCapacity(row, thisQty);
     if (!chk.ok) { alert('操作失败，请调整：\n\n' + chk.msg); return; }
@@ -2247,7 +2216,7 @@ document.addEventListener('click', (e) => {
       const skuCode = row.querySelector('.col-code')?.textContent.trim() || '';
       const bomData = comboBOMData[skuCode];
       if (bomData) {
-        openComboConfirm(tr, row, bomData, thisQty, sel ? sel.value : '');
+        openComboConfirm(tr, row, bomData, thisQty, transportVal);
         return; // 弹窗接管，不走普通确认
       }
     }
@@ -2377,20 +2346,19 @@ function refreshConfirmStatus() {
 
 // 刷新某行批次的运输升降标识
 function refreshTransportLevel(tr) {
-  const sel = tr.querySelector('select.nt-input');
-  if (!sel) return;
-  const batchT = sel.value;
+  const batchT = getBatchTransport(tr);
+  if (!batchT) return;
   const defaultT = getDefaultTransport(tr);
   const lv = getTransportLevel(batchT, defaultT);
-  // 找到或创建升降标识 span
+  // 找到或创建升降标识 span（插在运输方式单元格末尾）
   let span = tr.querySelector('.ship-level');
   if (lv.level === 'default') {
-    // 等于默认：不显示标识（或显示"默认"灰色文字）
     if (span) span.remove();
   } else {
     if (!span) {
       span = document.createElement('span');
-      sel.parentNode.insertBefore(span, sel.nextSibling);
+      const tds = Array.from(tr.children).filter(td => td.tagName === 'TD');
+      if (tds[4]) tds[4].appendChild(span);
     }
     span.className = 'ship-level ' + lv.level;
     span.textContent = lv.label;
@@ -2535,9 +2503,8 @@ function openComboConfirm(tr, row, bomData, currentQty, currentTransport) {
       if (otherTr.classList.contains('combo-row') || otherTr.classList.contains('row-done')) return;
       let otherCutoff = '';
       Array.from(otherTr.children).forEach(c => { if (/^\d{1,2}\/\d{1,2}/.test(c.textContent.trim())) otherCutoff = c.textContent.trim(); });
-      const otherSel = otherTr.querySelector('select.nt-input');
-      const otherTransport = otherSel ? otherSel.value : '';
-      const otherQty = parseInt(otherTr.querySelector('input.nt-input')?.value || 0);
+      const otherTransport = getBatchTransport(otherTr);
+      const otherQty = getBatchQty(otherTr);
       const otherStatus = otherTr.querySelector('.tag')?.textContent.trim() || '';
       if (otherCutoff === cutoff && otherTransport === currentTransport) {
         linkedRows.push({ tr: otherTr, row: otherRow, sku: otherSku, qty: otherQty, transport: otherTransport, cutoff: otherCutoff, status: otherStatus });
@@ -2656,12 +2623,11 @@ function comboConfirmOnly() {
   const members = comboConfirmContext.allMembers;
   const newQty = parseInt(document.getElementById('comboMainQty')?.value || members[0].qty);
   const newTransport = document.getElementById('comboMainTransport')?.value || members[0].transport;
-  // 只更新当前行（第一个member）
+  // 只更新当前行（第一个member）——嵌套表格只读，改 td 文本
   const m = members[0];
-  const inp = m.tr.querySelector('input.nt-input');
-  const sel = m.tr.querySelector('select.nt-input');
-  if (inp) inp.value = newQty;
-  if (sel) sel.value = newTransport;
+  const tds = Array.from(m.tr.children).filter(td => td.tagName === 'TD');
+  if (tds[3]) tds[3].textContent = newQty;
+  if (tds[4]) tds[4].textContent = newTransport;
   flowBatchStatus(m.tr, '待审核');
   refreshTransportLevel(m.tr);
   closeComboConfirm();
@@ -2680,10 +2646,10 @@ function comboConfirmAll() {
   }
   let count = 0;
   members.forEach(m => {
-    const inp = m.tr.querySelector('input.nt-input');
-    const sel = m.tr.querySelector('select.nt-input');
-    if (inp) inp.value = newQty;
-    if (sel) sel.value = newTransport;
+    // 嵌套表格只读，改 td 文本
+    const tds = Array.from(m.tr.children).filter(td => td.tagName === 'TD');
+    if (tds[3]) tds[3].textContent = newQty;
+    if (tds[4]) tds[4].textContent = newTransport;
     flowBatchStatus(m.tr, '待审核');
     refreshTransportLevel(m.tr);
     count++;
@@ -2719,8 +2685,7 @@ function validateConfirmCapacity(row, thisQty) {
     const tag = tr.querySelector('.tag');
     const status = tag ? tag.textContent.trim() : '';
     if (status === '已生成' || status === '待审核') {
-      const inp = tr.querySelector('.nt-input');
-      if (inp) used += parseInt(inp.value) || 0;
+      used += getBatchQty(tr);
     }
   });
   const capacity = prNeed - used;
@@ -3036,100 +3001,176 @@ function calcNow(btn) {
   }, 1500);
 }
 
-function openAddBatchModal(row, sku) {
-  // 仅待确认 Tab 可新增
-  if (currentTab !== 'pending') { alert('仅在「待确认」状态下可新增批次'); return; }
-  addBatchTargetRow = row;
-  document.getElementById('addBatchQty').value = '';
-  document.getElementById('addBatchTransport').value = '';
-  document.getElementById('addBatchDelivery').value = '';
-  document.getElementById('addBatchCutoff').value = '';
-  document.getElementById('addBatchRegion').value = '';
-  // 判断国家：美国才要求选区域
-  let isUS = false;
-  row.querySelectorAll('.field-line').forEach(fl => {
-    if (fl.textContent.includes('国家') && fl.textContent.includes('美国')) isUS = true;
+// === 编辑批次弹窗 ===
+let editBatchesTargetRow = null;
+const EDIT_TRANSPORT_OPTS = ['快递','空运','快船','卡航','卡航整柜','铁路','慢船','海运整柜'];
+const EDIT_DELIVERY_OPTS = ['方式1','方式2','方式3','方式4','方式5','方式6','方式7','方式8'];
+const EDIT_WH_OPTS = ['橙联英国仓','橙联德国仓','橙联法国仓','FTW1美东仓','ONT8美西仓','MEM1美南仓'];
+
+function buildEditSelect(opts, selected, disabled) {
+  const dis = disabled ? ' disabled' : '';
+  const inner = opts.map(o => `<option ${o===selected?'selected':''}>${o}</option>`).join('');
+  return `<select class="nt-input" style="width:100%;${dis?'':''}"${dis}>${inner}</select>`;
+}
+
+function openEditBatches(row) {
+  if (currentTab !== 'pending') { alert('仅在「待确认」状态下可编辑批次'); return; }
+  editBatchesTargetRow = row;
+  const sku = row.querySelector('.col-code')?.textContent || '';
+  const nested = row.querySelector('.nested-table tbody');
+  if (!nested) { alert('找不到批次表格'); return; }
+  // 标题
+  document.getElementById('editBatchesTitle').textContent = '编辑发货批次 · ' + sku;
+  // 填充表格：读取嵌套表格的全部批次行
+  const body = document.getElementById('editBatchesBody');
+  body.innerHTML = '';
+  let seq = 1;
+  nested.querySelectorAll('tr').forEach(tr => {
+    const tds = tr.children;
+    if (tds.length < 9) return;
+    // 读当前值（只读文本）
+    const source = tr.querySelector('.src-tag')?.textContent.trim() || '';
+    const qty = tds[3]?.textContent.trim() || '';
+    const transport = tds[4]?.textContent.trim() || '';
+    const delivery = tds[5]?.textContent.trim() || '';
+    const warehouse = tds[6]?.textContent.trim() || '';
+    const cutoff = tds[7]?.textContent.trim() || '';
+    const status = tr.querySelector('.tag')?.textContent.trim() || '';
+    const editable = status === '待确认';
+    // 新行
+    const tr2 = document.createElement('tr');
+    if (!editable) tr2.className = 'row-done';
+    tr2.innerHTML = `
+      <td class="nt-seq">${seq++}</td>
+      <td>${source}</td>
+      <td>${editable ? `<input class="nt-input" type="number" value="${qty}" style="width:60px;" />` : qty}</td>
+      <td>${editable ? buildEditSelect(EDIT_TRANSPORT_OPTS, transport) : transport}</td>
+      <td>${editable ? buildEditSelect(EDIT_DELIVERY_OPTS, delivery) : delivery}</td>
+      <td>${editable ? buildEditSelect(EDIT_WH_OPTS, warehouse) : warehouse}</td>
+      <td>${cutoff}</td>
+      <td><span class="tag tag-orange">${status}</span></td>
+      <td class="nt-op">${editable ? '<button class="nt-btn danger sm" onclick="editDelRow(this)">删除</button>' : '<span class="muted">—</span>'}</td>
+    `;
+    body.appendChild(tr2);
   });
-  document.getElementById('addBatchRegionRow').style.display = isUS ? '' : 'none';
-  document.getElementById('addBatchModalMask').classList.add('show');
+  document.getElementById('editBatchesMask').classList.add('show');
 }
-function closeAddBatchModal() {
-  document.getElementById('addBatchModalMask').classList.remove('show');
-  addBatchTargetRow = null;
+function closeEditBatches() {
+  document.getElementById('editBatchesMask').classList.remove('show');
+  editBatchesTargetRow = null;
 }
-function confirmAddBatch() {
-  const qty = document.getElementById('addBatchQty').value.trim();
-  const transport = document.getElementById('addBatchTransport').value;
-  const delivery = document.getElementById('addBatchDelivery').value;
-  const cutoff = document.getElementById('addBatchCutoff').value;
-  const regionRow = document.getElementById('addBatchRegionRow');
-  const isUS = regionRow.style.display !== 'none';
-  const region = document.getElementById('addBatchRegion').value;
-  if (!qty || parseInt(qty) <= 0) { alert('请输入有效的发货数量'); return; }
-  if (!transport) { alert('请选择运输方式'); return; }
-  if (!delivery) { alert('请选择派送方式'); return; }
-  if (!cutoff) { alert('请选择截仓发货日'); return; }
-  if (isUS && !region) { alert('请选择区域'); return; }
-  if (!addBatchTargetRow) { alert('找不到目标行'); return; }
-  // 容量校验：新增数量 + 已占用（待审核+已生成）不能超过 PR需求数
-  const chk = validateConfirmCapacity(addBatchTargetRow, parseInt(qty));
+function editAddRow() {
+  const body = document.getElementById('editBatchesBody');
+  const seq = body.children.length + 1;
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td class="nt-seq">${seq}</td>
+    <td><span class="src-tag manual">人工</span></td>
+    <td><input class="nt-input" type="number" value="" placeholder="数量" style="width:60px;" /></td>
+    <td>${buildEditSelect(EDIT_TRANSPORT_OPTS, '')}</td>
+    <td>${buildEditSelect(EDIT_DELIVERY_OPTS, '')}</td>
+    <td>${buildEditSelect(EDIT_WH_OPTS, '')}</td>
+    <td><input class="nt-input" type="date" value="" style="width:110px;" /></td>
+    <td><span class="tag tag-orange">待确认</span></td>
+    <td class="nt-op"><button class="nt-btn danger sm" onclick="editDelRow(this)">删除</button></td>
+  `;
+  body.appendChild(tr);
+}
+function editDelRow(btn) {
+  btn.closest('tr').remove();
+  // 重排序号
+  let seq = 1;
+  document.querySelectorAll('#editBatchesBody tr').forEach(tr => {
+    const seqCell = tr.querySelector('.nt-seq');
+    if (seqCell) seqCell.textContent = seq++;
+  });
+}
+function saveEditBatches() {
+  if (!editBatchesTargetRow) { alert('找不到目标行'); return; }
+  // 收集弹窗里的批次数据
+  const rows = document.querySelectorAll('#editBatchesBody tr');
+  const batches = [];
+  for (const tr of rows) {
+    const tds = tr.children;
+    const status = tr.querySelector('.tag')?.textContent.trim() || '';
+    const editable = status === '待确认';
+    const source = tds[1]?.textContent.trim() || '';
+    if (editable) {
+      const qty = tds[2].querySelector('input')?.value.trim() || '';
+      const transport = tds[3].querySelector('select')?.value || '';
+      const delivery = tds[4].querySelector('select')?.value || '';
+      const warehouse = tds[5].querySelector('select')?.value || '';
+      // 截仓发货日：已有批次只读（td文本）；新增批次可编辑（date input）
+      const cutoffInput = tds[6].querySelector('input');
+      let cutoffText;
+      if (cutoffInput) {
+        // 新增批次的 date input
+        const cutoff = cutoffInput.value;
+        if (!cutoff) { alert('有新增批次未选择截仓发货日'); return; }
+        const d = new Date(cutoff);
+        const weekMap = ['周日','周一','周二','周三','周四','周五','周六'];
+        cutoffText = (d.getMonth()+1) + '/' + d.getDate() + '（' + weekMap[d.getDay()] + '）';
+      } else {
+        // 已有批次：只读文本
+        cutoffText = tds[6]?.textContent.trim() || '';
+      }
+      // 校验
+      if (!qty || parseInt(qty) <= 0) { alert('有批次的数量无效，请检查'); return; }
+      if (!transport) { alert('有批次未选择运输方式'); return; }
+      if (!delivery) { alert('有批次未选择派送方式'); return; }
+      if (!warehouse) { alert('有批次未选择目的仓'); return; }
+      batches.push({ source, qty, transport, delivery, warehouse, cutoff: cutoffText, status, editable: true });
+    } else {
+      // 只读批次，原样保留
+      const qty = tds[2]?.textContent.trim() || '';
+      const transport = tds[3]?.textContent.trim() || '';
+      const delivery = tds[4]?.textContent.trim() || '';
+      const warehouse = tds[5]?.textContent.trim() || '';
+      const cutoff = tds[6]?.textContent.trim() || '';
+      batches.push({ source, qty, transport, delivery, warehouse, cutoff, status, editable: false });
+    }
+  }
+  // 容量校验：待确认批次总量 + 已占用 ≤ PR需求数
+  const pendingQty = batches.filter(b => b.editable).reduce((s, b) => s + (parseInt(b.qty)||0), 0);
+  const lockedQty = batches.filter(b => !b.editable).reduce((s, b) => s + (parseInt(b.qty)||0), 0);
+  const chk = validateConfirmCapacity(editBatchesTargetRow, pendingQty + lockedQty);
   if (!chk.ok) {
-    alert('新增失败，数量超限：\n\n' + chk.msg + '\n\n请调整数量后重试。');
+    alert('保存失败，数量超限：\n\n' + chk.msg + '\n\n请调整后重试。');
     return;
   }
-  // 截仓发货日格式化为 M/D（周X）
-  const d = new Date(cutoff);
-  const weekMap = ['周日','周一','周二','周三','周四','周五','周六'];
-  const cutoffText = (d.getMonth()+1) + '/' + d.getDate() + '（' + weekMap[d.getDay()] + '）';
-  // 找到嵌套表格的 tbody
-  const tbody = addBatchTargetRow.querySelector('.nested-table tbody');
-  if (!tbody) { alert('找不到批次表格'); return; }
-  // 构造运输/派送方式下拉（运输方式用运输枚举，派送方式用方式1-8）
-  const opts = ['快递','空运','快船','卡航','卡航整柜','铁路','慢船','海运整柜'];
-  const deliveryOpts = ['方式1','方式2','方式3','方式4','方式5','方式6','方式7','方式8'];
-  const optHtmlT = opts.map(o => `<option ${o===transport?'selected':''}>${o}</option>`).join('');
-  const optHtmlD = deliveryOpts.map(o => `<option ${o===delivery?'selected':''}>${o}</option>`).join('');
-  // 新行插在最后一个"建议"批次后、第一个"实际"批次前
-  const newRow = document.createElement('tr');
-  // 美国：序号格带 data-region，由 renumberSeq 渲染区域标签
-  const seqAttr = isUS ? ` data-region="${region}"` : '';
-  newRow.innerHTML = `
-    <td class="nt-ck"><span class="vxe-checkbox checked"></span></td>
-    <td class="nt-seq"${seqAttr}></td>
-    <td><span class="src-tag manual">人工</span></td>
-    <td><input class="nt-input" value="${qty}" /></td>
-    <td><select class="nt-input" style="width:70px;">${optHtmlT}</select></td>
-    <td><select class="nt-input" style="width:70px;">${optHtmlD}</select></td>
-    <td class="nt-confirm"><span class="confirm-status normal">—</span></td>
-    <td>${cutoffText}</td>
-    <td><span class="tag tag-orange">待确认</span></td>
-    <td class="nt-op">${opColConfig.pending}</td>
-  `;
-  // 找插入点：最后一个建议行之后
-  const rows = Array.from(tbody.querySelectorAll('tr'));
-  let insertBefore = null;
-  for (const r of rows) {
-    const src = r.querySelector('.src-tag');
-    if (src && src.classList.contains('manual')) { insertBefore = r; break; }
-  }
-  if (insertBefore) {
-    tbody.insertBefore(newRow, insertBefore);
-  } else {
-    tbody.appendChild(newRow);
-  }
-  // 给新行绑定勾选事件
-  bindCheckboxEvents(newRow);
-  // 重排序号
-  renumberSeq(tbody);
-  // 刷新新批次的运输升降标识
-  refreshTransportLevel(newRow);
-  // 更新统计
-  const table = addBatchTargetRow.querySelector('.nested-table');
-  updateSummary(table);
-  closeAddBatchModal();
-  const sku = addBatchTargetRow.querySelector('.col-code')?.textContent || '该明细';
-  const regionInfo = isUS ? ` · 区域：${region}` : '';
-  alert(`✓ 已新增预发货批次（来源：人工）\n数量：${qty} · 运输：${transport} · 派送：${delivery}${regionInfo}\n截仓发货日：${cutoffText} · 状态：待确认\n剩余可分配容量：${chk.capacity - parseInt(qty)} 件`);
+  // 写回嵌套表格（只读展示）
+  const nestedBody = editBatchesTargetRow.querySelector('.nested-table tbody');
+  nestedBody.innerHTML = '';
+  let seq = 1;
+  batches.forEach(b => {
+    const tr = document.createElement('tr');
+    const srcCls = b.source === '人工' || b.source === '实际' ? 'manual' : 'smart';
+    const statusTag = b.status === '已生成' || b.status === '已完成'
+      ? `<span class="tag" style="color:var(--success);background:#e8ffea;border:1px solid #c9f0d0;">${b.status}</span>`
+      : `<span class="tag tag-orange">${b.status}</span>`;
+    tr.innerHTML = `
+      <td class="nt-ck"><span class="vxe-checkbox ${b.editable?'checked':''}"></span></td>
+      <td class="nt-seq">${seq++}</td>
+      <td><span class="src-tag ${srcCls}">${b.source}</span></td>
+      <td>${b.qty}</td>
+      <td>${b.transport}</td>
+      <td>${b.delivery}</td>
+      <td>${b.warehouse}</td>
+      <td class="nt-confirm"><span class="confirm-status normal">—</span></td>
+      <td>${b.cutoff}</td>
+      <td>${statusTag}</td>
+      <td class="nt-op">${b.editable ? opColConfig.pending : '<span class="muted">—</span>'}</td>
+    `;
+    if (!b.editable) tr.classList.add('row-done');
+    nestedBody.appendChild(tr);
+  });
+  // 重排序号 + 刷新
+  renumberSeq(nestedBody);
+  nestedBody.querySelectorAll('tr').forEach(tr => refreshTransportLevel(tr));
+  updateSummary(editBatchesTargetRow.querySelector('.nested-table'));
+  const sku = editBatchesTargetRow.querySelector('.col-code')?.textContent || '';
+  closeEditBatches();
+  alert(`✓ 已保存 ${sku} 的批次编辑\n待确认批次：${batches.filter(b=>b.editable).length} 条\n总计：${batches.length} 条`);
 }
 
 // === 删除批次 ===
@@ -3152,17 +3193,10 @@ function deleteBatch(btn, sku) {
 function renumberSeq(tbody) {
   const rows = tbody.querySelectorAll('tr');
   let seq = 1;
-  const regionClass = { '美东': 'r-east', '美西': 'r-west', '美南': 'r-south' };
   rows.forEach(r => {
     const seqCell = r.querySelector('.nt-seq');
     if (seqCell && !seqCell.classList.contains('tr-hold')) {
-      const region = seqCell.getAttribute('data-region');
-      if (region) {
-        const cls = regionClass[region] || 'r-west';
-        seqCell.innerHTML = '<span class="seq-num">' + (seq++) + '</span><span class="nt-region ' + cls + '">' + region + '</span>';
-      } else {
-        seqCell.textContent = seq++;
-      }
+      seqCell.textContent = seq++;
     }
   });
 }
@@ -3617,6 +3651,7 @@ document.querySelectorAll('.nt-actions').forEach((act, idx) => {
   act.innerHTML = (idx === 3) ? tabHoldConfig[currentTab] : tabBtnConfig[currentTab];
 });
 refreshOpColumns();
+refreshMainOpColumns();
 filterNestedRows();
 refreshEditable();
 refreshCheckboxLock();
